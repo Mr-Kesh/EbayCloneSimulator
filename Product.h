@@ -20,7 +20,7 @@ private:
     bool isActive_; // Indicates if bidding is open
     bool isSold_;
 
-    std::map<Buyer*, double> bids_; // Stores buyer pointers and their bid amounts
+    //std::map<Buyer*, double> bids_; // Stores buyer pointers and their bid amounts
 
 public:
     // Constructor
