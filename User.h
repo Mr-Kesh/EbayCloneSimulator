@@ -15,10 +15,12 @@ protected:
 public:
 
     // Constructor
-    User::User(const std::string& username, long phoneNumber, const std::string& address, double balance);
+    User(const std::string& username, long phoneNumber, const std::string& address, double balance);
 
     // Virtual destructor (important for base classes)
     virtual ~User() {}
+
+    //virtual std::string getUserType() const = 0;  // Pure virtual function
 
     // Getters
     std::string getUsername() const;

@@ -11,7 +11,9 @@ private:
     std::vector<Product*> purchaseHistory_;  // Stores products the buyer has won
 public:
     // Constructor
-    Buyer(std::string username, long phone_no, std::string address, double account_balance);
+    Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
+
+    //std::string getUserType() const override;
 
     // Bidding actions
     bool placeBid(Product& product, double bidAmount);

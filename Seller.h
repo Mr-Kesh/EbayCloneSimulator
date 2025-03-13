@@ -11,7 +11,9 @@ private:
     std::vector<Product> productsForSale_; // List of products the seller is selling
 public:
     // Constructor
-    Seller(std::string username, long phone_no, std::string address, double account_balance);
+    Seller(const std::string &uname, long phone, const std::string &addr, double bal);
+
+    //std::string getUserType() const override;
 
     // Seller Actions
     void postProduct(const std::string& name, const std::string& category, double startingPrice, std::string quality);
