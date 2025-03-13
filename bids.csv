@@ -1,15 +1,16 @@
+Product ID,Product Name,Category,Condition,Base Price,Current Bid,Seller,Buyer
 1001,MacBook Pro,Electronics,Used-VeryGood,800,1050,john_seller,alice_buyer
-1002,Nike Air Jordan,Shoes,New,150,200,mike_seller,james_buyer
+1002,Nike Air Jordan,Clothing,New,150,200,mike_seller,james_buyer
 1003,Samsung Galaxy S22,Electronics,Used-Good,500,600,lisa_seller,dave_buyer
-1004,KitchenAid Mixer,Appliances,Used-Okay,120,150,susan_seller,bob_buyer
-1005,Rolex Watch,Accessories,New,5000,6800,mark_seller,anna_buyer
+1004,KitchenAid Mixer,Tools,Used-Okay,120,150,susan_seller,bob_buyer
+1005,Rolex Watch,Electronics,New,5000,6800,mark_seller,anna_buyer
 1006,Dell XPS 15,Electronics,Used-VeryGood,900,1100,steve_seller,chris_buyer
-1007,Guitar Fender Stratocaster,Musical Instruments,Used-Good,700,850,kevin_seller,emma_buyer
-1008,GoPro Hero 10,Cameras,New,300,450,ben_seller,sarah_buyer
+1007,Hammer,Tools,Used-Good,50,55,kevin_seller,emma_buyer
+1008,GoPro Hero 10,Electronics,New,300,450,ben_seller,sarah_buyer
 1009,Apple Watch Series 8,Electronics,Used-Good,250,320,laura_seller,daniel_buyer
-1010,Canon EOS 90D,Cameras,Used-Okay,700,750,tom_seller,kate_buyer
+1010,Canon EOS 90D,Electronics,Used-Okay,700,750,tom_seller,kate_buyer
 1011,Bose Headphones,Electronics,New,200,280,jason_seller,olivia_buyer
 1012,AirPods Pro,Electronics,Used-Good,120,180,sam_seller,nathan_buyer
 1013,PlayStation 5,Electronics,New,500,620,paul_seller,ryan_buyer
-1014,The Great Gatsby (1st Ed.),Books,Used-VeryGood,250,400,eric_seller,lucy_buyer
-1015,Tesla Model 3,Automobile,Used-Good,35000,42000,henry_seller,oliver_buyer
+1014,The Great Gatsby,Books,Used-VeryGood,25,43,eric_seller,lucy_buyer
+1015,Lor d of the Rings,Books,Used-Good,35,50,henry_seller,oliver_buyer
