@@ -8,7 +8,7 @@ class Bid {
 private:
     Buyer* buyer_;   // The buyer placing the bid
     Product* product_; // The product being bid on
-    double bidAmount_; // Amount of the bid
+    double bidAmount_; 
 
 public:
     // Constructor

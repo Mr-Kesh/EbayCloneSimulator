@@ -7,7 +7,7 @@
 #include "Seller.h"
 
 // UserID, Username, Role, PhoneNumber, Address, AccountBalance
-// ProductID, ProductName, Category, Quality, StartingPrice, FinalSellingPrice, SellerUsername, BuyerUsername
+// product_id,name,category,subcategory,specific_type,quality,base_price,final_price,seller_username,buyer_username,attribute1,attribute2
 
 class BidToBuy {
 private:

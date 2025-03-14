@@ -1,4 +1,5 @@
 #include "Driver.h"
+#include "Bid.h"
 
 
 // Initialize static instance pointer

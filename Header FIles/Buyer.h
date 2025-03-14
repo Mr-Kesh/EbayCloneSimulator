@@ -7,8 +7,8 @@
 
 class Buyer : public User {
 private:
-    //std::vector<> bidsPlaced_; // Stores products and corresponding bid amounts
     std::vector<Product*> purchaseHistory_;  // Stores products the buyer has won
+    std::vector<std::pair<int, double>> bid_history_;  // Product IDs and bid amounts
 public:
     // Constructor
     Buyer(const std::string &uname, long phone, const std::string &addr, double bal);

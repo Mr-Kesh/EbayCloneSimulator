@@ -1,16 +1,16 @@
-1001,MacBook Pro,Electronics,Used-VeryGood,800,1050,john_seller,alice_buyer
-1002,Nike Air Jordan,Clothing,New,150,200,mike_seller,james_buyer
-1003,Samsung Galaxy S22,Electronics,Used-Good,500,600,lisa_seller,dave_buyer
-1004,Oak Dining Table,Furniture,Used-VeryGood,320,450,susan_seller,bob_buyer
-1005,Rolex Watch,Clothing,New,5000,6800,mark_seller,anna_buyer
-1006,Dell XPS 15,Electronics,Used-VeryGood,900,1100,steve_seller,chris_buyer
-1007,Power Drill Set,Tools,Used-Good,150,185,kevin_seller,emma_buyer
-1008,GoPro Hero 10,Electronics,New,300,450,ben_seller,sarah_buyer
-1009,Leather Office Chair,Furniture,Used-Good,250,320,laura_seller,daniel_buyer
-1010,Canon EOS 90D,Electronics,Used-Okay,700,750,tom_seller,kate_buyer
-1011,Bose Headphones,Electronics,New,200,280,jason_seller,olivia_buyer
-1012,Queen Memory Foam Bed,Furniture,Used-VeryGood,520,680,sam_seller,nathan_buyer
-1013,Coffee Table,Furniture,New,200,275,paul_seller,ryan_buyer
-1014,The Great Gatsby,Books,Used-VeryGood,25,43,eric_seller,lucy_buyer
-1015,Advanced Programming,Books,Used-Good,55,80,henry_seller,oliver_buyer
-1016,Garden Lawn Mower,Tools,New,335,450,henry_seller,oliver_buyer
+1001,MacBook Pro,Electronics,Computer,Laptop,Used-VeryGood,800,1050,john_seller,alice_buyer,Apple,M1 Pro
+1002,Nike Air Jordan,Clothing,Shoes,Sneakers,New,150,200,mike_seller,james_buyer,10,Leather
+1003,Samsung Galaxy S22,Electronics,Phone,Smartphone,Used-Good,500,600,lisa_seller,dave_buyer,Samsung,S22
+1004,Oak Dining Table,Furniture,Table,CoffeeTable,Used-VeryGood,320,450,susan_seller,bob_buyer,Oak,
+1005,Rolex Submariner,Clothing,Accessories,Watch,New,5000,6800,mark_seller,anna_buyer,40mm,Stainless
+1006,Dell XPS 15,Electronics,Computer,Laptop,Used-VeryGood,900,1100,steve_seller,chris_buyer,Dell,XPS 15
+1007,Power Drill Set,Tools,PowerTool,Drill,Used-Good,150,185,kevin_seller,emma_buyer,Electric,
+1008,GoPro Hero 10,Electronics,Camera,ActionCamera,New,300,450,ben_seller,sarah_buyer,GoPro,Hero 10
+1009,Leather Office Chair,Furniture,Chair,OfficeChair,Used-Good,250,320,laura_seller,daniel_buyer,Leather,
+1010,Canon EOS 90D,Electronics,Camera,DSLR,Used-Okay,700,750,tom_seller,kate_buyer,Canon,EOS 90D
+1011,Bose QuietComfort,Electronics,Audio,Headphones,New,200,280,jason_seller,olivia_buyer,Bose,QuietComfort
+1012,Memory Foam Mattress,Furniture,Bed,TwinBed,Used-VeryGood,520,680,sam_seller,nathan_buyer,Memory Foam,
+1013,Glass Coffee Table,Furniture,Table,CoffeeTable,New,200,275,paul_seller,ryan_buyer,Glass,
+1014,The Great Gatsby,Books,Fiction,Novel,Used-VeryGood,25,43,eric_seller,lucy_buyer,F. Scott Fitzgerald,
+1015,Advanced C++ Programming,Books,NonFiction,Textbook,Used-Good,55,80,henry_seller,oliver_buyer,David Johannsen,
+1016,Electric Lawn Mower,Tools,GardenTool,LawnMower,New,335,450,henry_seller,oliver_buyer,Electric,
