@@ -14,7 +14,6 @@ int main(){
   // Load products from products.csv
   // Print Welcome to the Auction System
     
-  // Testing
   // Users.csv
   std::vector<User*> users; 
   std::ifstream file("users.csv");
