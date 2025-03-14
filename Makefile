@@ -9,8 +9,9 @@ all: main test
 main: main.cpp
 	$(CXX) $(CXXFLAGS) main.cpp -o main
 
-test: test.cpp
-	$(CXX) $(CXXFLAGS) test.cpp -o test
+# Commented and will uncomment for the future
+# test: test.cpp
+#	$(CXX) $(CXXFLAGS) test.cpp -o test
 	
 clean:
 	rm -f main test
