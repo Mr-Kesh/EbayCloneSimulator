@@ -37,6 +37,8 @@ public:
     // Main program operations
     void run();
     void loadData();
+    void loadUsers(const std::string& filename);
+    void loadProducts(const std::string& filename);
     void saveData();
     
     // User management
