@@ -1,24 +1,30 @@
 #include "User.h"
 
-// User constructor definition
+// Constructor implementation
 User::User(const std::string& username, long phoneNumber, const std::string& address, double balance)
-    : username_(username), phone_no_(phoneNumber), address_(address), account_balance_(balance) {
-    // Initialization list used to initialize data members
+: username_(username), phone_no_(phoneNumber), address_(address), account_balance_(balance) {}
+
+
+
+// Setter implementations
+void User::setUsername(std::string new_username) {
+    username_ = new_username;
 }
 
-// Getters
-std::string User::getUsername() const{
-    return username_;
-};
 
-long User::getPhoneNumber() const{
-    return phone_no_;
-};
 
-std::string User::getAddress() const{
-    return address_;
-};
+void User::setPhoneNumber(long new_phone_no) {
+    phone_no_ = new_phone_no;
+}
 
-double User::getBalance() const{
-    return account_balance_;
-};
+
+
+void User::setAddress(std::string new_address) {
+    address_ = new_address;
+}
+
+
+
+void User::updateBalance(double amount) {
+    account_balance_ += amount;
+}

@@ -6,34 +6,49 @@
 #include <map>
 #include "User.h"
 #include "Buyer.h"
+#include "Seller.h"
+
 
 enum class Quality { New, Used_VeryGood, Used_Good, Used_Okay };
 
-// I dont know if this class is correct
 
 class Product {
 private:
+    const int productId_;
     std::string name_;
     std::string category_;
     double basePrice_;
     Quality quality_;
-    bool isActive_; // Indicates if bidding is open
+    bool isActive_; 
     bool isSold_;
-
-    //std::map<Buyer*, double> bids_; // Stores buyer pointers and their bid amounts
+    Seller* seller_;  
+    std::map<Buyer*, double> bids_;  // Using map to track bids by buyer
 
 public:
     // Constructor
-    Product(std::string name, std::string category, double basePrice, Quality quality);
+    Product(const int productId, const std::string& name, const std::string& category, const double basePrice, const Quality quality, Seller* seller)
+    : productId_(productId), name_(name), category_(category), basePrice_(basePrice), quality_(quality), isActive_(true), isSold_(false), seller_(seller) {}
+
+    virtual ~Product() = default;  
+
 
     // Getters
-    std::string getName() const;
-    std::string getCategory() const;
-    double getBasePrice() const;
-    bool isActive() const;
-    bool isSold() const;
+    int getProductId() const { return productId_; }
+    std::string getName() const { return name_; }
+    std::string getCategory() const { return category_; }
+    double getBasePrice() const { return basePrice_; }
+    bool isActive() const { return isActive_; }
+    bool isSold() const { return isSold_; }
+    Quality getQuality() const { return quality_; }
+    Seller* getSeller() const { return seller_; }
     Buyer* getHighestBidder() const;
     double getHighestBidAmount() const;
+    
+    
+    // Setters
+    void setIsActive(bool active) { isActive_ = active; }
+    void setIsSold(bool sold) { isSold_ = sold; }
+
 
     // Bidding operations
     void addBid(Buyer* buyer, double bidAmount);
@@ -42,8 +57,9 @@ public:
     void rejectWinningBid();
     void markAsSold();
 
+
     // Display product information
-    void displayProductInfo() const;
+    virtual void displayProductInfo() const;
 };
 
 #endif // PRODUCT_H

@@ -6,8 +6,8 @@
 #include "Buyer.h"
 #include "Seller.h"
 
-// UserID,Username,Role,PhoneNumber,Address,AccountBalance
-// ProductID,ProductName,Category,Quality,StartingPrice,FinalSellingPrice,SellerUsername,BuyerUsername
+// UserID, Username, Role, PhoneNumber, Address, AccountBalance
+// ProductID, ProductName, Category, Quality, StartingPrice, FinalSellingPrice, SellerUsername, BuyerUsername
 
 class BidToBuy {
 private:
@@ -21,7 +21,7 @@ public:
     void run(); // runs the program
 
     void loadUsers(const std::string& filename); // Read users from CSV
-    void loadProducts(const std::string& filename); // Read product/bid data from CSV
+    void loadProducts(const std::string& filename); // Read product/bid data from CSV`
     void addUser();
 
     void displayUsers();

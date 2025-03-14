@@ -22,11 +22,12 @@ public:
 
     //virtual std::string getUserType() const = 0;  // Pure virtual function
 
-    // Getters
-    std::string getUsername() const;
-    long getPhoneNumber() const;
-    std::string getAddress() const;
-    double getBalance() const; // check account balance
+
+    // Getters - inline implementation
+    std::string getUsername() const { return username_; }
+    long getPhoneNumber() const { return phone_no_; }
+    std::string getAddress() const { return address_; }
+    double getBalance() const { return account_balance_; } // check account balance
 
     // Setters
     void setUsername(std::string new_username);
