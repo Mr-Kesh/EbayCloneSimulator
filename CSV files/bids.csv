@@ -1,5 +1,5 @@
 Product ID,Category,Subcategory,Specific Type,Attribute 1,Attribute 2,Buyer,Product Name,Base Price,Quality,Seller
-1001,Clothing,Shirt,T-Shirt,Medium,Shirt,JohnDoe_buyer,Polo T-Shirt,30,New,Sarah_seller
+1001,Clothing,Shirt,T-Shirt,Small,Shirt,JohnDoe_buyer,Polo T-Shirt,30,New,Sarah_seller
 1002,Clothing,Pants,Jeans,32,Pants,JaneSmith_buyer,Levi's 501,50,Used_Good,Mike_seller
 1003,Electronics,Computer,Laptop,Dell,XPS 15,AliceJohnson_buyer,Dell XPS 15,1200,New,Kevin_seller
 1004,Electronics,Phone,Smartphone,iPhone,14,BobWilliams_buyer,iPhone 14 Pro,1000,Used_VeryGood,David_seller

@@ -6,6 +6,7 @@
 #include <string>
 #include "Product.h"
 
+
 class Seller : public User {
 private:
     std::vector<Product> productsForSale_; // List of products the seller is selling

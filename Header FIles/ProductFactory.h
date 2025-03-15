@@ -2,7 +2,6 @@
 #define PRODUCT_FACTORY_H_
 
 
-
 #include "Product.h"
 #include "Electronics.h"
 #include "Clothing.h"

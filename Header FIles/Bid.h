@@ -10,6 +10,7 @@ private:
     Product* product_; // The product being bid on
     double bidAmount_; 
 
+
 public:
     // Constructor
     Bid(Buyer* buyer, Product* product, double bidAmount);

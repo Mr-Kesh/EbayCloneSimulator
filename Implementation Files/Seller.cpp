@@ -13,6 +13,7 @@ void Seller::postProduct(const std::string& name, const std::string& category, d
 
 
 
+
 void Seller::viewHistoricalPrices(const std::string& category) const {
     
 }

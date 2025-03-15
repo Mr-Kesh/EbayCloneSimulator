@@ -6,7 +6,6 @@
 #include "Product.h"
 
 
-
 class Electronics : public Product {
 public:
    Electronics(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& brand, const std::string& model)

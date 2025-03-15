@@ -1,5 +1,6 @@
 #include "User.h"
 
+
 // Constructor implementation
 User::User(const std::string& username, long phoneNumber, const std::string& address, double balance)
 : username_(username), phone_no_(phoneNumber), address_(address), account_balance_(balance) {}

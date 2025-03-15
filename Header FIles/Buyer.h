@@ -5,6 +5,7 @@
 #include "Product.h"
 #include <vector>
 
+
 class Buyer : public User {
 private:
     std::vector<Product*> purchaseHistory_;  // Stores products the buyer has won

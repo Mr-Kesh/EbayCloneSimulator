@@ -31,7 +31,6 @@ public:
 };
 
 
-
 class OfficeChair : public Chair {
 public:
     OfficeChair(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& material)

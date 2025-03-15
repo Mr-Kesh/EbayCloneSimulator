@@ -26,6 +26,7 @@ public:
 
     void displayUsers();
 
+
     ~BidToBuy(); // Destructor
 };
 

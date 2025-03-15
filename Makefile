@@ -15,3 +15,4 @@ test: test.cpp
 	
 clean:
 	rm -f main test
+	

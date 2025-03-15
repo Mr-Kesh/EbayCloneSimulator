@@ -11,7 +11,6 @@
 
 enum class Quality { New, Used_VeryGood, Used_Good, Used_Okay };
 
-
 class Product {
 private:
     const int productId_;
