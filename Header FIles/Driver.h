@@ -8,6 +8,7 @@
 #include "Buyer.h"
 #include "Seller.h"
 #include "Product.h"
+#include "Bid.h"
 #include "BidToBuy.h"
 
 class Driver
@@ -39,6 +40,7 @@ public:
      ****************************************************/
     static Driver *getInstance();
     void run();
+    void welcomeMessage();
     void mainMenu();
     bool showSellerMenu();
     bool showBuyerMenu();
@@ -90,6 +92,7 @@ public:
 };
 
 // Helper function outside of class
-double getValidNumberChoice(const std::string &prompt, double min, double max);
+template <typename T>
+T getValidNumberChoice(const std::string &prompt, T min, T max);
 
 #endif // DRIVER_H_

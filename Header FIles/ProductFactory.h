@@ -179,7 +179,7 @@ public:
         if (mainCategory == "Tools") // Finally, tools
         {
             // For simplicity, we'll just create a generic Tools object
-            return new Tools(productId, name, base_price, quality, seller);
+            return new Tools(productId, name, base_price, quality, seller, attribute1);
         }
 
         // If all else fails, create a generic product

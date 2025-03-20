@@ -5,8 +5,10 @@
 #include <vector>
 #include <map>
 #include "User.h"
-#include "Buyer.h"
-#include "Seller.h"
+
+// Forward declarations to avoid circular dependencies
+class Buyer;
+class Seller;
 
 enum class Quality
 {

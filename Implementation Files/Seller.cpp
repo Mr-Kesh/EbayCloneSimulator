@@ -37,10 +37,10 @@ void Seller::postProduct()
  *
  * @param product The product to open bidding on.
  */
-void Seller::openBid(Product &product)
+void Seller::openBid(Product *product)
 {
     // Set product as available for bidding
-    product.setIsActive(true);
+    product->setIsActive(true);
 }
 
 /**
@@ -50,10 +50,10 @@ void Seller::openBid(Product &product)
  *
  * @param product The product to close bidding on.
  */
-void Seller::closeBid(Product &product)
+void Seller::closeBid(Product *product)
 {
     // Close bidding on a product
-    product.setIsActive(false);
+    product->setIsActive(false);
 }
 
 /**
@@ -63,10 +63,10 @@ void Seller::closeBid(Product &product)
  *
  * @param product The product to check.
  */
-bool Seller::soldOrNot(const Product &product) const
+bool Seller::soldOrNot(const Product *product) const
 {
     // Check if a product has been sold
-    return product.isSold();
+    return product->isSold();
 }
 
 /**
@@ -89,7 +89,7 @@ double Seller::checkAccountBalance() const
  *
  * @param product The product to add to the seller's list of products for sale.
  */
-void Seller::addProductForSale(const Product &product)
+void Seller::addProductForSale(Product *product)
 {
     productsForSale_.push_back(product);
 }
@@ -109,7 +109,7 @@ void Seller::displayProductsForSale() const
     std::cout << "Products listed by " << getUsername() << ":" << std::endl;
     for (const auto &product : productsForSale_)
     {
-        product.displayProductInfo();
+        product->displayProductInfo();
     }
 }
 
@@ -155,10 +155,9 @@ void Seller::updateUserInformation()
 /**
  * @brief Adds a new product to the system for a seller.
  *
- * @param seller A pointer to the Seller object who is adding the product.
  * @return void This function adds the product to the system.
  */
-void Seller::addProduct(Seller *seller)
+Product *Seller::addProduct()
 {
     std::string name, category, subcategory, specificType, attribute1, attribute2;
     std::string customCategory;
@@ -199,7 +198,7 @@ void Seller::addProduct(Seller *seller)
         break;
     default:
         std::cout << "Invalid category.\n";
-        return;
+        return nullptr;
     }
 
     // Get price with validation
@@ -216,19 +215,19 @@ void Seller::addProduct(Seller *seller)
     // Generate a product ID the next available one so if the previous productID was 1001, the new one will be 1002
     int productId = getNextProductId();
     // Create a new product using the ProductFactory with all the details we gathered
-    Product *newProduct = ProductFactory::CreateProduct(productId, formattedCategory, name, price, quality, seller, attribute1, attribute2);
+    Product *newProduct = ProductFactory::CreateProduct(productId, name, formattedCategory, price, quality, this, attribute1, attribute2);
 
     // Check if the product was created successfully
     if (newProduct)
     {
         // Add the new product to our products map using its ID
-        products[newProduct->getProductId()] = newProduct;
+        Driver::getInstance()->products[newProduct->getProductId()] = newProduct;
 
         // Add the product to the seller's list of products for sale
         productsForSale_.push_back(newProduct);
 
         // Save the updated product list to a CSV file
-        saveData();
+        Driver::getInstance()->saveData();
 
         std::cout << "Product " << name << " listed for sale under " << category << " successfully!\n";
     }
@@ -236,6 +235,8 @@ void Seller::addProduct(Seller *seller)
     {
         std::cout << "Error creating product.\n";
     }
+
+    return newProduct;
 }
 
 /**
@@ -566,13 +567,12 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
 /**
  * @brief Opens bidding on a product.
  *
- * @param seller A pointer to the Seller object who owns the product.
  * @param productId The ID of the product that is being opened for bidding.
  * @return void This function opens the bidding process for the product.
  */
-void Seller::openBidding(Seller *seller, int productId)
+void Seller::openBidding(int productId)
 {
-    Product *product = getProductById(productId);
+    Product *product = Driver::getInstance()->getProductById(productId);
     if (product)
     {
         product->openBidding();
@@ -586,13 +586,12 @@ void Seller::openBidding(Seller *seller, int productId)
 /**
  * @brief Closes bidding on a product and determines the winner.
  *
- * @param seller A pointer to the Seller object who owns the product.
  * @param productId The ID of the product that is being closed for bidding.
  * @return void This function finalizes the bidding process for the product.
  */
-void Seller::closeBidding(Seller *seller, int productId)
+void Seller::closeBidding(int productId)
 {
-    Product *product = getProductById(productId);
+    Product *product = Driver::getInstance()->getProductById(productId);
     if (product)
     {
         product->closeBidding();
@@ -606,13 +605,12 @@ void Seller::closeBidding(Seller *seller, int productId)
 /**
  * @brief Displays the sales history of a product.
  *
- * @param seller A pointer to the Seller object who owns the product.
  * @param productId The ID of the product that is being viewed.
  * @return void This function displays the sales history of the product.
  */
-void Seller::viewSalesHistory(Seller *seller, int productId)
+void Seller::viewSalesHistory(int productId)
 {
-    Product *product = getProductById(productId);
+    Product *product = Driver::getInstance()->getProductById(productId);
     if (product)
     {
         product->viewSalesHistory();
@@ -627,8 +625,8 @@ void Seller::viewSalesHistory(Seller *seller, int productId)
  */
 Seller *Seller::getSellerByUsername(const std::string &username)
 {
-    // Use the sellers collection to find the seller by username
-    for (Seller *seller : sellers)
+    // Use the Driver's sellers collection to find the seller by username
+    for (Seller *seller : Driver::getInstance()->sellers)
     {
         if (seller->getUsername() == username)
         {
@@ -646,7 +644,8 @@ Seller *Seller::getSellerByUsername(const std::string &username)
 int Seller::getNextProductId()
 {
     int maxId = 0;
-    for (const auto &pair : products)
+    // Use the Driver's products map
+    for (const auto &pair : Driver::getInstance()->products)
     {
         if (pair.first > maxId)
         {

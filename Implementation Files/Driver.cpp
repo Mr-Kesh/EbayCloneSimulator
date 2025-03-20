@@ -145,7 +145,7 @@ bool Driver::showSellerMenu()
     std::cout << "5. Update user information" << std::endl;
     std::cout << "6. Exit" << std::endl;
 
-    double selection = getValidNumberChoice("Select an option: ", 1, 6);
+    int selection = getValidNumberChoice("Select an option: ", 1, 6);
 
     switch (selection)
     {
@@ -165,10 +165,13 @@ bool Driver::showSellerMenu()
         break;
     }
     case 4:
-        seller->viewSalesHistory();
+    {
+        int productId = getValidNumberChoice("Enter Product ID (0 to view all): ", 0, 9999);
+        seller->viewSalesHistory(productId);
         break;
+    }
     case 5:
-        seller->updateUserInformation();
+        updateUserInformation(seller);
         break;
     case 6:
         std::cout << "Goodbye!\n";
@@ -216,7 +219,7 @@ bool Driver::showBuyerMenu()
         displayAvailableProducts();
         int productId = getValidNumberChoice("Enter Product ID to bid on: ", 1000, 9999);
         double bidAmount = getValidNumberChoice("Enter bid amount: $", 0.01, 99999.99);
-        buyer->placeBid(productId, bidAmount);
+        placeBid(buyer, productId, bidAmount);
         break;
     }
     case 3:
@@ -551,8 +554,7 @@ std::vector<Product *> Driver::getProductsBySeller(Seller *seller)
 void Driver::placeBid(Buyer *buyer, int productId, double amount)
 {
     Product *product = getProductById(productId);
-    bool isActive = product->isActive(productId);
-    if (isActive)
+    if (product && product->isActive())
     {
         product->addBid(buyer, amount);
     }
@@ -588,9 +590,9 @@ std::vector<Bid *> Driver::getBidsForProduct(int productId)
  * User Update Functions
  ****************************************************/
 
-void Driver::updateUserInformation(User *user)
+void Driver::updateUserInformation(Seller *seller)
 {
-    user->updateUserInformation();
+    seller->updateUserInformation();
 }
 
 /****************************************************
@@ -761,9 +763,10 @@ void Driver::saveData() {}
  * @return T The valid number entered by the user
  */
 // Helper function to get a valid number from user input
-double getValidNumberChoice(const std::string &prompt, double min, double max)
+template <typename T>
+T getValidNumberChoice(const std::string &prompt, T min, T max)
 {
-    double number;
+    T number;
     std::cout << prompt;
 
     while (!(std::cin >> number) || number < min || number > max)
@@ -775,8 +778,11 @@ double getValidNumberChoice(const std::string &prompt, double min, double max)
         std::cin.clear();
 
         // Discard previous input (Gets rid of the invalid input)
-        std::cin.ignore(9999, '\n');
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
     return number;
 }
+
+template int getValidNumberChoice<int>(const std::string &, int, int);
+template double getValidNumberChoice<double>(const std::string &, double, double);

@@ -31,7 +31,7 @@ public:
      ****************************************************
      */
     Product *addProduct();
-    void postProduct(const std::string &name, const std::string &category, double startingPrice, std::string quality);
+    void postProduct();
     void displayProductsForSale() const;
     void addProductForSale(Product *product);
 
