@@ -49,6 +49,7 @@ Driver *Driver::getInstance()
 void Driver::run()
 {
     welcomeMessage();
+
     // Authenticate user type
     User *user = authenticateUserType();
     if (user == nullptr)
@@ -65,6 +66,39 @@ void Driver::run()
 }
 
 /**
+ * @brief Returns the user to the beginning menu.
+ *
+ * This function displays the beginning menu and allows the user to login, create a new account, or exit the program.
+ *
+ * @return void This function sets up the new user account.
+ */
+void Driver::returnToBeginningMenu()
+{
+    std::cout << "\n\n===================================" << std::endl;
+    std::cout << "  What would you like to do now?  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "1. Login" << std::endl;
+    std::cout << "2. Create a New Account" << std::endl;
+    std::cout << "3. Exit" << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+
+    double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
+    if (selection == 1)
+    {
+        authenticateUser();
+    }
+    else if (selection == 2)
+    {
+        createAccount();
+    }
+    else if (selection == 3)
+    {
+        std::cout << "Goodbye!\n";
+        exit(0);
+    }
+}
+
+/**
  * @brief Displays the welcome message and handles user input.
  *
  * This function displays a welcome message and gives options for the user to login, create an account, or exit the program.
@@ -72,7 +106,7 @@ void Driver::run()
  */
 void Driver::welcomeMessage()
 {
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Welcome to the Auction System  " << std::endl;
     std::cout << "===================================" << std::endl;
     std::cout << "1. Login" << std::endl;
@@ -135,7 +169,7 @@ bool Driver::showSellerMenu()
         return false;
     }
 
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Seller Menu  " << std::endl;
     std::cout << "===================================" << std::endl;
     std::cout << "1. Add a product for sale" << std::endl;
@@ -197,7 +231,7 @@ bool Driver::showBuyerMenu()
         std::cout << "Error: Current user isn't a buyer.\n";
         return false;
     }
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Buyer Menu  " << std::endl;
     std::cout << "===================================" << std::endl;
     std::cout << "1. View available products" << std::endl;
@@ -279,40 +313,19 @@ User *Driver::authenticateUser()
         std::cin >> choice;
         std::cin.ignore();
 
-        while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N')
-        {
-            std::cout << "Invalid choice. Please enter 'y' or 'n': ";
-            std::cin >> choice;
-            std::cin.ignore();
-        }
-
-        if (choice == 'y' || choice == 'Y')
+        if (validateYesNoInput(choice))
         {
             createAccount();
+
             // After creating the account, find the user again
             return findExistingUser(username);
         }
-        else if (choice == 'n' || choice == 'N')
+        else
         {
-            std::cout << "===================================" << std::endl;
-            std::cout << "  What would you like to do then?  " << std::endl;
-            std::cout << "===================================" << std::endl;
-            std::cout << "1. Login" << std::endl;
-            std::cout << "2. Exit" << std::endl;
-            std::cout << "-----------------------------------" << std::endl;
-            double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
-            if (selection == 1)
-            {
-                authenticateUser();
-            }
-            else if (selection == 2)
-            {
-                std::cout << "Goodbye!\n";
-                exit(0);
-            }
+            returnToBeginningMenu();
         }
     }
-    return nullptr; // This should never be reached
+    return nullptr;
 }
 
 /**
@@ -327,6 +340,7 @@ User *Driver::authenticateUserType()
 
     User *user = authenticateUser();
     std::string userType;
+
     // Prompt the user to specify their type (Buyer or Seller)
     while (userType != "Buyer" && userType != "Seller")
     {
@@ -460,7 +474,7 @@ User *Driver::login(const std::string &username)
  */
 void Driver::createAccount()
 {
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Create a New Account  " << std::endl;
     std::cout << "===================================" << std::endl;
 
@@ -832,4 +846,31 @@ template double getValidNumberChoice<double>(const std::string &, double, double
 void clearInputBuffer()
 {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+/**
+ * @brief Validates the user's input for a yes or no question.
+ *
+ * This function prompts the user to enter a yes or no answer and validates the input.
+ *
+ * @param choice The user's input.
+ * @return bool True if the input is valid, false otherwise.
+ */
+bool Driver::validateYesNoInput(char &choice)
+{
+    while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N')
+    {
+        std::cout << "Invalid choice. Please enter 'y' or 'n': ";
+        std::cin >> choice;
+        std::cin.ignore();
+    }
+
+    if (choice == 'y' || choice == 'Y')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

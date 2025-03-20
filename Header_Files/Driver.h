@@ -44,6 +44,7 @@ public:
     void mainMenu();
     bool showSellerMenu();
     bool showBuyerMenu();
+    void returnToBeginningMenu();
 
     /****************************************************
      * Authentication and Account Functions
@@ -92,6 +93,7 @@ public:
     void loadProducts(const std::string &filename);
     void saveData();
     Seller *getSellerByUsername(const std::string &username);
+    bool validateYesNoInput(char &choice);
 };
 
 // Helper function outside of class
