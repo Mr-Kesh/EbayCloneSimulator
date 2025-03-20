@@ -317,8 +317,6 @@ User *Driver::authenticateUser()
         {
             createAccount();
 
-            // After creating the account, find the user again
-            return findExistingUser(username);
         }
         else
         {
@@ -497,6 +495,8 @@ void Driver::createAccount()
         users[newSeller->getUsername()] = newSeller;
         std::cout << "Account created as a Seller successfully!" << std::endl;
     }
+
+    returnToBeginningMenu();
 }
 
 /**
