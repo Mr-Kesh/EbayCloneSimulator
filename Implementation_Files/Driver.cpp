@@ -49,9 +49,19 @@ Driver *Driver::getInstance()
 void Driver::run()
 {
     welcomeMessage();
+    // Authenticate user type
+    User *user = authenticateUserType();
+    if (user == nullptr)
+    {
+        std::cout << "User authentication failed.\n";
+        return; // Exit if authentication fails
+    }
 
-    // Exit if the welcome message returns - this means we're restarting or exiting
-    return;
+    // Set the current user
+    currentUser = user;
+
+    // Call the main menu
+    mainMenu();
 }
 
 /**
@@ -72,20 +82,11 @@ void Driver::welcomeMessage()
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
     if (selection == 1)
     {
-        User *user = authenticateUserType();
-        if (user != nullptr)
-        {
-            // Set the current user
-            currentUser = user;
-            // Call the main menu
-            mainMenu();
-        }
+        authenticateUser();
     }
     else if (selection == 2)
     {
         createAccount();
-        // After creating account, go back to welcome message
-        welcomeMessage();
     }
     else if (selection == 3)
     {
@@ -268,8 +269,8 @@ User *Driver::authenticateUser()
     User *existingUser = findExistingUser(username);
     if (existingUser != nullptr)
     {
+
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
-        return existingUser;
     }
     else
     {
@@ -288,10 +289,8 @@ User *Driver::authenticateUser()
         if (choice == 'y' || choice == 'Y')
         {
             createAccount();
-            // At this point a new account has been created
-            // We need to return to the main menu for re-authentication
-            welcomeMessage();
-            return nullptr; // This will cause the run() method to return
+            // After creating the account, find the user again
+            return findExistingUser(username);
         }
         else
         {
@@ -311,13 +310,23 @@ User *Driver::authenticateUser()
  */
 User *Driver::authenticateUserType()
 {
-    User *user = authenticateUser();
-    if (user == nullptr)
-    {
-        return nullptr; // Return null if authenticateUser failed
-    }
 
-    // User type is already set during User creation, no need to ask again
+    User *user = authenticateUser();
+    std::string userType;
+    // Prompt the user to specify their type (Buyer or Seller)
+    while (userType != "Buyer" && userType != "Seller")
+    {
+        std::cout << "Are you a Buyer or a Seller? ";
+        std::cin >> userType;
+        std::cin.ignore();
+
+        // Check if the input is valid
+        if (userType != "Buyer" && userType != "Seller")
+        {
+            std::cout << "Invalid user type.\n";
+            break;
+        }
+    }
     return user;
 }
 
