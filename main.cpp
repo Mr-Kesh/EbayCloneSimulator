@@ -6,11 +6,7 @@ int main()
     // Get the singleton instance of the Driver
     Driver *driver = Driver::getInstance();
 
-    // Load data from CSV files
-    driver->loadUsers("users.csv");
-    driver->loadProducts("products.csv");
-
-    // Start the game
+    // Run the application
     driver->run();
 
     return 0;

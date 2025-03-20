@@ -1,9 +1,9 @@
-#include "Seller.h"
+#include "Header_Files/Seller.h"
 #include <iostream>
 #include <limits>
-#include "ProductFactory.h"
-#include "User.h"
-#include "Driver.h"
+#include "Header_Files/ProductFactory.h"
+#include "Header_Files/User.h"
+#include "Header_Files/Driver.h"
 
 // Constructor
 Seller::Seller(const std::string &uname, long phone, const std::string &addr, double bal) : User(uname, phone, addr, bal)
@@ -11,8 +11,30 @@ Seller::Seller(const std::string &uname, long phone, const std::string &addr, do
     user_type_ = "Seller";
 }
 
-// Makes sure that the user can only enter a number between a min and max value and is valid
-extern double getValidNumberChoice(const std::string &prompt, double min, double max);
+// Define getValidNumberChoice template function
+template <typename T>
+T getValidNumberChoice(const std::string &prompt, T min, T max)
+{
+    T number;
+    std::cout << prompt;
+
+    while (!(std::cin >> number) || number < min || number > max)
+    {
+        // Explain the error
+        std::cout << "Error: Please enter a number between " << min << " and " << max << ": ";
+
+        // Clear the previous input (Resets cin so we can take a new input)
+        std::cin.clear();
+
+        // Discard previous input (Gets rid of the invalid input)
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
+    // Consume the newline left in the buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    return number;
+}
 
 /**
  * @brief Posts a product for sale.
@@ -172,7 +194,7 @@ Product *Seller::addProduct()
     std::getline(std::cin, name);
 
     // Get main category choice using the new function
-    int categoryChoice = getValidNumberChoice("Select category:\n1. Electronics\n2. Clothing\n3. Furniture\n4. Books\n5. Tools\nEnter choice: ", 1, 5);
+    int categoryChoice = getValidNumberChoice<int>("Select category:\n1. Electronics\n2. Clothing\n3. Furniture\n4. Books\n5. Tools\nEnter choice: ", 1, 5);
     // Process category selection using helper functions
     switch (categoryChoice)
     {
@@ -202,10 +224,10 @@ Product *Seller::addProduct()
     }
 
     // Get price with validation
-    price = getValidNumberChoice("Enter base price: ", 0.01, std::numeric_limits<double>::max());
+    price = getValidNumberChoice<double>("Enter base price: ", 0.01, std::numeric_limits<double>::max());
 
     // Get quality with validation
-    qualityChoice = getValidNumberChoice("Select product quality:\n0: New\n1: Used_VeryGood\n2: Used_Good\n3: Used_Okay\nEnter choice: ", 0, 3);
+    qualityChoice = getValidNumberChoice<int>("Select product quality:\n0: New\n1: Used_VeryGood\n2: Used_Good\n3: Used_Okay\nEnter choice: ", 0, 3);
     Quality quality = static_cast<Quality>(qualityChoice);
 
     // Step 5: Create the product using `ProductFactory`
@@ -248,7 +270,7 @@ Product *Seller::addProduct()
 void Seller::getElectronicsDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice("Select subcategory:\n1. Computer\n2. Phone\n3. TV\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select subcategory:\n1. Computer\n2. Phone\n3. TV\n", 1, 3);
 
     std::string customCategory;
     int typeChoice;
@@ -257,7 +279,7 @@ void Seller::getElectronicsDetails(std::string &subcategory, std::string &specif
     if (subcategoryChoice == 1)
     { // Computer
         subcategory = "Computer";
-        typeChoice = getValidNumberChoice("Select computer type:\n1. Laptop\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select computer type:\n1. Laptop\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -273,7 +295,7 @@ void Seller::getElectronicsDetails(std::string &subcategory, std::string &specif
     else if (subcategoryChoice == 2)
     { // Phone
         subcategory = "Phone";
-        typeChoice = getValidNumberChoice("Select phone type:\n1. Smartphone\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select phone type:\n1. Smartphone\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -289,7 +311,7 @@ void Seller::getElectronicsDetails(std::string &subcategory, std::string &specif
     else if (subcategoryChoice == 3)
     { // TV
         subcategory = "TV";
-        typeChoice = getValidNumberChoice("Select TV type:\n1. Smart TV\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select TV type:\n1. Smart TV\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -313,7 +335,7 @@ void Seller::getElectronicsDetails(std::string &subcategory, std::string &specif
 void Seller::getClothingDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice("Select type:\n1. Shirt\n2. Pants\n3. Shoes\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select type:\n1. Shirt\n2. Pants\n3. Shoes\n", 1, 3);
 
     std::string customCategory;
     int typeChoice;
@@ -322,7 +344,7 @@ void Seller::getClothingDetails(std::string &subcategory, std::string &specificT
     if (subcategoryChoice == 1)
     { // Shirt
         subcategory = "Shirt";
-        typeChoice = getValidNumberChoice("Select shirt type:\n1. T-Shirt\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select shirt type:\n1. T-Shirt\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -338,7 +360,7 @@ void Seller::getClothingDetails(std::string &subcategory, std::string &specificT
     else if (subcategoryChoice == 2)
     { // Pants
         subcategory = "Pants";
-        typeChoice = getValidNumberChoice("Select pants type:\n1. Jeans\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select pants type:\n1. Jeans\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -354,7 +376,7 @@ void Seller::getClothingDetails(std::string &subcategory, std::string &specificT
     else if (subcategoryChoice == 3)
     { // Shoes
         subcategory = "Shoes";
-        typeChoice = getValidNumberChoice("Select shoes type:\n1. Sneakers\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select shoes type:\n1. Sneakers\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -378,7 +400,7 @@ void Seller::getClothingDetails(std::string &subcategory, std::string &specificT
 void Seller::getFurnitureDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice("Select furniture type:\n1. Chair\n2. Table\n3. Bed\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select furniture type:\n1. Chair\n2. Table\n3. Bed\n", 1, 3);
 
     std::string customCategory;
     int typeChoice;
@@ -387,7 +409,7 @@ void Seller::getFurnitureDetails(std::string &subcategory, std::string &specific
     if (subcategoryChoice == 1)
     { // Chair
         subcategory = "Chair";
-        typeChoice = getValidNumberChoice("Select chair type:\n1. Office Chair\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select chair type:\n1. Office Chair\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -403,7 +425,7 @@ void Seller::getFurnitureDetails(std::string &subcategory, std::string &specific
     else if (subcategoryChoice == 2)
     { // Table
         subcategory = "Table";
-        typeChoice = getValidNumberChoice("Select table type:\n1. Coffee Table\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select table type:\n1. Coffee Table\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -419,7 +441,7 @@ void Seller::getFurnitureDetails(std::string &subcategory, std::string &specific
     else if (subcategoryChoice == 3)
     { // Bed
         subcategory = "Bed";
-        typeChoice = getValidNumberChoice("Select bed type:\n1. Twin Bed\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select bed type:\n1. Twin Bed\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -443,7 +465,7 @@ void Seller::getFurnitureDetails(std::string &subcategory, std::string &specific
 void Seller::getBookDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice("Select book type:\n1. Fiction\n2. Non-Fiction\n3. Comic\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select book type:\n1. Fiction\n2. Non-Fiction\n3. Comic\n", 1, 3);
 
     std::string customCategory;
     int typeChoice;
@@ -452,7 +474,7 @@ void Seller::getBookDetails(std::string &subcategory, std::string &specificType)
     if (subcategoryChoice == 1)
     { // Fiction
         subcategory = "Fiction";
-        typeChoice = getValidNumberChoice("Select fiction type:\n1. Novel\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select fiction type:\n1. Novel\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -468,7 +490,7 @@ void Seller::getBookDetails(std::string &subcategory, std::string &specificType)
     else if (subcategoryChoice == 2)
     { // Non-Fiction
         subcategory = "Non-Fiction";
-        typeChoice = getValidNumberChoice("Select non-fiction type:\n1. Textbook\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select non-fiction type:\n1. Textbook\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -484,7 +506,7 @@ void Seller::getBookDetails(std::string &subcategory, std::string &specificType)
     else if (subcategoryChoice == 3)
     { // Comic
         subcategory = "Comic";
-        typeChoice = getValidNumberChoice("Select comic type:\n1. Graphic Novel\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select comic type:\n1. Graphic Novel\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -508,7 +530,7 @@ void Seller::getBookDetails(std::string &subcategory, std::string &specificType)
 void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice("Select tool type:\n1. Hand Tool\n2. Power Tool\n3. Garden Tool\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select tool type:\n1. Hand Tool\n2. Power Tool\n3. Garden Tool\n", 1, 3);
 
     std::string customCategory;
     int typeChoice;
@@ -517,7 +539,7 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
     if (subcategoryChoice == 1)
     { // Hand Tool
         subcategory = "Hand Tool";
-        typeChoice = getValidNumberChoice("Select hand tool type:\n1. Hammer\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select hand tool type:\n1. Hammer\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -533,7 +555,7 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
     else if (subcategoryChoice == 2)
     { // Power Tool
         subcategory = "Power Tool";
-        typeChoice = getValidNumberChoice("Select power tool type:\n1. Drill\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select power tool type:\n1. Drill\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -549,7 +571,7 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
     else if (subcategoryChoice == 3)
     { // Garden Tool
         subcategory = "Garden Tool";
-        typeChoice = getValidNumberChoice("Select garden tool type:\n1. Lawn Mower\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select garden tool type:\n1. Lawn Mower\n2. Custom\n", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -654,7 +676,3 @@ int Seller::getNextProductId()
     }
     return maxId + 1;
 }
-
-// Template instantiation for getValidNumberChoice
-template double getValidNumberChoice<double>(const std::string &, double, double);
-template int getValidNumberChoice<int>(const std::string &, int, int);
