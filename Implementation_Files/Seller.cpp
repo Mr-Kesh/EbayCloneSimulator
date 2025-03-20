@@ -626,7 +626,7 @@ void Seller::viewSalesHistory(int productId)
 Seller *Seller::getSellerByUsername(const std::string &username)
 {
     // Use the Driver's sellers collection to find the seller by username
-    for (Seller *seller : Driver::getInstance()->sellers)
+    for (Seller *seller : Driver::getInstance()->getSellers())
     {
         if (seller->getUsername() == username)
         {
