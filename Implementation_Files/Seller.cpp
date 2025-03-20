@@ -654,3 +654,7 @@ int Seller::getNextProductId()
     }
     return maxId + 1;
 }
+
+// Template instantiation for getValidNumberChoice
+template double getValidNumberChoice<double>(const std::string &, double, double);
+template int getValidNumberChoice<int>(const std::string &, int, int);

@@ -127,3 +127,35 @@ bool Product::addBid(Buyer *buyer, double amount)
     }
     return false;
 }
+
+/**
+ * @brief Displays the sales history of the product.
+ *
+ * @return void This function shows the sales history of the product.
+ */
+void Product::viewSalesHistory()
+{
+    std::cout << "===================================" << std::endl;
+    std::cout << "  Sales History for Product #" << productId_ << "  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "Name: " << name_ << std::endl;
+    std::cout << "Category: " << category_ << std::endl;
+    std::cout << "Base Price: $" << basePrice_ << std::endl;
+    std::cout << "Status: " << (isActive_ ? "Active" : "Inactive") << ", " << (isSold_ ? "Sold" : "Not Sold") << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+
+    // Additional sales history details could be shown here
+    if (isSold_)
+    {
+        Buyer *highestBidder = getHighestBidder();
+        if (highestBidder)
+        {
+            std::cout << "Sold to: " << highestBidder->getUsername() << std::endl;
+            std::cout << "Sale Price: $" << getHighestBidAmount() << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "This product has not been sold yet." << std::endl;
+    }
+}
