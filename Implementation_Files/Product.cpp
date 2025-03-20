@@ -1,5 +1,8 @@
-#include "Product.h"
+#include "Header_Files/Product.h"
+#include "Header_Files/Buyer.h"
+#include "Header_Files/Seller.h"
 #include <iostream>
+#include <algorithm> // Include for max_element
 
 /**
  * @brief Gets the buyer with the highest bid for this product.
@@ -112,10 +115,6 @@ void Product::displayProductInfo() const
               << " | Price: $" << basePrice_
               << " | Status: " << (isActive_ ? "Bidding Open" : "Bidding Closed")
               << "\n-----------------------------------" << std::endl;
-}
-
-void Seller::viewSalesHistory(const Product &product) const
-{
 }
 
 bool Product::addBid(Buyer *buyer, double amount)

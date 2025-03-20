@@ -27,7 +27,7 @@ extern double getValidNumberChoice(const std::string &prompt, double min, double
 void Seller::postProduct()
 {
     std::cout << "Posting a new product for sale!" << std::endl;
-    addProduct(this);
+    addProduct();
 }
 
 /**
@@ -221,7 +221,7 @@ Product *Seller::addProduct()
     if (newProduct)
     {
         // Add the new product to our products map using its ID
-        Driver::getInstance()->products[newProduct->getProductId()] = newProduct;
+        Driver::getInstance()->addProduct(newProduct->getProductId(), newProduct);
 
         // Add the product to the seller's list of products for sale
         productsForSale_.push_back(newProduct);
@@ -645,7 +645,7 @@ int Seller::getNextProductId()
 {
     int maxId = 0;
     // Use the Driver's products map
-    for (const auto &pair : Driver::getInstance()->products)
+    for (const auto &pair : Driver::getInstance()->getProducts())
     {
         if (pair.first > maxId)
         {

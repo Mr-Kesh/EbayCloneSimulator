@@ -56,8 +56,16 @@ public:
      * Account Management Functions
      ****************************************************
      */
-    void checkAccountBalance() const;
+    double checkAccountBalance() const;
     void updateUserInformation() override;
+
+    /****************************************************
+     * Helper Functions
+     ****************************************************
+     */
+    bool soldOrNot(const Product *product) const;
+    int getNextProductId();
+    static Seller *getSellerByUsername(const std::string &username);
 };
 
 #endif // SELLER_H

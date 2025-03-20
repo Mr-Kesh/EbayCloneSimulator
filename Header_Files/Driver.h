@@ -66,6 +66,8 @@ public:
     Product *getProductById(int productId);
     std::vector<Product *> getProductsBySeller(Seller *seller);
     int getNextProductId();
+    const std::map<int, Product *> &getProducts() const { return products; }
+    void addProduct(int productId, Product *product);
 
     /****************************************************
      * Bid Functions

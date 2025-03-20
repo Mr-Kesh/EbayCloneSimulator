@@ -4,10 +4,10 @@
 #include <vector>   // For std::vector
 #include <map>      // For std::map
 #include <limits>   // For std::numeric_limits
-#include "Header FIles/Driver.h"
-#include "Header FIles/Bid.h"
-#include "Header FIles/UserFactory.h"
-#include "Header FIles/ProductFactory.h"
+#include "Header_Files/Driver.h"
+#include "Header_Files/Bid.h"
+#include "Header_Files/UserFactory.h"
+#include "Header_Files/ProductFactory.h"
 
 Driver *Driver::instance = nullptr;
 
@@ -514,6 +514,17 @@ Product *Driver::getProductById(int productId)
         return it->second;
     }
     return nullptr;
+}
+
+/**
+ * @brief Adds a product to the products map.
+ *
+ * @param productId The ID of the product.
+ * @param product The product to add.
+ */
+void Driver::addProduct(int productId, Product *product)
+{
+    products[productId] = product;
 }
 
 /**

@@ -1,18 +1,18 @@
 #include <iostream>
-#include "Implementation Files/Driver.cpp"
+#include "Implementation_Files/Driver.cpp"
 
-
-int main(){
+int main()
+{
 
     // Get the Singleton instance of Driver
-    Driver* driver = Driver::getInstance();
+    Driver *driver = Driver::getInstance();
 
     // Load data from CSV files
     driver->loadUsers("users.csv");
     driver->loadProducts("products.csv");
 
     // Start the game
-    driver->run(); 
+    driver->run();
 
     return 0;
 }
