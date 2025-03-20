@@ -10,6 +10,17 @@ class Seller : public User
 {
 private:
     std::vector<Product> productsForSale_; // List of products the seller is selling
+
+    /****************************************************
+     * Product Detail Functions
+     ****************************************************
+    */
+    Product *addProduct();
+    void getElectronicsDetails(std::string &subcategory, std::string &specificType);
+    void getClothingDetails(std::string &subcategory, std::string &specificType);
+    void getFurnitureDetails(std::string &subcategory, std::string &specificType);
+    void getBookDetails(std::string &subcategory, std::string &specificType);
+    void getToolDetails(std::string &subcategory, std::string &specificType);
 public:
 
     Seller(const std::string &uname, long phone, const std::string &addr, double bal);
@@ -43,17 +54,6 @@ public:
     */
     double checkAccountBalance() const;
     void updateUserInformation() override;
-
-    /****************************************************
-     * Product Detail Functions
-     ****************************************************
-    */
-    Product *addProduct();
-    void getElectronicsDetails(std::string &subcategory, std::string &specificType);
-    void getClothingDetails(std::string &subcategory, std::string &specificType);
-    void getFurnitureDetails(std::string &subcategory, std::string &specificType);
-    void getBookDetails(std::string &subcategory, std::string &specificType);
-    void getToolDetails(std::string &subcategory, std::string &specificType);
 };
 
 #endif // _SELLER_H_

@@ -31,8 +31,6 @@ void Seller::postProduct()
 }
 
 
-
-
 /**
  * @brief Opens bidding on a product.
  *

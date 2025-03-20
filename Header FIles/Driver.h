@@ -54,7 +54,7 @@ public:
     Buyer *createBuyer();
     Seller *createSeller();
     User *login(const std::string &username);
-    void createAccount(bool isSeller);
+    void createAccount();
     User *findExistingUser(const std::string &username);
 
     /****************************************************

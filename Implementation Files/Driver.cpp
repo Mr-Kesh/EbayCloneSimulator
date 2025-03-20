@@ -48,6 +48,7 @@ Driver *Driver::getInstance()
  */
 void Driver::run()
 {
+    welcomeMessage();
     // Authenticate user type
     User *user = authenticateUserType();
     if (user == nullptr)
@@ -85,7 +86,7 @@ void Driver::welcomeMessage()
     }
     else if (selection == 2)
     {
-        createAccount(existingUser->getUserType() == "Buyer");
+        createAccount();
     }
     else if (selection == 3)
     {
@@ -93,6 +94,9 @@ void Driver::welcomeMessage()
         exit(0);
     }
 }
+
+
+
 
 /**
  * @brief Displays the main menu for the user.
@@ -272,7 +276,7 @@ User *Driver::authenticateUser()
 
         if (choice == 'y' || choice == 'Y')
         {
-            createAccount(existingUser->getUserType() == "Buyer");
+            createAccount();
         }
         else
         {
@@ -420,18 +424,29 @@ User *Driver::login(const std::string &username)
  * @param isSeller A boolean that tells us if the new account is for a seller (true) or a buyer (false).
  * @return void This function sets up the new user account.
  */
-void Driver::createAccount(bool isSeller)
+void Driver::createAccount()
 {
-    if (isSeller)
-    {
 
-        Seller *newSeller = createSeller();
-        users[newSeller->getUsername()] = newSeller;
-    }
-    else
+    std::cout << "===================================" << std::endl;
+    std::cout << "  Create a New Account  " << std::endl;
+    std::cout << "===================================" << std::endl;
+
+    std::cout << "Are you signing up as a: " << std::endl;
+    std::cout << "1. Buyer" << std::endl;
+    std::cout << "2. Seller" << std::endl;
+
+    double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
+    if (selection == 1)
     {
         Buyer *newBuyer = createBuyer();
         users[newBuyer->getUsername()] = newBuyer;
+        std::cout << "Account created as a Buyer successfully!" << std::endl;
+    }
+    else
+    {
+        Seller *newSeller = createSeller();
+        users[newSeller->getUsername()] = newSeller;
+        std::cout << "Account created as a Seller successfully!" << std::endl;
     }
 }
 
