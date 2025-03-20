@@ -24,22 +24,14 @@ extern double getValidNumberChoice(const std::string &prompt, double min, double
  * @param startingPrice The starting price of the product.
  * @param quality The quality of the product.
  */
-void Seller::postProduct(const std::string &name, const std::string &category, double startingPrice, std::string quality)
+void Seller::postProduct()
 {
-    // Implementation...
+    std::cout << "Posting a new product for sale!" << std::endl;
+    addProduct(this); 
 }
 
-/**
- * @brief Displays the historical prices of a product.
- *
- * This function displays the historical prices of a product.
- *
- * @param category The category of the product.
- */
-void Seller::viewHistoricalPrices(const std::string &category) const
-{
-    // Implementation...
-}
+
+
 
 /**
  * @brief Opens bidding on a product.
@@ -218,7 +210,6 @@ void Seller::addProduct(Seller *seller)
 
     // Get quality with validation
     qualityChoice = getValidNumberChoice("Select product quality:\n0: New\n1: Used_VeryGood\n2: Used_Good\n3: Used_Okay\nEnter choice: ", 0, 3);
-
     Quality quality = static_cast<Quality>(qualityChoice);
 
     // Step 5: Create the product using `ProductFactory`
@@ -665,3 +656,5 @@ int Seller::getNextProductId()
     }
     return maxId + 1;
 }
+
+

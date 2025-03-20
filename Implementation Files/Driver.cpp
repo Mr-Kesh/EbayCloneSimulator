@@ -123,8 +123,15 @@ void Driver::mainMenu()
  *
  * @return void This function shows the options available to the user based on their role.
  */
-bool Driver::showSellerMenu()
-{
+bool Driver::showSellerMenu() {
+
+    // Basically just in case it's not a seller
+    Seller* seller = dynamic_cast<Seller*>(currentUser);
+    if (!seller) {
+        std::cout << "Error: Current user isn't a seller.\n";
+        return false;
+    }
+
     std::cout << "===================================" << std::endl;
     std::cout << "  Seller Menu  " << std::endl;
     std::cout << "===================================" << std::endl;
@@ -137,32 +144,36 @@ bool Driver::showSellerMenu()
 
     double selection = getValidNumberChoice("Select an option: ", 1, 6);
 
-    switch (selection)
-    {
-    case 1:
-        static_cast<Seller *>(currentUser)->addProduct();
-        break;
-    case 2:
-        Seller::openBidding(static_cast<Seller *>(currentUser), productId);
-        break;
-    case 3:
-        Seller::closeBidding(static_cast<Seller *>(currentUser), productId);
-        break;
-    case 4:
-        Seller::viewSalesHistory(static_cast<Seller *>(currentUser), productId);
-        break;
-    case 5:
-        Seller::updateUserInformation(static_cast<Seller *>(currentUser));
-        break;
-    case 6:
-        std::cout << "Goodbye!\n";
-        return false; // Return false to exit
-    default:
-        std::cout << "Invalid selection. Please try again.\n";
-        break;
+    switch (selection) {
+        case 1:
+            seller->addProduct();
+            break;
+        case 2: {
+            int productId = getValidNumberChoice("Enter Product ID to open for bidding: ", 1000, 9999);
+            seller->openBidding(productId);
+            break;
+        }
+        case 3: {
+            int productId = getValidNumberChoice("Enter Product ID to close bidding: ", 1000, 9999);
+            seller->closeBidding(productId);
+            break;
+        }
+        case 4:
+            seller->viewSalesHistory();
+            break;
+        case 5:
+            seller->updateUserInformation();
+            break;
+        case 6:
+            std::cout << "Goodbye!\n";
+            return false; // Exit the seller menu
+        default:
+            std::cout << "Invalid selection. Please try again.\n";
+            break;
     }
     return true; // Continue the menu loop
 }
+
 
 /**
  * @brief Displays the buyer menu for the user.
@@ -171,6 +182,12 @@ bool Driver::showSellerMenu()
  */
 bool Driver::showBuyerMenu()
 {
+    // Basically just in case it's not a seller
+    Buyer* buyer = dynamic_cast<Buyer*>(currentUser);
+    if (!buyer) {
+        std::cout << "Error: Current user isn't a buyer.\n";
+        return false;
+    }
     std::cout << "===================================" << std::endl;
     std::cout << "  Buyer Menu  " << std::endl;
     std::cout << "===================================" << std::endl;
@@ -186,22 +203,23 @@ bool Driver::showBuyerMenu()
     std::cin >> selection;
     std::cin.ignore();
 
+    // I just static casted just in case it's not a buyer
     switch (selection)
     {
     case 1:
-        Buyer::displayAvailableProducts();
+        buyer->displayAvailableProducts();
         break;
     case 2:
-        Buyer::placeBid(static_cast<Buyer *>(currentUser), productId, bidAmount);
+        buyer->placeBid(static_cast<Buyer *>(currentUser), productId, bidAmount);
         break;
     case 3:
-        Buyer::viewBiddingHistory(static_cast<Buyer *>(currentUser), productId);
+        buyer->viewBiddingHistory(static_cast<Buyer *>(currentUser), productId);
         break;
     case 4:
-        Buyer::viewPurchaseHistory(static_cast<Buyer *>(currentUser), productId);
+        buyer->viewPurchaseHistory(static_cast<Buyer *>(currentUser), productId);
         break;
     case 5:
-        Buyer::updateUserInformation(static_cast<Buyer *>(currentUser));
+        buyer->updateUserInformation(static_cast<Buyer *>(currentUser));
         break;
     case 6:
         std::cout << "Goodbye!\n";

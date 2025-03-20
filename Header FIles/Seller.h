@@ -18,7 +18,7 @@ public:
      * Product Management Functions
      ****************************************************
     */
-    void postProduct(const std::string &name, const std::string &category, double startingPrice, std::string quality);
+    void postProduct();
     void addProductForSale(const Product &product);
     void displayProductsForSale() const;
 
@@ -35,7 +35,6 @@ public:
      * Sales History Functions
      ****************************************************
     */
-    void viewHistoricalPrices(const std::string &category) const;
     void viewSalesHistory(int productId);
 
     /****************************************************
