@@ -292,10 +292,24 @@ User *Driver::authenticateUser()
             // After creating the account, find the user again
             return findExistingUser(username);
         }
-        else
+        else if (choice == 'n' || choice == 'N')
         {
-            std::cout << "Goodbye!\n";
-            exit(0);
+            std::cout << "===================================" << std::endl;
+            std::cout << "  What would you like to do then?  " << std::endl;
+            std::cout << "===================================" << std::endl;
+            std::cout << "1. Login" << std::endl;
+            std::cout << "2. Exit" << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
+            double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
+            if (selection == 1)
+            {
+                authenticateUser();
+            }
+            else if (selection == 2)
+            {
+                std::cout << "Goodbye!\n";
+                exit(0);
+            }
         }
     }
     return nullptr; // This should never be reached
@@ -455,7 +469,7 @@ void Driver::createAccount()
     std::cout << "2. Seller" << std::endl;
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+    clearInputBuffer(); // Clear input buffer
 
     if (selection == 1)
     {
@@ -806,3 +820,16 @@ T getValidNumberChoice(const std::string &prompt, T min, T max)
 
 template int getValidNumberChoice<int>(const std::string &, int, int);
 template double getValidNumberChoice<double>(const std::string &, double, double);
+
+/**
+ * @brief Clears the input buffer to prevent issues with getline after cin.
+ *
+ * This function discards any remaining characters in the input buffer,
+ * ensuring that subsequent input operations work correctly.
+ *
+ * @return void This function does not return a value.
+ */
+void clearInputBuffer()
+{
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
