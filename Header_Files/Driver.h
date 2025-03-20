@@ -97,5 +97,6 @@ public:
 // Helper function outside of class
 template <typename T>
 T getValidNumberChoice(const std::string &prompt, T min, T max);
+void clearInputBuffer(); // Clear input buffer
 
 #endif // DRIVER_H_
