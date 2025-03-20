@@ -1,35 +1,31 @@
-#ifndef _BUYER_H_
-#define _BUYER_H_
+#ifndef BUYER_H
+#define BUYER_H
 
 #include "User.h"
-#include "Product.h"
 #include <vector>
+
+// Forward declarations
+class Product;
 
 class Buyer : public User
 {
 private:
-    std::vector<Product *> purchaseHistory_;          // Stores products the buyer has won
-    std::vector<std::pair<int, double>> bid_history_; // Product IDs and bid amounts
+    std::vector<int> purchaseHistory_;
+    std::vector<int> biddingHistory_;
+
 public:
-    // Constructor
-    Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
+    Buyer(const std::string &username, long phoneNumber, const std::string &address, double balance);
 
-    // std::string getUserType() const override;
-
-    // Bidding actions
-    bool placeBid(Product &product, double bidAmount);
-    void viewActiveProducts(const std::vector<Product> &allProducts) const;
-    void viewBidsPlaced() const;
-    void finalizePurchase(Product &product);
-
-    // Purchase history
-    void viewPurchaseHistory() const;
-    void updateUserInformation() override;
-
-    // New methods moved from Driver
+    // Bidding functions
     bool placeBid(int productId, double amount);
     void viewBiddingHistory(int productId);
     void viewPurchaseHistory(int productId);
+
+    // Display available products
+    void displayAvailableProducts() const;
+
+    // User information management
+    void updateUserInformation() override;
 };
 
-#endif // _BUYER_H_
+#endif // BUYER_H

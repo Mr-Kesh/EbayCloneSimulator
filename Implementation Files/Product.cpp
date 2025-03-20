@@ -117,3 +117,14 @@ void Product::displayProductInfo() const
 void Seller::viewSalesHistory(const Product &product) const
 {
 }
+
+bool Product::addBid(Buyer *buyer, double amount)
+{
+    // Check if this is a higher bid
+    if (amount > getHighestBidAmount())
+    {
+        bids_[buyer] = amount;
+        return true;
+    }
+    return false;
+}

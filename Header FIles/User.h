@@ -22,14 +22,12 @@ public:
     // Virtual destructor (important for base classes)
     virtual ~User() {}
 
-    virtual std::string getUserType() const {return user_type_;}
-
     // Getters - inline implementation
     std::string getUsername() const { return username_; }
     long getPhoneNumber() const { return phone_no_; }
     std::string getAddress() const { return address_; }
     double getBalance() const { return account_balance_; }
-    std::string getUserType() const { return user_type_; }
+    virtual std::string getUserType() const { return user_type_; }
     // Setters
     void setUsername(std::string new_username) { username_ = new_username; }
     void setPhoneNumber(long new_phone_no) { phone_no_ = new_phone_no; }

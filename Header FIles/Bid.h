@@ -1,27 +1,31 @@
-#ifndef BID_H_
-#define BID_H_
+#ifndef BID_H
+#define BID_H
 
-#include "Buyer.h"
-#include "Product.h"
+#include <string>
 
-class Bid {
+// Forward declarations
+class Buyer;
+class Product;
+
+class Bid
+{
 private:
-    Buyer* buyer_;   // The buyer placing the bid
-    Product* product_; // The product being bid on
-    double bidAmount_; 
-
+    int bidId_;
+    Buyer *buyer_;
+    int productId_;
+    double amount_;
+    std::string timestamp_;
 
 public:
     // Constructor
-    Bid(Buyer* buyer, Product* product, double bidAmount);
+    Bid(int bidId, Buyer *buyer, int productId, double amount);
 
     // Getters
-    Buyer* getBuyer() const { return buyer_; }
-    Product* getProduct() const { return product_; }
-    double getBidAmount() const { return bidAmount_; }
-
-    // Display bid information
-    void displayBidInfo() const;
+    int getBidId() const { return bidId_; }
+    Buyer *getBuyer() const { return buyer_; }
+    int getProductId() const { return productId_; }
+    double getAmount() const { return amount_; }
+    std::string getTimestamp() const { return timestamp_; }
 };
 
-#endif // BID_H_
+#endif // BID_H

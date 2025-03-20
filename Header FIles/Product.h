@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "User.h"
-#include "Buyer.h"
-#include "Seller.h"
+
+// Forward declarations to break circular dependency
+class User;
+class Buyer;
+class Seller;
 
 enum class Quality
 {
@@ -41,17 +43,19 @@ public:
     std::string getName() const { return name_; }
     std::string getCategory() const { return category_; }
     double getBasePrice() const { return basePrice_; }
-    bool isActive(int productId) const { return isActive_; }
+    bool isActive() const { return isActive_; }
     bool isSold() const { return isSold_; }
     Quality getQuality() const { return quality_; }
     Seller *getSeller() const { return seller_; }
     Buyer *getHighestBidder() const;
     double getHighestBidAmount() const;
-    
 
     // Setters
     void setIsActive(bool active) { isActive_ = active; }
     void setIsSold(bool sold) { isSold_ = sold; }
+
+    // Bid management
+    bool addBid(Buyer *buyer, double amount);
 
     void openBidding();
     void closeBidding();
