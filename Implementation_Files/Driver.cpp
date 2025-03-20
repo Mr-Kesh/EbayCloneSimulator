@@ -446,7 +446,6 @@ User *Driver::login(const std::string &username)
  */
 void Driver::createAccount()
 {
-
     std::cout << "===================================" << std::endl;
     std::cout << "  Create a New Account  " << std::endl;
     std::cout << "===================================" << std::endl;
@@ -456,6 +455,8 @@ void Driver::createAccount()
     std::cout << "2. Seller" << std::endl;
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
+
     if (selection == 1)
     {
         Buyer *newBuyer = createBuyer();
