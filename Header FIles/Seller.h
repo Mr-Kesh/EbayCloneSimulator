@@ -6,26 +6,55 @@
 #include <string>
 #include "Product.h"
 
-
-class Seller : public User {
+class Seller : public User
+{
 private:
     std::vector<Product> productsForSale_; // List of products the seller is selling
 public:
-    // Constructor
+
     Seller(const std::string &uname, long phone, const std::string &addr, double bal);
 
-    //std::string getUserType() const override;
-
-    // Seller Actions
-    void postProduct(const std::string& name, const std::string& category, double startingPrice, std::string quality);
-    void viewHistoricalPrices(const std::string& category) const;
-    void openBid(Product& product);
-    void closeBid(Product& product);
-    bool soldOrNot(const Product& product) const;
-    double checkAccountBalance() const;
-
-    void addProductForSale(const Product& product);
+    /****************************************************
+     * Product Management Functions
+     ****************************************************
+    */
+    void postProduct(const std::string &name, const std::string &category, double startingPrice, std::string quality);
+    void addProductForSale(const Product &product);
     void displayProductsForSale() const;
+
+    /****************************************************
+     * Bidding Functions
+     ****************************************************
+    */
+    void openBid(Product &product);
+    void closeBid(Product &product);
+    void openBidding(int productId);
+    void closeBidding(int productId);
+
+    /****************************************************
+     * Sales History Functions
+     ****************************************************
+    */
+    void viewHistoricalPrices(const std::string &category) const;
+    void viewSalesHistory(int productId);
+
+    /****************************************************
+     * Account Management Functions
+     ****************************************************
+    */
+    double checkAccountBalance() const;
+    void updateUserInformation() override;
+
+    /****************************************************
+     * Product Detail Functions
+     ****************************************************
+    */
+    Product *addProduct();
+    void getElectronicsDetails(std::string &subcategory, std::string &specificType);
+    void getClothingDetails(std::string &subcategory, std::string &specificType);
+    void getFurnitureDetails(std::string &subcategory, std::string &specificType);
+    void getBookDetails(std::string &subcategory, std::string &specificType);
+    void getToolDetails(std::string &subcategory, std::string &specificType);
 };
 
-#endif  // _SELLER_H_
+#endif // _SELLER_H_
