@@ -27,9 +27,8 @@ extern double getValidNumberChoice(const std::string &prompt, double min, double
 void Seller::postProduct()
 {
     std::cout << "Posting a new product for sale!" << std::endl;
-    addProduct(this); 
+    addProduct(this);
 }
-
 
 /**
  * @brief Opens bidding on a product.
@@ -116,7 +115,7 @@ void Seller::displayProductsForSale() const
 
 /**
  * @brief Updates the user's information.
- *  
+ *
  * This function allows the user to update their username, phone number, and address.
  * It prompts the user to enter new values for these fields, and only updates them if
  * new values are provided.
@@ -224,6 +223,10 @@ void Seller::addProduct(Seller *seller)
     {
         // Add the new product to our products map using its ID
         products[newProduct->getProductId()] = newProduct;
+
+        // Add the product to the seller's list of products for sale
+        productsForSale_.push_back(newProduct);
+
         // Save the updated product list to a CSV file
         saveData();
 
@@ -231,7 +234,6 @@ void Seller::addProduct(Seller *seller)
     }
     else
     {
-
         std::cout << "Error creating product.\n";
     }
 }
@@ -617,7 +619,6 @@ void Seller::viewSalesHistory(Seller *seller, int productId)
     }
 }
 
-
 /**
  * @brief Gets a seller by their username.
  *
@@ -654,5 +655,3 @@ int Seller::getNextProductId()
     }
     return maxId + 1;
 }
-
-

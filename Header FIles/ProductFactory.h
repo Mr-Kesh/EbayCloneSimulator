@@ -11,7 +11,8 @@
 class ProductFactory
 {
 public:
-    static Product *CreateProduct(const int productId, const std::string &category, const std::string &name, const double base_price,
+    // Main factory method with consistent parameter order
+    static Product *CreateProduct(int productId, const std::string &name, const std::string &category, double base_price,
                                   const Quality quality, Seller *seller, const std::string &attribute1 = "", const std::string &attribute2 = "")
     {
         // We need to break down the category string into parts: main, sub, and specific type
@@ -94,27 +95,27 @@ public:
             {
                 if (specificType == "Sneakers")
                 {                                                                                  // And it's sneakers
-                    return new Sneakers(productId, name, base_price, quality, seller, attribute1); // Create sneakers
+                    return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create sneakers
                 }
-                return new Shoes(productId, name, base_price, quality, seller, attribute1); // Otherwise, just regular shoes
+                return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just regular shoes
             }
-            else if (specificType == "Pants")
+            else if (subCategory == "Pants")
             { // If it's pants
                 if (specificType == "Jeans")
                 {                                                                               // And it's jeans
-                    return new Jeans(productId, name, base_price, quality, seller, attribute1); // Create jeans
+                    return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create jeans
                 }
-                return new Pants(productId, name, base_price, quality, seller, attribute1); // Otherwise, just regular pants
+                return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just regular pants
             }
-            else if (specificType == "Shirt")
+            else if (subCategory == "Shirt")
             { // If it's a shirt
                 if (specificType == "TShirt")
                 {                                                                                // And it's a T-shirt
-                    return new TShirt(productId, name, base_price, quality, seller, attribute1); // Create a T-shirt
+                    return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create a T-shirt
                 }
-                return new Shirt(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular shirt
+                return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular shirt
             }
-            return new Clothing(productId, name, base_price, quality, seller, attribute1); // If none of the above, create a generic clothing item
+            return new Clothing(productId, name, base_price, quality, seller, subCategory, attribute1); // If none of the above, create a generic clothing item
         }
 
         if (mainCategory == "Books") // Next up, books
@@ -123,27 +124,27 @@ public:
             {
                 if (specificType == "Novel")
                 {                                                                               // And it's a novel
-                    return new Novel(productId, name, base_price, quality, seller, attribute1); // Create a novel
+                    return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a novel
                 }
-                return new Fiction(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a fiction book
+                return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a fiction book
             }
-            else if (specificType == "Non-Fiction")
+            else if (subCategory == "Non-Fiction")
             { // If it's non-fiction
                 if (specificType == "Textbook")
                 {                                                                                  // And it's a textbook
-                    return new Textbook(productId, name, base_price, quality, seller, attribute1); // Create a textbook
+                    return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a textbook
                 }
-                return new NonFiction(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a non-fiction book
+                return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a non-fiction book
             }
-            else if (specificType == "Comic")
+            else if (subCategory == "Comic")
             { // If it's a comic
                 if (specificType == "Graphic Novel")
                 {                                                                                      // And it's a graphic novel
-                    return new GraphicNovel(productId, name, base_price, quality, seller, attribute1); // Create a graphic novel
+                    return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a graphic novel
                 }
-                return new Comic(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a comic
+                return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a comic
             }
-            return new Books(productId, name, base_price, quality, seller, attribute1); // If none of the above, create a generic book
+            return new Books(productId, name, base_price, quality, seller, subCategory, attribute1); // If none of the above, create a generic book
         }
 
         if (mainCategory == "Furniture") // Now, furniture time
@@ -152,60 +153,37 @@ public:
             {
                 if (specificType == "Office Chair")
                 {                                                                                     // And it's an office chair
-                    return new OfficeChair(productId, name, base_price, quality, seller, attribute1); // Create an office chair
+                    return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create an office chair
                 }
-                return new Chair(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular chair
+                return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular chair
             }
-            else if (specificType == "Table")
+            else if (subCategory == "Table")
             { // If it's a table
                 if (specificType == "Coffee Table")
                 {                                                                                     // And it's a coffee table
-                    return new CoffeeTable(productId, name, base_price, quality, seller, attribute1); // Create a coffee table
+                    return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create a coffee table
                 }
-                return new Table(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular table
+                return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular table
             }
-            else if (specificType == "Bed")
+            else if (subCategory == "Bed")
             { // If it's a bed
                 if (specificType == "Twin Bed")
                 {                                                                                 // And it's a twin bed
-                    return new TwinBed(productId, name, base_price, quality, seller, attribute1); // Create a twin bed
+                    return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create a twin bed
                 }
-                return new Bed(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular bed
+                return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular bed
             }
-            return new Furniture(productId, name, base_price, quality, seller, attribute1); // If none of the above, create a generic furniture item
+            return new Furniture(productId, name, base_price, quality, seller, subCategory, attribute1); // If none of the above, create a generic furniture item
         }
 
         if (mainCategory == "Tools") // Finally, tools
         {
-            if (subCategory == "Hand Tool") // If it's a hand tool
-            {
-                if (specificType == "Hammer")
-                {                                                                                // And it's a hammer
-                    return new Hammer(productId, name, base_price, quality, seller, attribute1); // Create a hammer
-                }
-                return new HandTool(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular hand tool
-            }
-            else if (specificType == "Power Tool")
-            { // If it's a power tool
-                if (specificType == "Drill")
-                {                                                                               // And it's a drill
-                    return new Drill(productId, name, base_price, quality, seller, attribute1); // Create a drill
-                }
-                return new PowerTool(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular power tool
-            }
-            else if (specificType == "Garden Tool")
-            { // If it's a garden tool
-                if (specificType == "Lawn Mower")
-                {                                                                                   // And it's a lawn mower
-                    return new LawnMower(productId, name, base_price, quality, seller, attribute1); // Create a lawn mower
-                }
-                return new GardenTool(productId, name, base_price, quality, seller, attribute1); // Otherwise, just a regular garden tool
-            }
-            return new Tools(productId, name, base_price, quality, seller, attribute1); // If none of the above, create a generic tool
+            // For simplicity, we'll just create a generic Tools object
+            return new Tools(productId, name, base_price, quality, seller);
         }
 
-        // Return a nullptr if no valid match
-        return nullptr;
+        // If all else fails, create a generic product
+        return new Product(productId, name, category, base_price, quality, seller);
     }
 };
 

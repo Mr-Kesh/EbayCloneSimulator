@@ -1,75 +1,95 @@
-#ifndef DRIVER_H
-#define DRIVER_H
+#ifndef DRIVER_H_
+#define DRIVER_H_
 
 #include <string>
-#include <vector>
 #include <map>
+#include <vector>
 #include "User.h"
 #include "Buyer.h"
 #include "Seller.h"
-
-// Forward declarations
-class Product;
-class Bid;
+#include "Product.h"
+#include "BidToBuy.h"
 
 class Driver
 {
 private:
-    static Driver *instance_;
-    std::map<int, Product *> products;
-    std::vector<User *> users;
-    User *currentUser;
-    std::vector<Bid *> bids;
-    int nextProductId;
+    // Singleton instance
+    static Driver *instance;
 
-    // Private constructor to implement Singleton
+    // Constructor is private for singleton pattern
     Driver();
 
+    // Maps and collections to store data
+    std::map<std::string, User *> users;
+    std::map<int, Product *> products;
+    std::vector<Bid *> bids;
+    std::vector<Seller *> sellers;
+
+    // Current logged in user
+    User *currentUser;
+
 public:
-    // Get the singleton instance
+    // Delete copy constructor and assignment operator
+    Driver(const Driver &other) = delete;
+    Driver &operator=(const Driver &other) = delete;
+    ~Driver();
+
+    /****************************************************
+     * Singleton and Main Program Functions
+     ****************************************************/
     static Driver *getInstance();
-
-    // Main program execution
     void run();
-    void welcomeMessage();
-
-    // Menu handling
-    bool mainMenu();
+    void mainMenu();
     bool showSellerMenu();
     bool showBuyerMenu();
 
-    // Authentication
-    bool login();
-    bool registerUser();
-    void logout();
+    /****************************************************
+     * Authentication and Account Functions
+     ****************************************************/
+    User *authenticateUser();
+    User *authenticateUserType();
+    long enterPhoneNumber();
+    std::string enterAddress();
+    double enterBalance();
+    Buyer *createBuyer();
+    Seller *createSeller();
+    User *login(const std::string &username);
+    void createAccount();
+    User *findExistingUser(const std::string &username);
 
-    // Product management
+    /****************************************************
+     * Product Functions
+     ****************************************************/
     void displayAvailableProducts();
-    Product *getProductById(int id);
+    Product *getProductById(int productId);
     std::vector<Product *> getProductsBySeller(Seller *seller);
     int getNextProductId();
 
-    // Buyer methods
+    /****************************************************
+     * Bid Functions
+     ****************************************************/
     void placeBid(Buyer *buyer, int productId, double amount);
     std::vector<Bid *> getBidsByBuyer(Buyer *buyer);
     std::vector<Bid *> getBidsForProduct(int productId);
-
-    // Seller methods
-    void updateUserInformation(Seller *seller);
     void openBidding(Seller *seller, int productId);
     void closeBidding(Seller *seller, int productId);
 
-    // Data loading/saving
+    /****************************************************
+     * User Update Functions
+     ****************************************************/
+    void updateUserInformation(Seller *seller);
+
+    /****************************************************
+     * Data CSV Files Functions
+     ****************************************************/
+    void loadData();
     void loadUsers(const std::string &filename);
-    void saveUsers(const std::string &filename);
     void loadProducts(const std::string &filename);
-    void saveProducts(const std::string &filename);
-    void loadBids(const std::string &filename);
-    void saveBids(const std::string &filename);
+    void saveData();
+    Seller *getSellerByUsername(const std::string &username);
 };
 
-// Utility function - defined outside the class
-template <typename T>
-T getValidNumberChoice(const std::string &prompt, T min, T max);
+// Helper function outside of class
+double getValidNumberChoice(const std::string &prompt, double min, double max);
 
-#endif // DRIVER_H
+#endif // DRIVER_H_

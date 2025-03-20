@@ -17,7 +17,6 @@ private:
      * Product Detail Functions
      ****************************************************
      */
-    Product *addProduct();
     void getElectronicsDetails(std::string &subcategory, std::string &specificType);
     void getClothingDetails(std::string &subcategory, std::string &specificType);
     void getFurnitureDetails(std::string &subcategory, std::string &specificType);
@@ -31,6 +30,7 @@ public:
      * Product Management Functions
      ****************************************************
      */
+    Product *addProduct();
     void postProduct(const std::string &name, const std::string &category, double startingPrice, std::string quality);
     void displayProductsForSale() const;
     void addProductForSale(Product *product);

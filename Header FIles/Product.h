@@ -4,11 +4,9 @@
 #include <string>
 #include <vector>
 #include <map>
-
-// Forward declarations to break circular dependency
-class User;
-class Buyer;
-class Seller;
+#include "User.h"
+#include "Buyer.h"
+#include "Seller.h"
 
 enum class Quality
 {

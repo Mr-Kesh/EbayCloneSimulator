@@ -9,10 +9,10 @@
 #include "Header FIles/UserFactory.h"
 #include "Header FIles/ProductFactory.h"
 
-Driver *Driver::instance_ = nullptr;
+Driver *Driver::instance = nullptr;
 
 // Private constructor
-Driver::Driver() : currentUser(nullptr), nextProductId(2000)
+Driver::Driver() : currentUser(nullptr)
 {
 }
 
@@ -34,11 +34,11 @@ Driver::~Driver() {}
  */
 Driver *Driver::getInstance()
 {
-    if (instance_ == nullptr)
+    if (instance == nullptr)
     {
-        instance_ = new Driver();
+        instance = new Driver();
     }
-    return instance_;
+    return instance;
 }
 
 /**
@@ -49,14 +49,19 @@ Driver *Driver::getInstance()
 void Driver::run()
 {
     welcomeMessage();
-
-    bool exitProgram = false;
-    while (!exitProgram)
+    // Authenticate user type
+    User *user = authenticateUserType();
+    if (user == nullptr)
     {
-        exitProgram = mainMenu();
+        std::cout << "User authentication failed.\n";
+        return; // Exit if authentication fails
     }
 
-    std::cout << "Thank you for using our auction system. Goodbye!" << std::endl;
+    // Set the current user
+    currentUser = user;
+
+    // Call the main menu
+    mainMenu();
 }
 
 /**
@@ -67,9 +72,27 @@ void Driver::run()
  */
 void Driver::welcomeMessage()
 {
-    std::cout << "===================================\n";
-    std::cout << "🛍️  Welcome to the Auction System  🛍️\n";
-    std::cout << "===================================\n";
+    std::cout << "===================================" << std::endl;
+    std::cout << "  Welcome to the Auction System  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "1. Login" << std::endl;
+    std::cout << "2. Create a New Account" << std::endl;
+    std::cout << "3. Exit" << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+    double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
+    if (selection == 1)
+    {
+        authenticateUser();
+    }
+    else if (selection == 2)
+    {
+        createAccount();
+    }
+    else if (selection == 3)
+    {
+        std::cout << "Goodbye!" << std::endl;
+        exit(0);
+    }
 }
 
 /**
@@ -77,42 +100,23 @@ void Driver::welcomeMessage()
  *
  * @return void This function shows the options available to the user based on their role.
  */
-bool Driver::mainMenu()
+void Driver::mainMenu()
 {
-    if (currentUser == nullptr)
+    while (true)
     {
-        std::cout << "1. Login\n";
-        std::cout << "2. Register\n";
-        std::cout << "3. Exit\n";
+        std::string userType = currentUser->getUserType();
 
-        int choice = getValidNumberChoice("Enter your choice: ", 1, 3);
-
-        switch (choice)
+        if (userType == "Seller")
         {
-        case 1:
-            login();
-            break;
-        case 2:
-            registerUser();
-            break;
-        case 3:
-            return true; // Exit program
+            if (!showSellerMenu())
+                return; // Exit if user chose to exit
+        }
+        else if (userType == "Buyer")
+        {
+            if (!showBuyerMenu())
+                return; // Exit if user chose to exit
         }
     }
-    else
-    {
-        // User is logged in, show appropriate menu
-        if (currentUser->getUserType() == "Seller")
-        {
-            return showSellerMenu();
-        }
-        else if (currentUser->getUserType() == "Buyer")
-        {
-            return showBuyerMenu();
-        }
-    }
-
-    return false; // Don't exit program
 }
 
 /**
@@ -122,80 +126,58 @@ bool Driver::mainMenu()
  */
 bool Driver::showSellerMenu()
 {
-    Seller *seller = static_cast<Seller *>(currentUser);
 
-    std::cout << "\n===================================\n";
-    std::cout << "📋  Seller Menu  \n";
-    std::cout << "===================================\n";
-    std::cout << "1. Add new product\n";
-    std::cout << "2. View my products\n";
-    std::cout << "3. Manage bidding\n";
-    std::cout << "4. View sales history\n";
-    std::cout << "5. Check account balance\n";
-    std::cout << "6. Update my information\n";
-    std::cout << "7. Logout\n";
-    std::cout << "8. Exit\n";
+    // Basically just in case it's not a seller
+    Seller *seller = dynamic_cast<Seller *>(currentUser);
+    if (!seller)
+    {
+        std::cout << "Error: Current user isn't a seller.\n";
+        return false;
+    }
 
-    int choice = getValidNumberChoice("Enter your choice: ", 1, 8);
+    std::cout << "===================================" << std::endl;
+    std::cout << "  Seller Menu  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "1. Add a product for sale" << std::endl;
+    std::cout << "2. Open bidding on a product" << std::endl;
+    std::cout << "3. Close bidding on a product" << std::endl;
+    std::cout << "4. View sales history" << std::endl;
+    std::cout << "5. Update user information" << std::endl;
+    std::cout << "6. Exit" << std::endl;
 
-    switch (choice)
+    double selection = getValidNumberChoice("Select an option: ", 1, 6);
+
+    switch (selection)
     {
     case 1:
+        seller->addProduct();
+        break;
+    case 2:
     {
-        Product *newProduct = seller->addProduct();
-        if (newProduct)
-        {
-            products[newProduct->getProductId()] = newProduct;
-            std::cout << "Product added successfully!" << std::endl;
-        }
+        int productId = getValidNumberChoice("Enter Product ID to open for bidding: ", 1000, 9999);
+        seller->openBidding(productId);
         break;
     }
-    case 2:
-        seller->displayProductsForSale();
-        break;
     case 3:
     {
-        int productId = getValidNumberChoice("Enter product ID: ", 2000, 9999);
-        int bidAction = getValidNumberChoice("1. Open bidding\n2. Close bidding\nEnter choice: ", 1, 2);
-
-        if (bidAction == 1)
-        {
-            openBidding(seller, productId);
-        }
-        else
-        {
-            closeBidding(seller, productId);
-        }
+        int productId = getValidNumberChoice("Enter Product ID to close bidding: ", 1000, 9999);
+        seller->closeBidding(productId);
         break;
     }
     case 4:
-    {
-        int productId = getValidNumberChoice("Enter product ID (0 to view all): ", 0, 9999);
-        if (productId > 0)
-        {
-            seller->viewSalesHistory(productId);
-        }
-        else
-        {
-            // View all sales history logic
-            std::cout << "Viewing all sales history...\n";
-        }
+        seller->viewSalesHistory();
         break;
-    }
     case 5:
-        seller->checkAccountBalance();
+        seller->updateUserInformation();
         break;
     case 6:
-        updateUserInformation(seller);
+        std::cout << "Goodbye!\n";
+        return false; // Exit the seller menu
+    default:
+        std::cout << "Invalid selection. Please try again.\n";
         break;
-    case 7:
-        logout();
-        break;
-    case 8:
-        return true; // Exit program
     }
-
-    return false; // Don't exit program
+    return true; // Continue the menu loop
 }
 
 /**
@@ -205,22 +187,26 @@ bool Driver::showSellerMenu()
  */
 bool Driver::showBuyerMenu()
 {
-    Buyer *buyer = static_cast<Buyer *>(currentUser);
+    // Properly cast the currentUser to Buyer
+    Buyer *buyer = dynamic_cast<Buyer *>(currentUser);
+    if (!buyer)
+    {
+        std::cout << "Error: Current user isn't a buyer.\n";
+        return false;
+    }
+    std::cout << "===================================" << std::endl;
+    std::cout << "  Buyer Menu  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "1. View available products" << std::endl;
+    std::cout << "2. Place a bid on a product" << std::endl;
+    std::cout << "3. View bidding history" << std::endl;
+    std::cout << "4. View purchase history" << std::endl;
+    std::cout << "5. Update user information" << std::endl;
+    std::cout << "6. Exit" << std::endl;
 
-    std::cout << "\n===================================\n";
-    std::cout << "📋  Buyer Menu  \n";
-    std::cout << "===================================\n";
-    std::cout << "1. View available products\n";
-    std::cout << "2. Place a bid\n";
-    std::cout << "3. View bidding history\n";
-    std::cout << "4. View purchase history\n";
-    std::cout << "5. Update my information\n";
-    std::cout << "6. Logout\n";
-    std::cout << "7. Exit\n";
+    int selection = getValidNumberChoice("Select an option: ", 1, 6);
 
-    int choice = getValidNumberChoice("Enter your choice: ", 1, 7);
-
-    switch (choice)
+    switch (selection)
     {
     case 1:
         displayAvailableProducts();
@@ -228,20 +214,20 @@ bool Driver::showBuyerMenu()
     case 2:
     {
         displayAvailableProducts();
-        int productId = getValidNumberChoice("Enter product ID to bid on: ", 2000, 9999);
-        double bidAmount = getValidNumberChoice("Enter bid amount: $", 0.01, 100000.0);
-        placeBid(buyer, productId, bidAmount);
+        int productId = getValidNumberChoice("Enter Product ID to bid on: ", 1000, 9999);
+        double bidAmount = getValidNumberChoice("Enter bid amount: $", 0.01, 99999.99);
+        buyer->placeBid(productId, bidAmount);
         break;
     }
     case 3:
     {
-        int productId = getValidNumberChoice("Enter product ID (0 to view all): ", 0, 9999);
+        int productId = getValidNumberChoice("Enter Product ID (0 to view all): ", 0, 9999);
         buyer->viewBiddingHistory(productId);
         break;
     }
     case 4:
     {
-        int productId = getValidNumberChoice("Enter product ID (0 to view all): ", 0, 9999);
+        int productId = getValidNumberChoice("Enter Product ID (0 to view all): ", 0, 9999);
         buyer->viewPurchaseHistory(productId);
         break;
     }
@@ -249,13 +235,13 @@ bool Driver::showBuyerMenu()
         buyer->updateUserInformation();
         break;
     case 6:
-        logout();
+        std::cout << "Goodbye!\n";
+        return false; // Return false to exit
+    default:
+        std::cout << "Invalid selection. Please try again.\n";
         break;
-    case 7:
-        return true; // Exit program
     }
-
-    return false; // Don't exit program
+    return true; // Continue the menu loop
 }
 
 /****************************************************
@@ -271,33 +257,43 @@ bool Driver::showBuyerMenu()
  *
  * @return User* A pointer to the authenticated User object.
  */
-bool Driver::login()
+User *Driver::authenticateUser()
 {
     std::string username;
-    std::cout << "Enter username: ";
-    std::cin >> username;
+    std::cout << "Enter your username: ";
+    std::getline(std::cin, username);
 
-    // Find user in the list
-    for (User *user : users)
+    User *existingUser = findExistingUser(username);
+    if (existingUser != nullptr)
     {
-        if (user->getUsername() == username)
+
+        std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
+    }
+    else
+    {
+        char choice;
+        std::cout << "Username not found. Would you like to create a new account? (y/n): ";
+        std::cin >> choice;
+        std::cin.ignore();
+
+        while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N')
         {
-            currentUser = user;
-            std::cout << "Login successful. Welcome, " << username << "!" << std::endl;
-            return true;
+            std::cout << "Invalid choice. Please enter 'y' or 'n': ";
+            std::cin >> choice;
+            std::cin.ignore();
+        }
+
+        if (choice == 'y' || choice == 'Y')
+        {
+            createAccount();
+        }
+        else
+        {
+            std::cout << "Goodbye!\n";
+            exit(0);
         }
     }
-
-    std::cout << "User not found. Would you like to register? (y/n): ";
-    char choice;
-    std::cin >> choice;
-
-    if (choice == 'y' || choice == 'Y')
-    {
-        return registerUser();
-    }
-
-    return false;
+    return existingUser;
 }
 
 /**
@@ -490,27 +486,15 @@ User *Driver::findExistingUser(const std::string &username)
  */
 void Driver::displayAvailableProducts()
 {
-    std::cout << "===================================\n";
-    std::cout << "📋  Available Products  \n";
-    std::cout << "===================================\n";
-
-    bool foundProducts = false;
+    // Display all products that are available for bidding
     for (const auto &pair : products)
     {
         Product *product = pair.second;
-        if (product->isActive() && !product->isSold())
+        if (product->isActive())
         {
             product->displayProductInfo();
-            foundProducts = true;
         }
     }
-
-    if (!foundProducts)
-    {
-        std::cout << "No products available for bidding at this time." << std::endl;
-    }
-
-    std::cout << "-----------------------------------" << std::endl;
 }
 
 /**
@@ -567,28 +551,14 @@ std::vector<Product *> Driver::getProductsBySeller(Seller *seller)
 void Driver::placeBid(Buyer *buyer, int productId, double amount)
 {
     Product *product = getProductById(productId);
-    if (product)
+    bool isActive = product->isActive(productId);
+    if (isActive)
     {
-        if (product->isActive() && !product->isSold())
-        {
-            // Add bid to product
-            if (product->addBid(buyer, amount))
-            {
-                std::cout << "Bid placed successfully!" << std::endl;
-            }
-            else
-            {
-                std::cout << "Failed to place bid. Your bid must be higher than the current highest bid." << std::endl;
-            }
-        }
-        else
-        {
-            std::cout << "This product is not available for bidding." << std::endl;
-        }
+        product->addBid(buyer, amount);
     }
     else
     {
-        std::cout << "Product not found." << std::endl;
+        std::cout << "Product is not active or does not exist.\n";
     }
 }
 
@@ -600,16 +570,7 @@ void Driver::placeBid(Buyer *buyer, int productId, double amount)
  */
 std::vector<Bid *> Driver::getBidsByBuyer(Buyer *buyer)
 {
-    std::vector<Bid *> buyerBids;
-    for (Bid *bid : bids)
-    {
-        // Assuming Bid has methods to get its buyer
-        if (bid->getBuyer() == buyer)
-        {
-            buyerBids.push_back(bid);
-        }
-    }
-    return buyerBids;
+    return std::vector<Bid *>();
 }
 
 /**
@@ -620,16 +581,7 @@ std::vector<Bid *> Driver::getBidsByBuyer(Buyer *buyer)
  */
 std::vector<Bid *> Driver::getBidsForProduct(int productId)
 {
-    std::vector<Bid *> productBids;
-    for (Bid *bid : bids)
-    {
-        // Assuming Bid has methods to get its product ID
-        if (bid->getProductId() == productId)
-        {
-            productBids.push_back(bid);
-        }
-    }
-    return productBids;
+    return std::vector<Bid *>();
 }
 
 /****************************************************
@@ -694,66 +646,88 @@ void Driver::loadUsers(const std::string &filename)
  * @param filename The name of the CSV file to read product data from. This should be a string like "products.csv".
  * @return void This function populates the products vector with Product objects.
  */
-// Read from the correct file
 void Driver::loadProducts(const std::string &filename)
 {
     std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "Could not open file: " << filename << std::endl;
+        return;
+    }
+
     std::string line;
+    // Skip header line
+    std::getline(file, line);
 
     while (std::getline(file, line))
     {
         std::stringstream ss(line);
-        std::string product_id_str, product_name, product_category, product_condition, product_price_str, product_status, product_owner;
+        std::string productIdStr, category, attribute1, attribute2, buyerName, productName, basePriceStr, qualityStr, sellerName;
 
-        // Read product attributes from the line
-        std::getline(ss, product_id_str, ',');
-        std::getline(ss, product_name, ',');
-        std::getline(ss, product_category, ',');
-        std::getline(ss, product_condition, ',');
-        std::getline(ss, product_price_str, ',');
-        std::getline(ss, product_status, ',');
-        std::getline(ss, product_owner, ',');
+        // Parse CSV line based on actual bids.csv format:
+        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Product Name,Base Price,Quality,Seller
+        std::getline(ss, productIdStr, ',');
+        std::getline(ss, category, ',');
+        std::getline(ss, attribute1, ',');
+        std::getline(ss, attribute2, ',');
+        std::getline(ss, buyerName, ',');
+        std::getline(ss, productName, ',');
+        std::getline(ss, basePriceStr, ',');
+        std::getline(ss, qualityStr, ',');
+        std::getline(ss, sellerName);
 
-        // Convert product ID and price from string to appropriate types
-        int product_id = std::stoi(product_id_str);
-        double product_price = std::stod(product_price_str);
+        // Convert numeric values
+        int productId = std::stoi(productIdStr);
+        double basePrice = std::stod(basePriceStr);
 
-        // Determine the Quality based on the product_condition string
-        Quality product_quality;
-        if (product_condition == "New")
+        // Find the seller
+        Seller *seller = nullptr;
+        for (const auto &pair : users)
         {
-            product_quality = Quality::New;
-        }
-        else if (product_condition == "Used_VeryGood")
-        {
-            product_quality = Quality::Used_VeryGood;
-        }
-        else if (product_condition == "Used_Good")
-        {
-            product_quality = Quality::Used_Good;
-        }
-        else if (product_condition == "Used_Okay")
-        {
-            product_quality = Quality::Used_Okay;
-        }
-        else
-        {
-            continue;
+            User *user = pair.second;
+            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
+            {
+                seller = static_cast<Seller *>(user);
+                break;
+            }
         }
 
-        // Get the Seller object based on the product_owner
-        Seller *seller = Seller::getSellerByUsername(product_owner);
-        if (seller == nullptr)
+        if (seller)
         {
-            continue; // Skip the product if the seller is not found
+            // Convert string to Quality enum
+            Quality quality = Quality::Used_Okay; // Default value
+            if (qualityStr == "New")
+            {
+                quality = Quality::New;
+            }
+            else if (qualityStr == "Used_VeryGood")
+            {
+                quality = Quality::Used_VeryGood;
+            }
+            else if (qualityStr == "Used_Good")
+            {
+                quality = Quality::Used_Good;
+            }
+            else if (qualityStr == "Used_Okay")
+            {
+                quality = Quality::Used_Okay;
+            }
+            else
+            {
+                std::cout << "Unknown quality '" << qualityStr << "' for product " << productId << ", defaulting to Used_Okay\n";
+            }
+
+            Product *product = ProductFactory::CreateProduct(productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
+
+            if (product)
+            {
+                products[productId] = product;
+                seller->addProductForSale(product);
+            }
         }
-
-        // Create a new Product object using the correct constructor
-        Product *p = ProductFactory::CreateProduct(product_id, product_category, product_name, product_price, product_quality, seller); // Create new Product
-
-        // Store the product in the products map
-        products[product_id] = p; // Store product in the map
     }
+
+    file.close();
 }
 
 /**
@@ -805,5 +779,4 @@ double getValidNumberChoice(const std::string &prompt, double min, double max)
     }
 
     return number;
-}
 }
