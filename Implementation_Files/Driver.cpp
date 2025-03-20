@@ -459,13 +459,13 @@ void Driver::createAccount()
     if (selection == 1)
     {
         Buyer *newBuyer = createBuyer();
-
+        users[newBuyer->getUsername()] = newBuyer;
         std::cout << "Account created as a Buyer successfully!" << std::endl;
     }
     else
     {
         Seller *newSeller = createSeller();
-
+        users[newSeller->getUsername()] = newSeller;
         std::cout << "Account created as a Seller successfully!" << std::endl;
     }
 }
