@@ -105,8 +105,6 @@ double Seller::checkAccountBalance() const
     return getBalance();
 }
 
-
-
 /**
  * @brief Adds a product to the seller's list of products for sale.
  *
@@ -610,7 +608,19 @@ void Seller::viewSalesHistory(int productId)
     Product *product = Driver::getInstance()->getProductById(productId);
     if (product)
     {
-        product->viewSalesHistory();
+        Seller *productSeller = Seller::getSellerByUsername(product->getSeller()->getUsername());
+        if (productSeller == this)
+        {
+            product->viewSalesHistory();
+        }
+        else
+        {
+            std::cout << "Product does not exist or you don't own the product." << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "Product doesn't exist or you don't own the product." << std::endl;
     }
 }
 

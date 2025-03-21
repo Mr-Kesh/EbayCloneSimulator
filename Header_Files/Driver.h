@@ -96,6 +96,13 @@ public:
     void saveProducts(const std::string &filename);
     Seller *getSellerByUsername(const std::string &username);
     bool validateYesNoInput(char &choice);
+
+    /****************************************************
+     * Helper Functions
+     ****************************************************/
+    bool isProductValidAndOwned(Product *product, Seller *seller);
+    bool processSale(Buyer *highestBidder, Seller *seller, Product *product, double highestBidAmount);
+    void handleInsufficientFunds(Buyer *highestBidder, Product *product);
 };
 
 // Helper function outside of class

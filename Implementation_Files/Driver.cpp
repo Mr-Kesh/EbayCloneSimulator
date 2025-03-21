@@ -990,52 +990,56 @@ void Driver::openBidding(Seller *seller, int productId)
 void Driver::closeBidding(Seller *seller, int productId)
 {
     Product *product = getProductById(productId);
-    if (product && product->getSeller() == seller)
+    if (isProductValidAndOwned(product, seller))
     {
-        // Get the highest bidder and amount before closing
         Buyer *highestBidder = product->getHighestBidder();
         double highestBidAmount = product->getHighestBidAmount();
 
-        // Close the bidding
         product->closeBidding();
 
-        // If there's a valid bid, mark the product as sold
         if (highestBidder != nullptr && highestBidAmount > 0)
         {
-            // Transfer the money from buyer to seller
-            double buyerBalance = highestBidder->getBalance();
-            double sellerBalance = seller->getBalance();
-
-            if (buyerBalance >= highestBidAmount)
+            if (processSale(highestBidder, seller, product, highestBidAmount))
             {
-                // Mark as sold only if payment can be processed
-                product->markAsSold();
-
-                // Deduct from buyer
-                highestBidder->setAccountBalance(buyerBalance - highestBidAmount);
-                // Add to seller
-                seller->setAccountBalance(sellerBalance + highestBidAmount);
-
-                // Update the buyer's purchase history
-                highestBidder->addPurchasedProduct(product);
-
                 std::cout << "Product sold to " << highestBidder->getUsername()
                           << " for $" << highestBidAmount << ".\n";
                 std::cout << "Payment of $" << highestBidAmount << " successfully transferred.\n";
             }
             else
             {
-                std::cout << "Warning: Buyer " << highestBidder->getUsername()
-                          << " doesn't have sufficient funds. Transaction not completed.\n";
-                std::cout << "The product has been returned to active status for new bids.\n";
-
-                // Re-open bidding instead of marking as sold
-                product->reopenBidding();
+                handleInsufficientFunds(highestBidder, product);
             }
         }
     }
     else
     {
-        std::cout << "Product does not exist or you do not own this product.\n";
+        std::cout << "Product doesn't exist or you don't own this product.\n";
     }
+}
+
+bool Driver::isProductValidAndOwned(Product *product, Seller *seller)
+{
+    return product && product->getSeller() == seller;
+}
+
+bool Driver::processSale(Buyer *highestBidder, Seller *seller, Product *product, double highestBidAmount)
+{
+    double buyerBalance = highestBidder->getBalance();
+    if (buyerBalance >= highestBidAmount)
+    {
+        product->markAsSold();
+        highestBidder->setAccountBalance(buyerBalance - highestBidAmount);
+        seller->setAccountBalance(seller->getBalance() + highestBidAmount);
+        highestBidder->addPurchasedProduct(product);
+        return true;
+    }
+    return false;
+}
+
+void Driver::handleInsufficientFunds(Buyer *highestBidder, Product *product)
+{
+    std::cout << "Warning: Buyer " << highestBidder->getUsername()
+              << " doesn't have sufficient funds. Transaction not completed.\n";
+    std::cout << "The product has been returned to active status for new bids.\n";
+    product->reopenBidding();
 }
