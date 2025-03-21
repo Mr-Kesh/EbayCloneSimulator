@@ -48,15 +48,13 @@ Driver *Driver::getInstance()
  */
 void Driver::run()
 {
-    while (!exitProgram)
-    {
-        welcomeMessage();
+    welcomeMessage();
 
-    // Only call mainMenu if a user is logged in
-        if (currentUser != nullptr)
-        {
-            mainMenu();
-        }
+    // After welcomeMessage, we need to actually check if a user is logged in
+    if (currentUser != nullptr)
+    {
+        // Only show the main menu if we have a valid user
+        mainMenu();
     }
 }
 
@@ -176,8 +174,7 @@ bool Driver::showSellerMenu()
     std::cout << "3. Close bidding on a product" << std::endl;
     std::cout << "4. View sales history" << std::endl;
     std::cout << "5. Update user information" << std::endl;
-    std::cout << "6. Sign out" << std::endl;
-    std::cout << "7. Exit the whole program" << std::endl;
+    std::cout << "6. Exit" << std::endl;
 
     int selection = getValidNumberChoice("Select an option: ", 1, 6);
 
@@ -208,13 +205,8 @@ bool Driver::showSellerMenu()
         updateUserInformation(seller);
         break;
     case 6:
-        std::cout << "Signing out...\n";
-        currentUser = nullptr; // Set the current user to nullptr
-        returnToBeginningMenu();
-        return false; // Return false to exit
-    case 7:
         std::cout << "Goodbye!\n";
-        exit(0);
+        return false; // Exit the seller menu
     default:
         std::cout << "Invalid selection. Please try again.\n";
         break;
@@ -244,10 +236,9 @@ bool Driver::showBuyerMenu()
     std::cout << "3. View bidding history" << std::endl;
     std::cout << "4. View purchase history" << std::endl;
     std::cout << "5. Update user information" << std::endl;
-    std::cout << "6. Sign out" << std::endl;
-    std::cout << "7. Exit the whole program" << std::endl;
+    std::cout << "6. Exit" << std::endl;
 
-    int selection = getValidNumberChoice("Select an option: ", 1, 7);
+    int selection = getValidNumberChoice("Select an option: ", 1, 6);
 
     switch (selection)
     {
@@ -278,14 +269,8 @@ bool Driver::showBuyerMenu()
         buyer->updateUserInformation();
         break;
     case 6:
-        std::cout << "Signing out...\n";
-        currentUser = nullptr; // Set the current user to nullptr
-        returnToBeginningMenu();
-        return false; // Return false to exit
-
-    case 7:
         std::cout << "Goodbye!\n";
-        exit(0);
+        return false; // Return false to exit
     default:
         std::cout << "Invalid selection. Please try again.\n";
         break;
@@ -316,8 +301,12 @@ User *Driver::authenticateUser()
     if (existingUser != nullptr)
     {
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
-        currentUser = existingUser; // Set the current user
-        return existingUser;        // Return the authenticated user
+
+        // Set the current user
+        currentUser = existingUser;
+
+        // Return the existing user
+        return existingUser;
     }
     else
     {
@@ -329,13 +318,14 @@ User *Driver::authenticateUser()
         if (validateYesNoInput(choice))
         {
             createAccount();
+            return nullptr;
         }
         else
         {
             returnToBeginningMenu();
+            return nullptr;
         }
     }
-    return nullptr;
 }
 
 // /**
