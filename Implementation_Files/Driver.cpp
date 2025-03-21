@@ -83,6 +83,9 @@ void Driver::returnToBeginningMenu()
     std::cout << "-----------------------------------" << std::endl;
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
+    clearInputBuffer();
+    
+
     if (selection == 1)
     {
         authenticateUser();
