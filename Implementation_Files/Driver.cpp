@@ -23,7 +23,22 @@ Driver::Driver() : currentUser(nullptr)
  *
  * @return void This function cleans up any resources used by the Driver when it's no longer needed.
  */
-Driver::~Driver() {}
+Driver::~Driver()
+{
+    // Save data to CSV files before program ends
+    saveData();
+
+    // Clean up allocated memory
+    for (auto &pair : users)
+    {
+        delete pair.second;
+    }
+
+    for (auto &pair : products)
+    {
+        delete pair.second;
+    }
+}
 
 /****************************************************
  * Singleton and Main Program Functions
@@ -691,7 +706,6 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
-
     std::ifstream file(filename);
     if (!file.is_open())
     {
@@ -725,9 +739,11 @@ void Driver::loadUsers(const std::string &filename)
         if (u != nullptr)
         {
             users[username] = u;
+            count++;
         }
     }
 
+    std::cout << "Loaded " << count << " users from " << filename << std::endl;
     file.close();
 }
 
@@ -863,20 +879,19 @@ void Driver::saveUsers(const std::string &filename)
         std::cout << "ERROR: Could not open file for writing: " << filename << std::endl;
         return;
     }
-    
 
     // Write each user's data
     for (const auto &pair : users)
     {
         User *user = pair.second;
-        file << user->getUserId() << ","
-             << user->getUsername() << ","
+        file << user->getUsername() << ","
              << user->getUserType() << ","
              << user->getPhoneNumber() << ","
              << user->getAddress() << ","
              << user->getBalance() << std::endl;
     }
 
+    std::cout << "Saved " << users.size() << " users to " << filename << std::endl;
     file.close();
 }
 

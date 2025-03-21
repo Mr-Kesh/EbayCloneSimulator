@@ -11,7 +11,8 @@ private:
     std::vector<Product *> purchaseHistory_;          // Stores products the buyer has won
     std::vector<std::pair<int, double>> bid_history_; // Product IDs and bid amounts
 public:
-    // Constructor
+    // Constructors
+    Buyer(int userId, const std::string &uname, long phone, const std::string &addr, double bal);
     Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
 
     // Bidding actions
@@ -22,7 +23,7 @@ public:
 
     // Purchase history
     void viewPurchaseHistory() const;
-    
+
     // Override from User base class
     void updateUserInformation() override;
 
@@ -30,7 +31,7 @@ public:
     bool placeBid(int productId, double amount);
     void viewBiddingHistory(int productId);
     void viewPurchaseHistory(int productId);
-    
+
     // Method for displaying available products
     void displayAvailableProducts() const;
 };

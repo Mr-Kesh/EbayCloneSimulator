@@ -5,8 +5,16 @@
 #include "Header_Files/User.h"
 #include "Header_Files/Driver.h"
 
-// Constructor
-Seller::Seller(const std::string &uname, long phone, const std::string &addr, double bal) : User(uname, phone, addr, bal)
+// Constructor with userId
+Seller::Seller(int userId, const std::string &uname, long phone, const std::string &addr, double bal)
+    : User(userId, uname, phone, addr, bal)
+{
+    user_type_ = "Seller";
+}
+
+// Constructor without userId (for backward compatibility)
+Seller::Seller(const std::string &uname, long phone, const std::string &addr, double bal)
+    : User(uname, phone, addr, bal)
 {
     user_type_ = "Seller";
 }
