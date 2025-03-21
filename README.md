@@ -92,13 +92,13 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 ## Running the Program
 
 1. Clone the repository:
-  git clone https://github.com/yourusername/BidToBuy.git
+```git clone [https://github.com/yourusername/BidToBuy.git](https://github.com/jejo8526/programming-workshop-hw3.git)```
 
-2. Compile the program using Makefile:
-  make main
+3. Compile the program using Makefile:
+  ```make main```
 
-3. Run the program:
-  ./main
+4. Run the program:
+  ```./main```
 
 ## Contributors
 
