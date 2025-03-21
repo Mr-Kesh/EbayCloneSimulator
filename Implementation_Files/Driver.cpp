@@ -170,12 +170,14 @@ bool Driver::showSellerMenu()
     std::cout << "3. Close bidding on a product" << std::endl;
     std::cout << "4. View sales history" << std::endl;
     std::cout << "5. Update user information" << std::endl;
-    std::cout << "6. Exit" << std::endl;
+    std::cout << "6. Logout" << std::endl;
+    std::cout << "7. Exit the program" << std::endl;
 
-    int selection = getValidNumberChoice("Select an option: ", 1, 6);
+    int selection = getValidNumberChoice("Select an option: ", 1, 7);
 
     switch (selection)
     {
+    
     case 1:
         seller->addProduct();
         break;
@@ -201,8 +203,11 @@ bool Driver::showSellerMenu()
         updateUserInformation(seller);
         break;
     case 6:
-        std::cout << "Goodbye!\n";
+        returnToBeginningMenu();
         return false; // Exit the seller menu
+    case 7:
+        std::cout << "Goodbye!\n";
+        exit(0);
     default:
         std::cout << "Invalid selection. Please try again.\n";
         break;
@@ -265,8 +270,11 @@ bool Driver::showBuyerMenu()
         buyer->updateUserInformation();
         break;
     case 6:
-        std::cout << "Goodbye!\n";
+        returnToBeginningMenu();
         return false; // Return false to exit
+    case 7:
+        std::cout << "Goodbye!\n";
+        exit(0);
     default:
         std::cout << "Invalid selection. Please try again.\n";
         break;

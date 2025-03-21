@@ -125,7 +125,7 @@ void Seller::addProductForSale(Product *product)
  */
 void Seller::displayProductsForSale() const
 {
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Your Products for Sale  " << std::endl;
     std::cout << "===================================" << std::endl;
     std::cout << "Products listed by " << getUsername() << ":" << std::endl;
@@ -186,12 +186,9 @@ Product *Seller::addProduct()
     double price;
     int qualityChoice;
 
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Add a Product!  " << std::endl;
     std::cout << "===================================" << std::endl;
-
-    std::cout << "Enter the name of the product: ";
-    std::getline(std::cin, name);
 
     // Get main category choice using the new function
     int categoryChoice = getValidNumberChoice<int>("Select category:\n1. Electronics\n2. Clothing\n3. Furniture\n4. Books\n5. Tools\nEnter choice: ", 1, 5);
@@ -227,8 +224,14 @@ Product *Seller::addProduct()
     price = getValidNumberChoice<double>("Enter base price: ", 0.01, std::numeric_limits<double>::max());
 
     // Get quality with validation
-    qualityChoice = getValidNumberChoice<int>("Select product quality:\n0: New\n1: Used_VeryGood\n2: Used_Good\n3: Used_Okay\nEnter choice: ", 0, 3);
+    qualityChoice = getValidNumberChoice<int>("Select product quality:\n0: New\n1: Used (Very Good)\n2: Used (Good)\n3: Used (Okay)\nEnter choice: ", 0, 3);
     Quality quality = static_cast<Quality>(qualityChoice);
+
+    std::cout << "Give a name to your product: ";
+    std::getline(std::cin, name);
+
+    // Get category-specific attributes
+    getCategoryAttributes(category, attribute1, attribute2);
 
     // Step 5: Create the product using `ProductFactory`
     // This line creates a formatted string for the product's category. specificType is only added if it's not empty so we don't end up with an extra colon at the end.
@@ -251,7 +254,7 @@ Product *Seller::addProduct()
         // Save the updated product list to a CSV file
         Driver::getInstance()->saveData();
 
-        std::cout << "Product " << name << " listed for sale under " << category << " successfully!\n";
+        std::cout << "Product " << newProduct->getProductId() << " (" << newProduct->getName() << ") listed for sale under " << category << " successfully!\n";
     }
     else
     {
@@ -279,7 +282,7 @@ void Seller::getElectronicsDetails(std::string &subcategory, std::string &specif
     if (subcategoryChoice == 1)
     { // Computer
         subcategory = "Computer";
-        typeChoice = getValidNumberChoice<int>("Select computer type:\n1. Laptop\n2. Custom\n", 1, 2);
+        typeChoice = getValidNumberChoice<int>("Select computer type:\n1. Laptop\n2. Custom\nEnter choice: ", 1, 2);
 
         if (typeChoice == 1)
         {
@@ -675,4 +678,71 @@ int Seller::getNextProductId()
         }
     }
     return maxId + 1;
+}
+
+/**
+ * @brief Gets category specific attributes based on the product type
+ *
+ * This function prompts the user for attributes that are specific to each product category
+ * - Clothing: Size and Type
+ * - Electronics: Brand and Model
+ * - Furniture: Material and Type
+ * - Books: Author and Genre
+ * - Tools: Brand and Tool Type
+ *
+ * @param category The product category
+ * @param attribute1 Reference to store the first attribute
+ * @param attribute2 Reference to store the second attribute
+ */
+void Seller::getCategoryAttributes(const std::string &category, std::string &attribute1, std::string &attribute2)
+{
+    if (category == "Clothing")
+    {
+        std::cout << "Enter the size (e.g., S, M, L, XL): ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter the type of clothing (e.g., Shirt, Pants, Dress): ";
+        std::getline(std::cin, attribute2);
+    }
+    else if (category == "Electronics")
+    {
+        std::cout << "Enter the brand (e.g., Dell, Apple, Samsung): ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter the model (e.g., XPS 15, iPhone 14, Galaxy S23): ";
+        std::getline(std::cin, attribute2);
+    }
+    else if (category == "Furniture")
+    {
+        std::cout << "Enter the material (e.g., Wood, Metal, Plastic): ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter the furniture type (e.g., Bed, Chair, Table): ";
+        std::getline(std::cin, attribute2);
+    }
+    else if (category == "Books")
+    {
+        std::cout << "Enter the author's name: ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter the genre (e.g., Fiction, Non-Fiction, Science): ";
+        std::getline(std::cin, attribute2);
+    }
+    else if (category == "Tools")
+    {
+        std::cout << "Enter the brand (e.g., DeWalt, Craftsman, Milwaukee): ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter the tool type (e.g., Power Tool, Hand Tool): ";
+        std::getline(std::cin, attribute2);
+    }
+    else
+    {
+        // Default for any maybe just in case unknown categories
+        std::cout << "Enter attribute 1: ";
+        std::getline(std::cin, attribute1);
+
+        std::cout << "Enter attribute 2: ";
+        std::getline(std::cin, attribute2);
+    }
 }

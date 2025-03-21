@@ -22,6 +22,7 @@ private:
     void getFurnitureDetails(std::string &subcategory, std::string &specificType);
     void getBookDetails(std::string &subcategory, std::string &specificType);
     void getToolDetails(std::string &subcategory, std::string &specificType);
+    void getCategoryAttributes(const std::string &category, std::string &attribute1, std::string &attribute2);
 
 public:
     Seller(const std::string &username, long phoneNumber, const std::string &address, double balance);

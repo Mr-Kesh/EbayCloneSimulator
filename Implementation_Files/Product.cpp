@@ -106,7 +106,7 @@ void Product::markAsSold()
  */
 void Product::displayProductInfo() const
 {
-    std::cout << "===================================\n"
+    std::cout << "\n\n===================================\n"
               << " Your Products for Sale \n"
               << "===================================\n"
               << "ID: " << productId_
@@ -135,7 +135,7 @@ bool Product::addBid(Buyer *buyer, double amount)
  */
 void Product::viewSalesHistory()
 {
-    std::cout << "===================================" << std::endl;
+    std::cout << "\n\n===================================" << std::endl;
     std::cout << "  Sales History for Product #" << productId_ << "  " << std::endl;
     std::cout << "===================================" << std::endl;
     std::cout << "Name: " << name_ << std::endl;
