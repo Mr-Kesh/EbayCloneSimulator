@@ -50,10 +50,11 @@ void Driver::run()
 {
     welcomeMessage();
 
-    
-
-    // Call the main menu
-    mainMenu();
+    // Only call mainMenu if a user is logged in
+    if (currentUser != nullptr)
+    {
+        mainMenu();
+    }
 }
 
 /**
@@ -108,7 +109,7 @@ void Driver::welcomeMessage()
     std::cout << "-----------------------------------" << std::endl;
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
     clearInputBuffer();
-    
+
     if (selection == 1)
     {
         authenticateUser();
@@ -299,6 +300,8 @@ User *Driver::authenticateUser()
     if (existingUser != nullptr)
     {
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
+        currentUser = existingUser; // Set the current user
+        return existingUser;        // Return the authenticated user
     }
     else
     {
