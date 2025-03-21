@@ -299,6 +299,8 @@ User *Driver::authenticateUser()
     if (existingUser != nullptr)
     {
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
+        currentUser = existingUser;
+        return existingUser;
     }
     else
     {
