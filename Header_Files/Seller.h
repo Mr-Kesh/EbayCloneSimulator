@@ -52,6 +52,7 @@ public:
     void viewHistoricalPrices(const std::string &category) const;
     void viewSalesHistory(int productId);
     void viewSalesHistory(const Product &product) const;
+    void viewAllProductsSalesHistory();
 
     /****************************************************
      * Account Management Functions

@@ -159,3 +159,29 @@ void Product::viewSalesHistory()
         std::cout << "This product has not been sold yet." << std::endl;
     }
 }
+
+/**
+ * @brief Displays a concise sales history summary of the product.
+ * This is used when showing multiple products at once.
+ */
+void Product::displaySalesHistorySummary() const
+{
+    std::cout << "Product #" << productId_ << " - " << name_ << " | ";
+    std::cout << "Price: $" << basePrice_ << " | ";
+    std::cout << "Status: " << (isActive_ ? "Active" : "Inactive");
+
+    if (isSold_)
+    {
+        std::cout << ", Sold for $" << getHighestBidAmount();
+    }
+    else if (!bids_.empty())
+    {
+        std::cout << ", Current bid: $" << getHighestBidAmount();
+    }
+    else
+    {
+        std::cout << ", No bids";
+    }
+
+    std::cout << std::endl;
+}

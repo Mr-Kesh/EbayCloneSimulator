@@ -63,6 +63,7 @@ public:
     void rejectWinningBid();
     void markAsSold();
     void viewSalesHistory();
+    void displaySalesHistorySummary() const;
     // Display product information
     virtual void displayProductInfo() const;
 };

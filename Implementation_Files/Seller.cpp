@@ -635,11 +635,73 @@ void Seller::closeBidding(int productId)
  */
 void Seller::viewSalesHistory(int productId)
 {
+    if (productId == 0)
+    {
+        // If productId is 0, show sales history for all products
+        viewAllProductsSalesHistory();
+        return;
+    }
+
     Product *product = Driver::getInstance()->getProductById(productId);
     if (product)
     {
         product->viewSalesHistory();
     }
+}
+
+/**
+ * @brief Displays the sales history for all products owned by the seller.
+ *
+ * This function shows a concise summary of sales history for all products
+ * that belong to this seller.
+ *
+ * @return void This function displays the sales history summary of all products.
+ */
+void Seller::viewAllProductsSalesHistory()
+{
+    std::cout << "\n\n===================================" << std::endl;
+    std::cout << "  Sales History for All Products  " << std::endl;
+    std::cout << "===================================" << std::endl;
+    std::cout << "Seller: " << getUsername() << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+
+    if (productsForSale_.empty())
+    {
+        std::cout << "You don't have any products listed for sale." << std::endl;
+        return;
+    }
+
+    std::cout << "Products Summary:" << std::endl;
+    int activeBids = 0;
+    int soldItems = 0;
+    double totalSales = 0.0;
+
+    // Display each product's sales history summary
+    for (const auto &product : productsForSale_)
+    {
+        product->displaySalesHistorySummary();
+
+        if (product->isSold())
+        {
+            soldItems++;
+            totalSales += product->getHighestBidAmount();
+        }
+        else if (!product->isActive())
+        {
+            // Product not active and not sold = bidding closed without sale
+        }
+        else if (product->getHighestBidAmount() > 0)
+        {
+            activeBids++;
+        }
+    }
+
+    std::cout << "-----------------------------------" << std::endl;
+    std::cout << "Summary Statistics:" << std::endl;
+    std::cout << "Total Products: " << productsForSale_.size() << std::endl;
+    std::cout << "Active Products with Bids: " << activeBids << std::endl;
+    std::cout << "Sold Products: " << soldItems << std::endl;
+    std::cout << "Total Sales Revenue: $" << totalSales << std::endl;
 }
 
 /**
