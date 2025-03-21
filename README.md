@@ -4,9 +4,9 @@ Jenna and Jeshua's CSCI 3010 HW3
 ![Build Status](https://github.com/jejo8526/programming-workshop-hw3/actions/workflows/c-cpp.yml/badge.svg)
 
 
-##BidToBuy: CLI-Based eBay Simulation
+## BidToBuy: CLI-Based eBay Simulation
 
-#Overview
+# Overview
 
 BidToBuy is a command-line interface (CLI) application that simulates an online auction platform similar to eBay. The application allows buyers to bid on products posted by sellers, with the highest bidder winning once the auction closes. The project incorporates object-oriented programming principles, inheritance, design patterns, and file-based data storage.
 
