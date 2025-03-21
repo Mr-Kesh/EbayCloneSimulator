@@ -48,12 +48,15 @@ Driver *Driver::getInstance()
  */
 void Driver::run()
 {
-    welcomeMessage();
+    while (!exitProgram)
+    {
+        welcomeMessage();
 
     // Only call mainMenu if a user is logged in
-    if (currentUser != nullptr)
-    {
-        mainMenu();
+        if (currentUser != nullptr)
+        {
+            mainMenu();
+        }
     }
 }
 

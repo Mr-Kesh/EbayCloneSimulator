@@ -5,6 +5,8 @@ int main()
 {
     // Get the singleton instance of the Driver
     Driver *driver = Driver::getInstance();
+    driver->loadUsers();
+    driver->loadProducts();
 
     // Run the application
     driver->run();
