@@ -739,11 +739,11 @@ void Driver::loadUsers(const std::string &filename)
         if (u != nullptr)
         {
             users[username] = u;
-            count++;
+            
         }
     }
 
-    std::cout << "Loaded " << count << " users from " << filename << std::endl;
+    std::cout << "Loaded " << users.size() << " users from " << filename << std::endl;
     file.close();
 }
 
