@@ -105,21 +105,7 @@ double Seller::checkAccountBalance() const
     return getBalance();
 }
 
-/**
- * @brief Updates the seller's account balance by adding the specified amount.
- *
- * This function increases or decreases the seller's account balance by the given amount.
- * A positive amount adds to the balance, and a negative amount deducts from it.
- *
- * @param amount The amount to add to the seller's account balance.
- */
-void Seller::updateAccountBalance(double amount)
-{
-    // Call the parent class's updateBalance method
-    updateBalance(amount);
-    std::cout << "Account balance updated by $" << amount << std::endl;
-    std::cout << "New balance: $" << getBalance() << std::endl;
-}
+
 
 /**
  * @brief Adds a product to the seller's list of products for sale.

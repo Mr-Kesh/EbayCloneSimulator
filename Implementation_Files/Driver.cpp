@@ -1012,9 +1012,9 @@ void Driver::closeBidding(Seller *seller, int productId)
                 product->markAsSold();
 
                 // Deduct from buyer
-                highestBidder->setBalance(buyerBalance - highestBidAmount);
+                highestBidder->setAccountBalance(buyerBalance - highestBidAmount);
                 // Add to seller
-                seller->setBalance(sellerBalance + highestBidAmount);
+                seller->setAccountBalance(sellerBalance + highestBidAmount);
 
                 // Update the buyer's purchase history
                 highestBidder->addPurchasedProduct(product);
