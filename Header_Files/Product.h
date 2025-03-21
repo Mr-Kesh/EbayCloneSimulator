@@ -30,6 +30,8 @@ private:
     bool isSold_;
     Seller *seller_;
     std::map<Buyer *, double> bids_; // Using map to track bids by buyer
+    std::string attribute1_;         // First attribute specific to product type
+    std::string attribute2_;         // Second attribute specific to product type
 
 public:
     // Constructor
@@ -49,6 +51,14 @@ public:
     Seller *getSeller() const { return seller_; }
     Buyer *getHighestBidder() const;
     double getHighestBidAmount() const;
+
+    // New attribute getters
+    std::string getAttribute1() const { return attribute1_; }
+    std::string getAttribute2() const { return attribute2_; }
+
+    // New attribute setters
+    void setAttribute1(const std::string &attr) { attribute1_ = attr; }
+    void setAttribute2(const std::string &attr) { attribute2_ = attr; }
 
     // Setters
     void setIsActive(bool active) { isActive_ = active; }

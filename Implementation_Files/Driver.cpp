@@ -742,10 +742,10 @@ void Driver::loadUsers(const std::string &filename)
 }
 
 /**
- * @brief Loads products from a specified CSV file.
+ * @brief Loads bids from a specified CSV file.
  *
- * @param filename The name of the CSV file to read product data from. This should be a string like "products.csv".
- * @return void This function populates the products vector with Product objects.
+ * @param filename The name of the CSV file to read bid data from (bids.csv)
+ * @return void This function populates the bids vector and updates products with bid information
  */
 void Driver::loadBids(const std::string &filename)
 {
@@ -760,24 +760,77 @@ void Driver::loadBids(const std::string &filename)
     while (std::getline(file, line))
     {
         std::istringstream iss(line);
-        int productId;
-        std::string category, productName, sellerUsername, status;
-        double basePrice, finalPrice;
-        int quality;
+        std::string productIdStr, category, attribute1, attribute2, buyerUsername, bidAmountStr,
+            productName, basePriceStr, qualityStr, sellerUsername;
 
-        if (!(iss >> productId >> category >> productName >> basePrice >> quality >> sellerUsername >> status >> finalPrice))
+        // Parse CSV line: productId,category,attribute1,attribute2,buyerUsername,bidAmount,productName,basePrice,quality,sellerUsername
+        std::getline(iss, productIdStr, ',');
+        std::getline(iss, category, ',');
+        std::getline(iss, attribute1, ',');
+        std::getline(iss, attribute2, ',');
+        std::getline(iss, buyerUsername, ',');
+        std::getline(iss, bidAmountStr, ',');
+        std::getline(iss, productName, ',');
+        std::getline(iss, basePriceStr, ',');
+        std::getline(iss, qualityStr, ',');
+        std::getline(iss, sellerUsername);
+
+        try
         {
-            std::cerr << "Error: Invalid format in " << filename << std::endl;
-            continue;
+            // Convert string values to appropriate types
+            int productId = std::stoi(productIdStr);
+            double bidAmount = std::stod(bidAmountStr);
+            double basePrice = std::stod(basePriceStr);
+
+            // Convert quality string to enum
+            Quality quality = Quality::Used_Okay; // Default value
+            if (qualityStr == "New")
+            {
+                quality = Quality::New;
+            }
+            else if (qualityStr == "Used_VeryGood")
+            {
+                quality = Quality::Used_VeryGood;
+            }
+            else if (qualityStr == "Used_Good")
+            {
+                quality = Quality::Used_Good;
+            }
+
+            // Find or create seller
+            Seller *seller = getSellerByUsername(sellerUsername);
+            if (!seller)
+            {
+                std::cerr << "Seller " << sellerUsername << " not found. Skipping bid." << std::endl;
+                continue;
+            }
+
+            // Find or create buyer
+            Buyer *buyer = dynamic_cast<Buyer *>(findExistingUser(buyerUsername));
+            if (!buyer)
+            {
+                std::cerr << "Buyer " << buyerUsername << " not found. Skipping bid." << std::endl;
+                continue;
+            }
+
+            // Find or create product
+            Product *product = getProductById(productId);
+            if (!product)
+            {
+                // Create new product if it doesn't exist yet
+                product = ProductFactory::CreateProduct(
+                    productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
+                products[productId] = product;
+                seller->addProductForSale(product);
+            }
+
+            // Add the bid
+            product->addBid(buyer, bidAmount);
         }
-
-        Seller *seller = getSellerByUsername(sellerUsername);
-        if (seller)
+        catch (const std::exception &e)
         {
-            Product *product = new Product(productId, productName, category, basePrice, static_cast<Quality>(quality), seller);
-            product->setStatus(status);
-            product->setFinalPrice(finalPrice);
-            products[productId] = product;
+            std::cerr << "Error parsing bid entry: " << e.what() << std::endl;
+            continue;
         }
     }
     file.close();
@@ -792,7 +845,7 @@ void Driver::loadData()
 {
     // Update paths to look in the "CSV files" directory
     loadUsers("CSV_files/users.csv");
-    loadProducts("CSV_files/bids.csv");
+    loadBids("CSV_files/bids.csv");
 }
 
 /**
@@ -824,6 +877,12 @@ void Driver::saveUsers(const std::string &filename)
     file.close();
 }
 
+/**
+ * @brief Saves product data made during the program to products.csv file
+ *
+ * @param productsFilename The name of the CSV file to write product data to.
+ * @return void This function writes the product data to the specified file.
+ */
 void Driver::saveProductsToCSV(const std::string &productsFilename)
 {
     std::ofstream productsFile(productsFilename);
@@ -838,15 +897,38 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
     {
         Product *product = pair.second;
 
-        // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
-        productsFile << product->getProductId() << ","
-                     << product->getCategory() << ","
-                     << product->getAttribute1() << ","
-                     << product->getAttribute2() << ","
-                     << product->getName() << ","
-                     << product->getBasePrice() << ","
-                     << product->getQualityAsString() << ","
-                     << product->getSeller()->getUsername() << std::endl;
+        if (product != nullptr)
+        {
+            // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
+            productsFile << product->getProductId() << ","
+                         << product->getCategory() << ","
+                         << product->getAttribute1() << ","
+                         << product->getAttribute2() << ","
+                         << product->getName() << ","
+                         << product->getBasePrice() << ",";
+
+            // Convert quality enum to string
+            Quality quality = product->getQuality();
+            switch (quality)
+            {
+            case Quality::New:
+                productsFile << "New";
+                break;
+            case Quality::Used_VeryGood:
+                productsFile << "Used_VeryGood";
+                break;
+            case Quality::Used_Good:
+                productsFile << "Used_Good";
+                break;
+            case Quality::Used_Okay:
+                productsFile << "Used_Okay";
+                break;
+            default:
+                productsFile << "Unknown";
+            }
+
+            productsFile << "," << product->getSeller()->getUsername() << std::endl;
+        }
     }
 
     productsFile.close();

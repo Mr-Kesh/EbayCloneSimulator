@@ -89,6 +89,7 @@ public:
      * Data CSV Files Functions
      ****************************************************/
     void loadUsers(const std::string &filename);
+    void loadProducts(const std::string &filename);
     void loadBids(const std::string &filename);
     void loadData();
     void saveData();
