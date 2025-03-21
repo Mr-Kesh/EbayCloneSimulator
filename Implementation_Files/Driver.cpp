@@ -50,16 +50,7 @@ void Driver::run()
 {
     welcomeMessage();
 
-    // Authenticate user type
-    User *user = authenticateUser();
-    if (user == nullptr)
-    {
-        std::cout << "User authentication failed.\n";
-        return; // Exit if authentication fails
-    }
-
-    // Set the current user
-    currentUser = user;
+    returnToBeginningMenu();
 
     // Call the main menu
     mainMenu();
@@ -117,10 +108,10 @@ void Driver::welcomeMessage()
     std::cout << "-----------------------------------" << std::endl;
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
     clearInputBuffer();
-
+    
     if (selection == 1)
     {
-        return;
+        authenticateUser();
     }
     else if (selection == 2)
     {
