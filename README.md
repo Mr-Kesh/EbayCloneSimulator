@@ -14,86 +14,50 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 ## Features
 
 ### General Features
-
-Loads users and products from CSV files
-
-Users can choose a role: Buyer or Seller
-
-Implements a Singleton Driver class to manage users, products, and bids
+* Loads users and products from CSV files
+* Users can choose a role: Buyer or Seller
+* Implements a Singleton Driver class to manage users, products, and bids
 
 ### Seller Features
-
-Post products for sale with a base price and quality indicator
-
-View historical prices of similar products
-
-Check account balance
-
-Update user information
-
-View products sold or still available
-
-Open and close bids on products
-
-View entire bid history for their products
+* Post products for sale with a base price and quality indicator
+* View historical prices of similar products
+* Check account balance
+* Update user information
+* View products sold or still available
+* Open and close bids on products
+* View entire bid history for their products
 
 ### Buyer Features
-
-Browse available products for sale
-
-Place bids on active listings (limited by account balance)
-
-Check account balance
-
-Update user information
-
-View bid history and purchased products
-
-Receive notifications on bid status
+* Browse available products for sale
+* Place bids on active listings (limited by account balance)
+* Check account balance
+* Update user information
+* View bid history and purchased products
+* Receive notifications on bid status
 
 ### Bidding System
-
-Products accept bids until the seller closes the auction
-
-Buyers can bid on multiple products
-
-The highest bidder wins, provided they have sufficient funds
-
-If the highest bidder defaults, the product is awarded to the next highest bidder
-
-Unsold products can be relisted by the seller
-
-Sold products cannot be resold
+* Products accept bids until the seller closes the auction
+* Buyers can bid on multiple products
+* The highest bidder wins, provided they have sufficient funds
+* If the highest bidder defaults, the product is awarded to the next highest bidder
+* Unsold products can be relisted by the seller
+* Sold products cannot be resold
 
 ### Product Categories & Inheritance
-
-At least 5 product categories with a minimum of 3 levels of inheritance per category
-
-Products include different quality ratings: New, Used-VeryGood, Used-Good, Used-Okay
-
-Detailed class structures for robust inheritance design
+* At least 5 product categories with a minimum of 3 levels of inheritance per category
+* Products include different quality ratings: New, Used-VeryGood, Used-Good, Used-Okay
+* Detailed class structures for robust inheritance design
 
 ## Implementation Details
-
-Programming Language: C++
-
-Design Patterns Used:
-
-Singleton: Driver class to manage application state
-
-Factory Pattern: Creating products dynamically
-
-Maps: Tracking users, products, and bids efficiently
-
-File Storage:
-
-CSV files store user and product data
-
-loadUsers() and loadProducts() functions read from CSV files
-
-Makefile: For compiling and running the program
-
-CI/CD Pipeline: Set up for GitHub repository
+* Programming Language: C++
+* Design Patterns Used:
+* Singleton: Driver class to manage application state
+* Factory Pattern: Creating products dynamically
+* Maps: Tracking users, products, and bids efficiently
+* File Storage: CSV files store user and product data
+* loadUsers() and loadProducts() functions read from CSV files
+* Makefile: For compiling and running the program
+* CI/CD Pipeline: Set up for GitHub repository
 
 ## File Structure:
 
