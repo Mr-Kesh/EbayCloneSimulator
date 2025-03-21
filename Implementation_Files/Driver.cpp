@@ -50,12 +50,10 @@ void Driver::run()
 {
     welcomeMessage();
 
-    // After welcomeMessage, we need to actually check if a user is logged in
-    if (currentUser != nullptr)
-    {
-        // Only show the main menu if we have a valid user
-        mainMenu();
-    }
+    returnToBeginningMenu();
+
+    // Call the main menu
+    mainMenu();
 }
 
 /**
@@ -301,12 +299,6 @@ User *Driver::authenticateUser()
     if (existingUser != nullptr)
     {
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
-
-        // Set the current user
-        currentUser = existingUser;
-
-        // Return the existing user
-        return existingUser;
     }
     else
     {
@@ -318,14 +310,13 @@ User *Driver::authenticateUser()
         if (validateYesNoInput(choice))
         {
             createAccount();
-            return nullptr;
         }
         else
         {
             returnToBeginningMenu();
-            return nullptr;
         }
     }
+    return nullptr;
 }
 
 // /**
