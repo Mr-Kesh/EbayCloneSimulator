@@ -14,8 +14,7 @@ User *UserFactory::createUser(const std::string &type, const std::string &userna
     return nullptr; // Invalid type
 }
 
-User *UserFactory::createUserFromCSV(const std::string &user_id, const std::string &username,
-                                     const std::string &user_type, long phoneNumber,
+User *UserFactory::createUserFromCSV(const std::string &username, const std::string &user_type, long phoneNumber,
                                      const std::string &address, double balance)
 {
     // You can use the user_id if needed or just pass it along
