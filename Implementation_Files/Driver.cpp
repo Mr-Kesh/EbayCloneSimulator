@@ -752,37 +752,64 @@ void Driver::loadBids(const std::string &filename)
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cerr << "Error: Could not open " << filename << " for reading." << std::endl;
+        std::cout << "Could not open file: " << filename << std::endl;
         return;
     }
 
     std::string line;
+    // Skip header line
+    std::getline(file, line);
+
     while (std::getline(file, line))
     {
-        std::istringstream iss(line);
-        std::string productIdStr, category, attribute1, attribute2, buyerUsername, bidAmountStr,
-            productName, basePriceStr, qualityStr, sellerUsername;
+        std::stringstream ss(line);
+        std::string productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
 
-        // Parse CSV line: productId,category,attribute1,attribute2,buyerUsername,bidAmount,productName,basePrice,quality,sellerUsername
-        std::getline(iss, productIdStr, ',');
-        std::getline(iss, category, ',');
-        std::getline(iss, attribute1, ',');
-        std::getline(iss, attribute2, ',');
-        std::getline(iss, buyerUsername, ',');
-        std::getline(iss, bidAmountStr, ',');
-        std::getline(iss, productName, ',');
-        std::getline(iss, basePriceStr, ',');
-        std::getline(iss, qualityStr, ',');
-        std::getline(iss, sellerUsername);
+        // Parse CSV line based on updated bids.csv format:
+        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Bid Price,Product Name,Base Price,Quality,Seller
+        std::getline(ss, productIdStr, ',');
+        std::getline(ss, category, ',');
+        std::getline(ss, attribute1, ',');
+        std::getline(ss, attribute2, ',');
+        std::getline(ss, buyerName, ',');
+        std::getline(ss, bidPriceStr, ',');
+        std::getline(ss, productName, ',');
+        std::getline(ss, basePriceStr, ',');
+        std::getline(ss, qualityStr, ',');
+        std::getline(ss, sellerName);
 
-        try
+        // Convert numeric values
+        int productId = std::stoi(productIdStr);
+        double basePrice = std::stod(basePriceStr);
+        double bidPrice = std::stod(bidPriceStr);
+
+        // Find the seller
+        Seller *seller = nullptr;
+        for (const auto &pair : users)
         {
-            // Convert string values to appropriate types
-            int productId = std::stoi(productIdStr);
-            double bidAmount = std::stod(bidAmountStr);
-            double basePrice = std::stod(basePriceStr);
+            User *user = pair.second;
+            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
+            {
+                seller = static_cast<Seller *>(user);
+                break;
+            }
+        }
 
-            // Convert quality string to enum
+        // Find the buyer
+        Buyer *buyer = nullptr;
+        for (const auto &pair : users)
+        {
+            User *user = pair.second;
+            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
+            {
+                buyer = static_cast<Buyer *>(user);
+                break;
+            }
+        }
+
+        if (seller)
+        {
+            // Convert string to Quality enum
             Quality quality = Quality::Used_Okay; // Default value
             if (qualityStr == "New")
             {
@@ -796,43 +823,32 @@ void Driver::loadBids(const std::string &filename)
             {
                 quality = Quality::Used_Good;
             }
-
-            // Find or create seller
-            Seller *seller = getSellerByUsername(sellerUsername);
-            if (!seller)
+            else if (qualityStr == "Used_Okay")
             {
-                std::cerr << "Seller " << sellerUsername << " not found. Skipping bid." << std::endl;
-                continue;
+                quality = Quality::Used_Okay;
+            }
+            else
+            {
+                std::cout << "Unknown quality '" << qualityStr << "' for product " << productId << ", defaulting to Used_Okay\n";
             }
 
-            // Find or create buyer
-            Buyer *buyer = dynamic_cast<Buyer *>(findExistingUser(buyerUsername));
-            if (!buyer)
-            {
-                std::cerr << "Buyer " << buyerUsername << " not found. Skipping bid." << std::endl;
-                continue;
-            }
+            Product *product = ProductFactory::CreateProduct(productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
 
-            // Find or create product
-            Product *product = getProductById(productId);
-            if (!product)
+            if (product)
             {
-                // Create new product if it doesn't exist yet
-                product = ProductFactory::CreateProduct(
-                    productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
                 products[productId] = product;
                 seller->addProductForSale(product);
-            }
 
-            // Add the bid
-            product->addBid(buyer, bidAmount);
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error parsing bid entry: " << e.what() << std::endl;
-            continue;
+                // Add the bid to the product if there's a buyer
+                if (buyer && bidPrice > 0)
+                {
+                    product->addBid(buyer, bidPrice);
+                    buyer->placeBid(productId, bidPrice);
+                }
+            }
         }
     }
+
     file.close();
 }
 
