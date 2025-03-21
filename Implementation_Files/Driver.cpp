@@ -51,7 +51,7 @@ void Driver::run()
     welcomeMessage();
 
     // Authenticate user type
-    User *user = authenticateUserType();
+    User *user = authenticateUser();
     if (user == nullptr)
     {
         std::cout << "User authentication failed.\n";
@@ -326,24 +326,35 @@ User *Driver::authenticateUser()
     return nullptr;
 }
 
-/**
- * @brief Authenticates the user's type.
- *
- * This function prompts the user to specify their type (Buyer or Seller) and validates the input.
- *
- * @return User* A pointer to the authenticated User object.
- */
-User *Driver::authenticateUserType()
-{
-    User *user = authenticateUser();
-    if (user == nullptr)
-    {
-        return nullptr; // Return null if authentication failed
-    }
+// /**
+//  * @brief Authenticates the user's type.
+//  *
+//  * This function prompts the user to specify their type (Buyer or Seller) and validates the input.
+//  *
+//  * @return User* A pointer to the authenticated User object.
+//  */
+// User *Driver::authenticateUserType()
+// {
 
-    // User already authenticated, no need to ask for type
-    return user;
-}
+//     User *user = authenticateUser();
+//     std::string userType;
+
+//     // Prompt the user to specify their type (Buyer or Seller)
+//     while (userType != "Buyer" && userType != "Seller")
+//     {
+//         std::cout << "Are you a Buyer or a Seller? ";
+//         std::cin >> userType;
+//         std::cin.ignore();
+
+//         // Check if the input is valid
+//         if (userType != "Buyer" && userType != "Seller")
+//         {
+//             std::cout << "Invalid user type.\n";
+//             break;
+//         }
+//     }
+//     return user;
+// }
 
 /**
  * @brief Prompts the user to enter a phone number.
