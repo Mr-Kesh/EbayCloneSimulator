@@ -724,11 +724,10 @@ void Driver::loadUsers(const std::string &filename)
     while (std::getline(file, line))
     {
         std::stringstream ss(line);
-        std::string username, address, user_id, user_type;
+        std::string username, address, user_type;
         std::string phone_str, balance_str;
 
         // Read values as strings
-        std::getline(ss, user_id, ',');
         std::getline(ss, username, ',');
         std::getline(ss, user_type, ',');
         std::getline(ss, phone_str, ',');
@@ -739,7 +738,7 @@ void Driver::loadUsers(const std::string &filename)
         long phoneNumber = std::stol(phone_str);
         double balance = std::stod(balance_str);
 
-        User *u = UserFactory::createUserFromCSV(user_id, username, user_type, phoneNumber, address, balance);
+        User *u = UserFactory::createUserFromCSV(username, user_type, phoneNumber, address, balance);
 
         // Add user to the users map using username as key
         if (u != nullptr)
