@@ -50,8 +50,6 @@ void Driver::run()
 {
     welcomeMessage();
 
-    returnToBeginningMenu();
-
     // Call the main menu
     mainMenu();
 }
