@@ -1,5 +1,6 @@
 #include "Header_Files/ProductFactory.h"
 #include "Header_Files/Product.h"
+#include "Header_Files/Seller.h"
 
 // This file is needed to ensure proper linking, but the inline implementation in the header
 // contains the main functionality. Just to be sure attributes are set properly, we'll add

@@ -1,6 +1,9 @@
 #ifndef PRODUCT_FACTORY_H_
 #define PRODUCT_FACTORY_H_
 
+// Forward declaration
+class Seller;
+
 #include "Product.h"
 #include "Electronics.h"
 #include "Clothing.h"

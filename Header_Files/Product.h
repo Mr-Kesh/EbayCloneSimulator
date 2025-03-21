@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "User.h"
+
+// Forward declarations
+class Buyer;
+class Seller;
 
 // Struct to store bid information
 struct BidInfo

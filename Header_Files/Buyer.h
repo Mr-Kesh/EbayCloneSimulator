@@ -2,8 +2,10 @@
 #define _BUYER_H_
 
 #include "User.h"
-#include "Product.h"
 #include <vector>
+
+// Forward declaration
+class Product;
 
 class Buyer : public User
 {
