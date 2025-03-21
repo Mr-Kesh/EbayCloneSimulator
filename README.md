@@ -62,7 +62,7 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 
 ## File Structure:
 
-|-- src/
+```|-- src/
 |   |-- main.cpp
 |   |-- Driver.cpp
 |   |-- Driver.h
@@ -86,6 +86,7 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 |
 |-- Makefile
 |-- README.md
+```
 
 
 ## Running the Program
