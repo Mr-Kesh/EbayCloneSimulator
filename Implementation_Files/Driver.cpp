@@ -177,7 +177,7 @@ bool Driver::showSellerMenu()
 
     switch (selection)
     {
-    
+
     case 1:
         seller->addProduct();
         break;
@@ -368,8 +368,15 @@ long Driver::enterPhoneNumber()
 {
     std::cout << "Enter phone number: ";
     long phoneNumber;
-    std::cin >> phoneNumber;
-    std::cin.ignore();
+
+    while (!(std::cin >> phoneNumber))
+    {
+        std::cout << "Invalid phone number. Please enter a numeric value: ";
+        std::cin.clear(); // Clear error flags
+        clearInputBuffer();
+    }
+
+    clearInputBuffer();
     return phoneNumber;
 }
 
@@ -399,16 +406,22 @@ double Driver::enterBalance()
 {
     std::cout << "Enter starting balance: ";
     double balance;
-    std::cin >> balance;
-    std::cin.ignore();
 
-    while (balance < 0)
+    while (!(std::cin >> balance) || balance < 0)
     {
-        std::cout << "Balance can't be negative silly. Please enter a valid balance: ";
-        std::cin >> balance;
-        std::cin.ignore();
+        if (std::cin.fail())
+        {
+            std::cout << "Invalid balance. Please enter a numeric value: ";
+            std::cin.clear(); 
+            clearInputBuffer();
+        }
+        else
+        {
+            std::cout << "Balance can't be negative. Please enter a valid balance: ";
+        }
     }
 
+    clearInputBuffer();
     return balance;
 }
 
@@ -820,16 +833,20 @@ T getValidNumberChoice(const std::string &prompt, T min, T max)
 
     while (!(std::cin >> number) || number < min || number > max)
     {
-        // Explain the error
-        std::cout << "Error: Please enter a number between " << min << " and " << max << ": ";
-
         // Clear the previous input (Resets cin so we can take a new input)
         std::cin.clear();
 
         // Discard previous input (Gets rid of the invalid input)
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        // Explain the error and reprompt
+        if (std::cin.fail())
+            std::cout << "Error: Invalid input. Please enter a number: ";
+        else
+            std::cout << "Error: Please enter a number between " << min << " and " << max << ": ";
     }
 
+    clearInputBuffer();
     return number;
 }
 
