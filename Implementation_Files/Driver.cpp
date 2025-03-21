@@ -72,7 +72,6 @@ void Driver::returnToBeginningMenu()
     std::cout << "-----------------------------------" << std::endl;
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
-    clearInputBuffer();
 
     if (selection == 1)
     {
@@ -105,7 +104,6 @@ void Driver::welcomeMessage()
     std::cout << "3. Exit" << std::endl;
     std::cout << "-----------------------------------" << std::endl;
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
-    clearInputBuffer();
 
     if (selection == 1)
     {
@@ -376,7 +374,7 @@ long Driver::enterPhoneNumber()
         clearInputBuffer();
     }
 
-    clearInputBuffer();
+    clearInputBuffer(); // Add this back - needed to consume the newline after reading a number
     return phoneNumber;
 }
 
@@ -412,7 +410,7 @@ double Driver::enterBalance()
         if (std::cin.fail())
         {
             std::cout << "Invalid balance. Please enter a numeric value: ";
-            std::cin.clear(); 
+            std::cin.clear();
             clearInputBuffer();
         }
         else
@@ -421,7 +419,7 @@ double Driver::enterBalance()
         }
     }
 
-    clearInputBuffer();
+    clearInputBuffer(); // Add this back - needed to consume the newline after reading a number
     return balance;
 }
 
@@ -837,7 +835,7 @@ T getValidNumberChoice(const std::string &prompt, T min, T max)
         std::cin.clear();
 
         // Discard previous input (Gets rid of the invalid input)
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        clearInputBuffer();
 
         // Explain the error and reprompt
         if (std::cin.fail())
@@ -846,7 +844,7 @@ T getValidNumberChoice(const std::string &prompt, T min, T max)
             std::cout << "Error: Please enter a number between " << min << " and " << max << ": ";
     }
 
-    clearInputBuffer();
+    clearInputBuffer(); // Add this back to consume the newline after successful input
     return number;
 }
 
