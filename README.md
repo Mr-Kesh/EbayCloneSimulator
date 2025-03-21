@@ -1,4 +1,3 @@
-Jenna and Jeshua's CSCI 3010 HW3
 
 ![Build Status](https://github.com/jejo8526/programming-workshop-hw3/actions/workflows/c-cpp.yml/badge.svg)
 
@@ -62,30 +61,60 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 
 ## File Structure:
 
-```|-- src/
-|   |-- main.cpp
-|   |-- Driver.cpp
-|   |-- Driver.h
-|   |-- User.cpp
-|   |-- User.h
-|   |-- Product.cpp
-|   |-- Product.h
-|   |-- Buyer.cpp
-|   |-- Buyer.h
-|   |-- Seller.cpp
-|   |-- Seller.h
-|   |-- Bid.cpp
-|   |-- Bid.h
-|
-|-- data/
-|   |-- users.csv
+```|-- .github/
+|   |-- workflows/
+|   |   |-- c-cpp.yml
+|-- .ipynb_checkpoints/
+|   |-- BidToBuy-checkpoint.cpp
+|   |-- BidToBuy-checkpoint.h
+|   |-- Makefile-checkpoint
+|   |-- Product-checkpoint.cpp
+|   |-- Product-checkpoint.h
+|   |-- Seller-checkpoint.cpp
+|   |-- User-checkpoint.cpp
+|   |-- main-checkpoint.cpp
+|   |-- test-checkpoint.cpp
+|-- .vscode/
+|   |-- c_cpp_properties.json
+|   |-- settings.json
+|-- CSV_files/
+|   |-- bids.csv
 |   |-- products.csv
-|
-|-- output/
-|   |-- output.txt
-|
+|   |-- users.csv
+|-- Header_Files/
+|   |-- Bid.h
+|   |-- Books.h
+|   |-- Buyer.h
+|   |-- Clothing.h
+|   |-- Driver.h
+|   |-- Electronics.h
+|   |-- Furniture.h
+|   |-- Product.h
+|   |-- ProductFactory.h
+|   |-- Seller.h
+|   |-- Tools.h
+|   |-- User.h
+|   |-- UserFactory.h
+|-- Implementation_Files/
+|   |-- Bid.cpp
+|   |-- Books.cpp
+|   |-- Buyer.cpp
+|   |-- Clothing.cpp
+|   |-- Driver.cpp
+|   |-- Electronics.cpp
+|   |-- Furniture.cpp
+|   |-- Product.cpp
+|   |-- ProductFactory.cpp
+|   |-- Seller.cpp
+|   |-- Tools.cpp
+|   |-- User.cpp
+|   |-- UserFactory.cpp
+|-- .gitignore
 |-- Makefile
 |-- README.md
+|-- catch.hpp
+|-- main
+|-- main.cpp
 ```
 
 
@@ -104,7 +133,7 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
   ```./main```
 
 ## Output
-Example game output is in output.txt
+Example output of the simulation is in output.txt.
 
 ## Contributors
 
