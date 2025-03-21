@@ -44,8 +44,6 @@ public:
      */
     void openBid(Product *product);
     void closeBid(Product *product);
-    void openBidding(int productId);
-    void closeBidding(int productId);
 
     /****************************************************
      * Sales History Functions

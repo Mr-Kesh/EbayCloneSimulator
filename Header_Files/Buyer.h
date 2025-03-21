@@ -23,6 +23,7 @@ public:
 
     // Purchase history
     void viewPurchaseHistory() const;
+    void addPurchasedProduct(Product *product); // Add product to purchase history
 
     // Override from User base class
     void updateUserInformation() override;

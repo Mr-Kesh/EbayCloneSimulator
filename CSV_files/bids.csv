@@ -1,20 +1,20 @@
-1001,Clothing:Shirt:T-Shirt,Small,Shirt,JaneSmith,Polo T-Shirt,30,New,JohnDoe
-1002,Clothing:Pants:Jeans,32,Pants,JaneSmith,Levi's 501,50,Used_Good,AliceJohnson
-1003,Electronics:Computer:Laptop,Dell,XPS 15,SophiaGreen,Dell XPS 15,1200,New,FrankMiller
-1004,Electronics:Phone:Smartphone,iPhone,14,OliviaBrown,iPhone 14 Pro,1000,Used_VeryGood,NathanWhite
-1005,Furniture:Bed:Twin Bed,Cotton,Bed,OliviaBrown,Twin Bedz,200,New,JohnDoe
-1006,Books:Fiction:Novel,J.K. Rowling,Fiction,BobWilliams,Harry Potter,40,Used_Good,JohnDoe
-1007,Tools:Hand Tool:Hammer,Black & Decker,Hand Tool,KarenMoore,Hammer,80,New,LiamScott
-1008,Electronics:Television:Smart TV,Samsung,QLED 4K,GraceWilson,Samsung 55-inch,700,Used_Okay,EthanWhite
-1009,Furniture:Table:Coffee Table,Wood,Table,KarenMoore,Coffee Table,300,Used_VeryGood,CharlieBrown
-1010,Books:Non-Fiction:Textbook,Stephen Hawking,Non-Fiction,IvyMartinez,A Brief History of Time,20,New,CharlieBrown
-1011,Electronics:Computer:Laptop,MacBook,Pro,IvyMartinez,MacBook Pro 16-inch,2200,New,FrankMiller
-1012,Clothing:Shoes:Sneakers,Nike Air Jordan,Shoes,EmilyDavis,Nike Air Jordan 1,150,New,HenryClark
-1013,Furniture:Chair:Office Chair,Leather,Chair,BobWilliams,Luxury Office Chair,500,New,JamesMiller
-1014,Books:Fiction:Mystery,Agatha Christie,Fiction,SophiaGreen,Murder on the Orient Express,25,Used_VeryGood,NathanWhite
-1015,Tools:Power Tool:Drill,Ryobi,Power Tool,MiaRoberts,Ryobi Drill,120,New,JackAnderson
-1016,Electronics:Phone:Smartphone,Samsung,S23 Ultra,DanielWhite,Samsung Galaxy S23 Ultra,1100,New,LiamScott
-1017,Clothing:Shirt:T-Shirt,Small,Shirt,SophiaGreen,Polo T-Shirt,30,New,JohnDoe
-1018,Clothing:Pants:Jeans,35,Pants,DanielWhite,Addidas Joggers,50,Used_Good,AliceJohnson
-1019,Electronics:Computer:Laptop,Dell,Alienware M15,SophiaGreen,Alienware M15,1200,New,FrankMiller
-1020,Electronics:Phone:Smartphone,Apple,Iphone14,OliviaBrown,iPhone 14 Pro,1000,Used_VeryGood,NathanWhite
+1001,Clothing:Shirt:T-Shirt,Small,Shirt,JaneSmith,35,Polo T-Shirt,30,New,JohnDoe
+1002,Clothing:Pants:Jeans,32,Pants,JaneSmith,55,Levi's 501,50,Used_Good,AliceJohnson
+1003,Electronics:Computer:Laptop,Dell,XPS 15,SophiaGreen,1300,Dell XPS 15,1200,New,FrankMiller
+1004,Electronics:Phone:Smartphone,iPhone,14,OliviaBrown,1050,iPhone 14 Pro,1000,Used_VeryGood,NathanWhite
+1005,Furniture:Bed:Twin Bed,Cotton,Bed,OliviaBrown,220,Twin Bedz,200,New,JohnDoe
+1006,Books:Fiction:Novel,J.K. Rowling,Fiction,BobWilliams,45,Harry Potter,40,Used_Good,JohnDoe
+1007,Tools:Hand Tool:Hammer,Black & Decker,Hand Tool,KarenMoore,85,Hammer,80,New,LiamScott
+1008,Electronics:Television:Smart TV,Samsung,QLED 4K,GraceWilson,720,Samsung 55-inch,700,Used_Okay,EthanWhite
+1009,Furniture:Table:Coffee Table,Wood,Table,KarenMoore,320,Coffee Table,300,Used_VeryGood,CharlieBrown
+1010,Books:Non-Fiction:Textbook,Stephen Hawking,Non-Fiction,IvyMartinez,25,A Brief History of Time,20,New,CharlieBrown
+1011,Electronics:Computer:Laptop,MacBook,Pro,IvyMartinez,2300,MacBook Pro 16-inch,2200,New,FrankMiller
+1012,Clothing:Shoes:Sneakers,Nike Air Jordan,Shoes,EmilyDavis,165,Nike Air Jordan 1,150,New,HenryClark
+1013,Furniture:Chair:Office Chair,Leather,Chair,BobWilliams,510,Luxury Office Chair,500,New,JamesMiller
+1014,Books:Fiction:Mystery,Agatha Christie,Fiction,SophiaGreen,30,Murder on the Orient Express,25,Used_VeryGood,NathanWhite
+1015,Tools:Power Tool:Drill,Ryobi,Power Tool,MiaRoberts,130,Ryobi Drill,120,New,JackAnderson
+1016,Electronics:Phone:Smartphone,Samsung,S23 Ultra,DanielWhite,1150,Samsung Galaxy S23 Ultra,1100,New,LiamScott
+1017,Clothing:Shirt:T-Shirt,Small,Shirt,SophiaGreen,32,Polo T-Shirt,30,New,JohnDoe
+1018,Clothing:Pants:Jeans,35,Pants,DanielWhite,55,Addidas Joggers,50,Used_Good,AliceJohnson
+1019,Electronics:Computer:Laptop,Dell,Alienware M15,SophiaGreen,1250,Alienware M15,1200,New,FrankMiller
+1020,Electronics:Phone:Smartphone,Apple,Iphone14,OliviaBrown,1050,iPhone 14 Pro,1000,Used_VeryGood,NathanWhite

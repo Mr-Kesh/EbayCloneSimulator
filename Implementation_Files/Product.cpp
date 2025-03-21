@@ -144,7 +144,7 @@ void Product::viewSalesHistory()
     std::cout << "Status: " << (isActive_ ? "Active" : "Inactive") << ", " << (isSold_ ? "Sold" : "Not Sold") << std::endl;
     std::cout << "-----------------------------------" << std::endl;
 
-    // Additional sales history details could be shown here
+    // Show sales information if the product is sold
     if (isSold_)
     {
         Buyer *highestBidder = getHighestBidder();
@@ -154,9 +154,27 @@ void Product::viewSalesHistory()
             std::cout << "Sale Price: $" << getHighestBidAmount() << std::endl;
         }
     }
+    // If not sold, check if there are any bids
+    else if (!bids_.empty())
+    {
+        double highestBid = getHighestBidAmount();
+        Buyer *highestBidder = getHighestBidder();
+        std::cout << "Current highest bid: $" << highestBid << " by " << highestBidder->getUsername() << std::endl;
+
+        // Show all bids if there are multiple
+        if (bids_.size() > 1)
+        {
+            std::cout << "\nAll bids:" << std::endl;
+            for (const auto &bid : bids_)
+            {
+                std::cout << " - " << bid.first->getUsername() << ": $" << bid.second << std::endl;
+            }
+        }
+    }
     else
     {
         std::cout << "This product has not been sold yet." << std::endl;
+        std::cout << "No bids have been placed." << std::endl;
     }
 }
 
@@ -176,7 +194,7 @@ void Product::displaySalesHistorySummary() const
     }
     else if (!bids_.empty())
     {
-        std::cout << ", Current bid: $" << getHighestBidAmount();
+        std::cout << ", Current highest bid: $" << getHighestBidAmount();
     }
     else
     {

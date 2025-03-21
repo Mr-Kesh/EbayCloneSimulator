@@ -591,43 +591,6 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
     }
 }
 
-/**
- * @brief Opens bidding on a product.
- *
- * @param productId The ID of the product that is being opened for bidding.
- * @return void This function opens the bidding process for the product.
- */
-void Seller::openBidding(int productId)
-{
-    Product *product = Driver::getInstance()->getProductById(productId);
-    if (product)
-    {
-        product->openBidding();
-    }
-    else
-    {
-        std::cout << "Product not found.\n";
-    }
-}
-
-/**
- * @brief Closes bidding on a product and determines the winner.
- *
- * @param productId The ID of the product that is being closed for bidding.
- * @return void This function finalizes the bidding process for the product.
- */
-void Seller::closeBidding(int productId)
-{
-    Product *product = Driver::getInstance()->getProductById(productId);
-    if (product)
-    {
-        product->closeBidding();
-    }
-    else
-    {
-        std::cout << "Product not found.\n";
-    }
-}
 
 /**
  * @brief Displays the sales history of a product.

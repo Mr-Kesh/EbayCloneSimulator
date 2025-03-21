@@ -232,13 +232,13 @@ bool Driver::showSellerMenu()
     case 2:
     {
         int productId = getValidNumberChoice("Enter Product ID to open for bidding: ", 1000, 9999);
-        seller->openBidding(productId);
+        openBidding(seller, productId);
         break;
     }
     case 3:
     {
         int productId = getValidNumberChoice("Enter Product ID to close bidding: ", 1000, 9999);
-        seller->closeBidding(productId);
+        closeBidding(seller, productId);
         break;
     }
     case 4:
@@ -771,15 +771,16 @@ void Driver::loadProducts(const std::string &filename)
     while (std::getline(file, line))
     {
         std::stringstream ss(line);
-        std::string productIdStr, category, attribute1, attribute2, buyerName, productName, basePriceStr, qualityStr, sellerName;
+        std::string productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
 
-        // Parse CSV line based on actual bids.csv format:
-        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Product Name,Base Price,Quality,Seller
+        // Parse CSV line based on updated bids.csv format:
+        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Bid Price,Product Name,Base Price,Quality,Seller
         std::getline(ss, productIdStr, ',');
         std::getline(ss, category, ',');
         std::getline(ss, attribute1, ',');
         std::getline(ss, attribute2, ',');
         std::getline(ss, buyerName, ',');
+        std::getline(ss, bidPriceStr, ',');
         std::getline(ss, productName, ',');
         std::getline(ss, basePriceStr, ',');
         std::getline(ss, qualityStr, ',');
@@ -788,6 +789,7 @@ void Driver::loadProducts(const std::string &filename)
         // Convert numeric values
         int productId = std::stoi(productIdStr);
         double basePrice = std::stod(basePriceStr);
+        double bidPrice = std::stod(bidPriceStr);
 
         // Find the seller
         Seller *seller = nullptr;
@@ -797,6 +799,18 @@ void Driver::loadProducts(const std::string &filename)
             if (user->getUsername() == sellerName && user->getUserType() == "Seller")
             {
                 seller = static_cast<Seller *>(user);
+                break;
+            }
+        }
+
+        // Find the buyer
+        Buyer *buyer = nullptr;
+        for (const auto &pair : users)
+        {
+            User *user = pair.second;
+            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
+            {
+                buyer = static_cast<Buyer *>(user);
                 break;
             }
         }
@@ -832,6 +846,13 @@ void Driver::loadProducts(const std::string &filename)
             {
                 products[productId] = product;
                 seller->addProductForSale(product);
+
+                // Add the bid to the product if there's a buyer
+                if (buyer && bidPrice > 0)
+                {
+                    product->addBid(buyer, bidPrice);
+                    buyer->placeBid(productId, bidPrice);
+                }
             }
         }
     }
@@ -936,5 +957,85 @@ bool Driver::validateYesNoInput(char &choice)
     else
     {
         return false;
+    }
+}
+
+/**
+ * @brief Opens bidding on a product by a seller.
+ *
+ * @param seller A pointer to the Seller object who owns the product.
+ * @param productId The ID of the product to open bidding on.
+ * @return void This function sets the product as active for bidding.
+ */
+void Driver::openBidding(Seller *seller, int productId)
+{
+    Product *product = getProductById(productId);
+    if (product && product->getSeller() == seller)
+    {
+        product->openBidding();
+    }
+    else
+    {
+        std::cout << "Product does not exist or you do not own this product.\n";
+    }
+}
+
+/**
+ * @brief Closes bidding on a product by a seller and handles potential sale.
+ *
+ * @param seller A pointer to the Seller object who owns the product.
+ * @param productId The ID of the product to close bidding on.
+ * @return void This function processes the end of bidding and potential sale.
+ */
+void Driver::closeBidding(Seller *seller, int productId)
+{
+    Product *product = getProductById(productId);
+    if (product && product->getSeller() == seller)
+    {
+        // Get the highest bidder and amount before closing
+        Buyer *highestBidder = product->getHighestBidder();
+        double highestBidAmount = product->getHighestBidAmount();
+
+        // Close the bidding
+        product->closeBidding();
+
+        // If there's a valid bid, mark the product as sold
+        if (highestBidder != nullptr && highestBidAmount > 0)
+        {
+            // Transfer the money from buyer to seller
+            double buyerBalance = highestBidder->getAccountBalance();
+            double sellerBalance = seller->getAccountBalance();
+
+            if (buyerBalance >= highestBidAmount)
+            {
+                // Mark as sold only if payment can be processed
+                product->markAsSold();
+
+                // Deduct from buyer
+                highestBidder->setAccountBalance(buyerBalance - highestBidAmount);
+                // Add to seller
+                seller->setAccountBalance(sellerBalance + highestBidAmount);
+
+                // Update the buyer's purchase history
+                highestBidder->addPurchasedProduct(product);
+
+                std::cout << "Product sold to " << highestBidder->getUsername()
+                          << " for $" << highestBidAmount << ".\n";
+                std::cout << "Payment of $" << highestBidAmount << " successfully transferred.\n";
+            }
+            else
+            {
+                std::cout << "Warning: Buyer " << highestBidder->getUsername()
+                          << " doesn't have sufficient funds. Transaction not completed.\n";
+                std::cout << "The product has been returned to active status for new bids.\n";
+
+                // Re-open bidding instead of marking as sold
+                product->reopenBidding();
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Product does not exist or you do not own this product.\n";
     }
 }

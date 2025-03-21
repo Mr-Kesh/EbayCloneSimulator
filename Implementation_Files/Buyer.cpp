@@ -141,3 +141,17 @@ void Buyer::displayAvailableProducts() const
     std::cout << "To see available products, please use the main menu option.\n";
     std::cout << "-----------------------------------" << std::endl;
 }
+
+/**
+ * @brief Adds a product to the buyer's purchase history
+ *
+ * @param product Pointer to the product to add to purchase history
+ */
+void Buyer::addPurchasedProduct(Product *product)
+{
+    if (product)
+    {
+        purchaseHistory_.push_back(product);
+        std::cout << "Product '" << product->getName() << "' added to " << getUsername() << "'s purchase history.\n";
+    }
+}
