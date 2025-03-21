@@ -89,13 +89,12 @@ public:
      * Data CSV Files Functions
      ****************************************************/
     void loadUsers(const std::string &filename);
-    void loadProducts(const std::string &filename);
+    void loadBids(const std::string &filename);
     void loadData();
     void saveData();
     void saveUsers(const std::string &filename);
-    void saveProducts(const std::string &filename);
-    Seller *getSellerByUsername(const std::string &username);
-    bool validateYesNoInput(char &choice);
+    void saveBids(const std::string &filename);
+    void saveProductsToCSV(const std::string &productsFilename);
 
     /****************************************************
      * Helper Functions
@@ -103,6 +102,8 @@ public:
     bool isProductValidAndOwned(Product *product, Seller *seller);
     bool processSale(Buyer *highestBidder, Seller *seller, Product *product, double highestBidAmount);
     void handleInsufficientFunds(Buyer *highestBidder, Product *product);
+    Seller *getSellerByUsername(const std::string &username);
+    bool validateYesNoInput(char &choice);
 };
 
 // Helper function outside of class

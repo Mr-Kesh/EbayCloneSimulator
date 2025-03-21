@@ -4,6 +4,7 @@
 #include <vector>   // For std::vector
 #include <map>      // For std::map
 #include <limits>   // For std::numeric_limits
+#include <set>      // For std::set
 #include "Header_Files/Driver.h"
 #include "Header_Files/Bid.h"
 #include "Header_Files/UserFactory.h"
@@ -706,46 +707,37 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
-    std::cout << "Attempting to load users from: " << filename << std::endl;
-
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cout << "ERROR: Could not open file: " << filename << std::endl;
+        std::cerr << "Error: Could not open " << filename << " for reading." << std::endl;
         return;
     }
 
     std::string line;
-    std::cout << "File opened successfully. Reading lines..." << std::endl;
-
     while (std::getline(file, line))
     {
-        std::stringstream ss(line);
-        std::string username, address, user_type;
-        std::string phone_str, balance_str;
+        std::istringstream iss(line);
+        std::string username, role, address;
+        long phoneNumber;
+        double balance;
 
-        // Read values as strings
-        std::getline(ss, username, ',');
-        std::getline(ss, user_type, ',');
-        std::getline(ss, phone_str, ',');
-        std::getline(ss, address, ',');
-        std::getline(ss, balance_str, ',');
-
-        // Convert to proper types
-        long phoneNumber = std::stol(phone_str);
-        double balance = std::stod(balance_str);
-
-        User *u = UserFactory::createUserFromCSV(username, user_type, phoneNumber, address, balance);
-
-        // Add user to the users map using username as key
-        if (u != nullptr)
+        if (!(iss >> username >> role >> phoneNumber >> address >> balance))
         {
-            users[username] = u;
-            std::cout << "Loaded user: " << username << " (" << user_type << ")\n";
+            std::cerr << "Error: Invalid format in " << filename << std::endl;
+            continue;
+        }
+
+        if (role == "Buyer")
+        {
+            users[username] = new Buyer(username, phoneNumber, address, balance);
+        }
+        else if (role == "Seller")
+        {
+            users[username] = new Seller(username, phoneNumber, address, balance);
+            sellers.push_back(static_cast<Seller *>(users[username]));
         }
     }
-
-    std::cout << "Loaded " << users.size() << " users from " << filename << std::endl;
     file.close();
 }
 
@@ -755,108 +747,39 @@ void Driver::loadUsers(const std::string &filename)
  * @param filename The name of the CSV file to read product data from. This should be a string like "products.csv".
  * @return void This function populates the products vector with Product objects.
  */
-void Driver::loadProducts(const std::string &filename)
+void Driver::loadBids(const std::string &filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cout << "Could not open file: " << filename << std::endl;
+        std::cerr << "Error: Could not open " << filename << " for reading." << std::endl;
         return;
     }
 
     std::string line;
-    // Skip header line
-    std::getline(file, line);
-
     while (std::getline(file, line))
     {
-        std::stringstream ss(line);
-        std::string productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
+        std::istringstream iss(line);
+        int productId;
+        std::string category, productName, sellerUsername, status;
+        double basePrice, finalPrice;
+        int quality;
 
-        // Parse CSV line based on updated bids.csv format:
-        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Bid Price,Product Name,Base Price,Quality,Seller
-        std::getline(ss, productIdStr, ',');
-        std::getline(ss, category, ',');
-        std::getline(ss, attribute1, ',');
-        std::getline(ss, attribute2, ',');
-        std::getline(ss, buyerName, ',');
-        std::getline(ss, bidPriceStr, ',');
-        std::getline(ss, productName, ',');
-        std::getline(ss, basePriceStr, ',');
-        std::getline(ss, qualityStr, ',');
-        std::getline(ss, sellerName);
-
-        // Convert numeric values
-        int productId = std::stoi(productIdStr);
-        double basePrice = std::stod(basePriceStr);
-        double bidPrice = std::stod(bidPriceStr);
-
-        // Find the seller
-        Seller *seller = nullptr;
-        for (const auto &pair : users)
+        if (!(iss >> productId >> category >> productName >> basePrice >> quality >> sellerUsername >> status >> finalPrice))
         {
-            User *user = pair.second;
-            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
-            {
-                seller = static_cast<Seller *>(user);
-                break;
-            }
+            std::cerr << "Error: Invalid format in " << filename << std::endl;
+            continue;
         }
 
-        // Find the buyer
-        Buyer *buyer = nullptr;
-        for (const auto &pair : users)
-        {
-            User *user = pair.second;
-            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
-            {
-                buyer = static_cast<Buyer *>(user);
-                break;
-            }
-        }
-
+        Seller *seller = getSellerByUsername(sellerUsername);
         if (seller)
         {
-            // Convert string to Quality enum
-            Quality quality = Quality::Used_Okay; // Default value
-            if (qualityStr == "New")
-            {
-                quality = Quality::New;
-            }
-            else if (qualityStr == "Used_VeryGood")
-            {
-                quality = Quality::Used_VeryGood;
-            }
-            else if (qualityStr == "Used_Good")
-            {
-                quality = Quality::Used_Good;
-            }
-            else if (qualityStr == "Used_Okay")
-            {
-                quality = Quality::Used_Okay;
-            }
-            else
-            {
-                std::cout << "Unknown quality '" << qualityStr << "' for product " << productId << ", defaulting to Used_Okay\n";
-            }
-
-            Product *product = ProductFactory::CreateProduct(productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
-
-            if (product)
-            {
-                products[productId] = product;
-                seller->addProductForSale(product);
-
-                // Add the bid to the product if there's a buyer
-                if (buyer && bidPrice > 0)
-                {
-                    product->addBid(buyer, bidPrice);
-                    buyer->placeBid(productId, bidPrice);
-                }
-            }
+            Product *product = new Product(productId, productName, category, basePrice, static_cast<Quality>(quality), seller);
+            product->setStatus(status);
+            product->setFinalPrice(finalPrice);
+            products[productId] = product;
         }
     }
-
     file.close();
 }
 
@@ -877,7 +800,58 @@ void Driver::loadData()
  *
  * @return void This function ensures that any changes made during the program are saved.
  */
-void Driver::saveData() {}
+void Driver::saveData()
+{
+    saveUsers("CSV_files/users.csv");
+    saveProductsToCSV("CSV_files/products.csv");
+}
+
+void Driver::saveUsers(const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cerr << "Error: Could not open " << filename << " for writing." << std::endl;
+        return;
+    }
+
+    for (const auto &pair : users)
+    {
+        User *user = pair.second;
+        file << user->getUsername() << "," << (dynamic_cast<Buyer *>(user) ? "Buyer" : "Seller")
+             << "," << user->getPhoneNumber() << "," << user->getAddress() << "," << user->getBalance() << std::endl;
+    }
+    file.close();
+}
+
+void Driver::saveProductsToCSV(const std::string &productsFilename)
+{
+    std::ofstream productsFile(productsFilename);
+    if (!productsFile.is_open())
+    {
+        std::cerr << "Error: Could not open " << productsFilename << " for writing." << std::endl;
+        return;
+    }
+
+    // Save all products in the products map to the CSV file
+    for (const auto &pair : products)
+    {
+        Product *product = pair.second;
+
+        // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
+        productsFile << product->getProductId() << ","
+                     << product->getCategory() << ","
+                     << product->getAttribute1() << ","
+                     << product->getAttribute2() << ","
+                     << product->getName() << ","
+                     << product->getBasePrice() << ","
+                     << product->getQualityAsString() << ","
+                     << product->getSeller()->getUsername() << std::endl;
+    }
+
+    productsFile.close();
+    std::cout << "Products saved to " << productsFilename << std::endl;
+}
 
 /****************************************************
  * Helper Functions
