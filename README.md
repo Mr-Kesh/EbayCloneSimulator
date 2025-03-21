@@ -51,11 +51,12 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 ## Implementation Details
 * Programming Language: C++
 * Design Patterns Used:
-* Singleton: Driver class to manage application state
-* Factory Pattern: Creating products dynamically
-* Maps: Tracking users, products, and bids efficiently
-* File Storage: CSV files store user and product data
-* loadUsers() and loadProducts() functions read from CSV files
+  * Singleton: Driver class to manage application state
+  * Factory Pattern: Creating products dynamically
+  * Maps: Tracking users, products, and bids efficiently
+* File Storage:
+  * CSV files store user and product data
+  * loadUsers() and loadProducts() functions read from CSV files
 * Makefile: For compiling and running the program
 * CI/CD Pipeline: Set up for GitHub repository
 
