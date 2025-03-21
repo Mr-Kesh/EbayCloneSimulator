@@ -11,6 +11,9 @@
 class ProductFactory
 {
 public:
+    // Helper function to set attributes on a Product object
+    static void SetAttributesOnProduct(Product *product, const std::string &attribute1, const std::string &attribute2);
+
     // Main factory method with consistent parameter order
     static Product *CreateProduct(int productId, const std::string &name, const std::string &category, double base_price,
                                   const Quality quality, Seller *seller, const std::string &attribute1 = "", const std::string &attribute2 = "")
@@ -94,7 +97,7 @@ public:
             if (subCategory == "Shoes") // If it's shoes
             {
                 if (specificType == "Sneakers")
-                {                                                                                  // And it's sneakers
+                {                                                                                                 // And it's sneakers
                     return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create sneakers
                 }
                 return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just regular shoes
@@ -102,7 +105,7 @@ public:
             else if (subCategory == "Pants")
             { // If it's pants
                 if (specificType == "Jeans")
-                {                                                                               // And it's jeans
+                {                                                                                                 // And it's jeans
                     return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create jeans
                 }
                 return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just regular pants
@@ -110,7 +113,7 @@ public:
             else if (subCategory == "Shirt")
             { // If it's a shirt
                 if (specificType == "TShirt")
-                {                                                                                // And it's a T-shirt
+                {                                                                                                 // And it's a T-shirt
                     return new Clothing(productId, name, base_price, quality, seller, subCategory, specificType); // Create a T-shirt
                 }
                 return new Clothing(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular shirt
@@ -123,7 +126,7 @@ public:
             if (subCategory == "Fiction") // If it's fiction
             {
                 if (specificType == "Novel")
-                {                                                                               // And it's a novel
+                {                                                                                              // And it's a novel
                     return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a novel
                 }
                 return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a fiction book
@@ -131,7 +134,7 @@ public:
             else if (subCategory == "Non-Fiction")
             { // If it's non-fiction
                 if (specificType == "Textbook")
-                {                                                                                  // And it's a textbook
+                {                                                                                              // And it's a textbook
                     return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a textbook
                 }
                 return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a non-fiction book
@@ -139,7 +142,7 @@ public:
             else if (subCategory == "Comic")
             { // If it's a comic
                 if (specificType == "Graphic Novel")
-                {                                                                                      // And it's a graphic novel
+                {                                                                                              // And it's a graphic novel
                     return new Books(productId, name, base_price, quality, seller, subCategory, specificType); // Create a graphic novel
                 }
                 return new Books(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a comic
@@ -152,7 +155,7 @@ public:
             if (subCategory == "Chair") // If it's a chair
             {
                 if (specificType == "Office Chair")
-                {                                                                                     // And it's an office chair
+                {                                                                                                  // And it's an office chair
                     return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create an office chair
                 }
                 return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular chair
@@ -160,7 +163,7 @@ public:
             else if (subCategory == "Table")
             { // If it's a table
                 if (specificType == "Coffee Table")
-                {                                                                                     // And it's a coffee table
+                {                                                                                                  // And it's a coffee table
                     return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create a coffee table
                 }
                 return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular table
@@ -168,7 +171,7 @@ public:
             else if (subCategory == "Bed")
             { // If it's a bed
                 if (specificType == "Twin Bed")
-                {                                                                                 // And it's a twin bed
+                {                                                                                                  // And it's a twin bed
                     return new Furniture(productId, name, base_price, quality, seller, subCategory, specificType); // Create a twin bed
                 }
                 return new Furniture(productId, name, base_price, quality, seller, subCategory, "Generic"); // Otherwise, just a regular bed
@@ -183,7 +186,10 @@ public:
         }
 
         // If all else fails, create a generic product
-        return new Product(productId, name, category, base_price, quality, seller);
+        Product *product = new Product(productId, name, category, base_price, quality, seller);
+        // Make sure to set attributes for generic products too
+        SetAttributesOnProduct(product, attribute1, attribute2);
+        return product;
     }
 };
 

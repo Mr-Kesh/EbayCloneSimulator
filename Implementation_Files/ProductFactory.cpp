@@ -1,13 +1,15 @@
 #include "Header_Files/ProductFactory.h"
 #include "Header_Files/Product.h"
 
-Product *ProductFactory::CreateProduct(int productId, const std::string &name, const std::string &category, double basePrice, Quality quality, Seller *seller, const std::string &attribute1, const std::string &attribute2)
+// This file is needed to ensure proper linking, but the inline implementation in the header
+// contains the main functionality. Just to be sure attributes are set properly, we'll add
+// a function to set attributes on generic Product objects.
+
+void ProductFactory::SetAttributesOnProduct(Product *product, const std::string &attribute1, const std::string &attribute2)
 {
-    Product *product = new Product(productId, name, category, basePrice, quality, seller);
-
-    // Set the attributes
-    product->setAttribute1(attribute1);
-    product->setAttribute2(attribute2);
-
-    return product;
+    if (product)
+    {
+        product->setAttribute1(attribute1);
+        product->setAttribute2(attribute2);
+    }
 }
