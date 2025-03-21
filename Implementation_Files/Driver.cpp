@@ -691,14 +691,18 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
+    std::cout << "Attempting to load users from: " << filename << std::endl;
+
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cout << "Could not open file: " << filename << std::endl;
+        std::cout << "ERROR: Could not open file: " << filename << std::endl;
         return;
     }
 
     std::string line;
+    std::cout << "File opened successfully. Reading lines..." << std::endl;
+
 
     while (std::getline(file, line))
     {
@@ -829,8 +833,9 @@ void Driver::loadProducts(const std::string &filename)
  */
 void Driver::loadData()
 {
-    loadUsers("users.csv");
-    loadProducts("products.csv");
+    // Update paths to look in the "CSV files" directory
+    loadUsers("CSV_files/users.csv");
+    loadProducts("CSV_files/products.csv");
 }
 
 /**

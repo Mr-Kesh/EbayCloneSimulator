@@ -1,0 +1,34 @@
+Product ID,Category,Attribute 1,Attribute 2,Buyer,Product Name,Base Price,Quality,Seller
+1001,Clothing:Shirt:T-Shirt,Small,Shirt,JohnDoe_buyer,Polo T-Shirt,30,New,Sarah_seller
+1002,Clothing:Pants:Jeans,32,Pants,JaneSmith_buyer,Levi's 501,50,Used_Good,Mike_seller
+1003,Electronics:Computer:Laptop,Dell,XPS 15,AliceJohnson_buyer,Dell XPS 15,1200,New,Kevin_seller
+1004,Electronics:Phone:Smartphone,iPhone,14,BobWilliams_buyer,iPhone 14 Pro,1000,Used_VeryGood,David_seller
+1005,Furniture:Bed:Twin Bed,Cotton,Bed,CharlieBrown_buyer,Twin Bedz,200,New,Emma_seller
+1006,Books:Fiction:Novel,J.K. Rowling,Fiction,EmilyDavis_buyer,Harry Potter,40,Used_Good,Liam_seller
+1007,Tools:Hand Tool:Hammer,Black & Decker,Hand Tool,FrankMiller_buyer,Hammer,80,New,Nathan_seller
+1008,Electronics:Television:Smart TV,Samsung,QLED 4K,GraceWilson_buyer,Samsung 55-inch,700,Used_Okay,Sophie_seller
+1009,Furniture:Table:Coffee Table,Wood,Table,HenryClark_buyer,Coffee Table,300,Used_VeryGood,Oliver_seller
+1010,Books:Non-Fiction:Textbook,Stephen Hawking,Non-Fiction,IvyMartinez_buyer,A Brief History of Time,20,New,Lucas_seller
+1011,Electronics:Computer:Laptop,MacBook,Pro,SophiaGreen_buyer,MacBook Pro 16-inch,2200,New,Emma_seller
+1012,Clothing:Shoes:Sneakers,Nike Air Jordan,Shoes,JamesMiller_buyer,Nike Air Jordan 1,150,New,John_seller
+1013,Furniture:Chair:Office Chair,Leather,Chair,OliviaBrown_buyer,Luxury Office Chair,500,New,Lucas_seller
+1014,Books:Fiction:Mystery,Agatha Christie,Fiction,EthanWhite_buyer,Murder on the Orient Express,25,Used_VeryGood,Daniel_seller
+1015,Tools:Power Tool:Drill,Ryobi,Power Tool,WilliamDavis_buyer,Ryobi Drill,120,New,Sophie_seller
+1016,Electronics:Phone:Smartphone,Samsung,S23 Ultra,LiamHarris_buyer,Samsung Galaxy S23 Ultra,1100,New,Ethan_seller
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
