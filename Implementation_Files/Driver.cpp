@@ -48,7 +48,11 @@ Driver *Driver::getInstance()
  */
 void Driver::run()
 {
-    welcomeMessage();
+    // Only show welcome message if no user is logged in
+    if (currentUser == nullptr)
+    {
+        welcomeMessage();
+    }
 
     // If a user is logged in, show the main menu
     if (currentUser != nullptr)
@@ -84,7 +88,18 @@ void Driver::returnToBeginningMenu()
 
     if (selection == 1)
     {
-        authenticateUser();
+        User *user = authenticateUser();
+        if (user != nullptr)
+        {
+            // User authenticated successfully
+            currentUser = user;
+            mainMenu(); // Go directly to main menu after login
+        }
+        else
+        {
+            // Failed authentication, try again
+            returnToBeginningMenu();
+        }
     }
     else if (selection == 2)
     {
