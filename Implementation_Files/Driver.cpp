@@ -707,37 +707,46 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
+    std::cout << "Attempting to load users from: " << filename << std::endl;
+
     std::ifstream file(filename);
     if (!file.is_open())
     {
-        std::cerr << "Error: Could not open " << filename << " for reading." << std::endl;
+        std::cout << "ERROR: Could not open file: " << filename << std::endl;
         return;
     }
 
     std::string line;
+    std::cout << "File opened successfully. Reading lines..." << std::endl;
+
     while (std::getline(file, line))
     {
-        std::istringstream iss(line);
-        std::string username, role, address;
-        long phoneNumber;
-        double balance;
+        std::stringstream ss(line);
+        std::string username, address, user_type;
+        std::string phone_str, balance_str;
 
-        if (!(iss >> username >> role >> phoneNumber >> address >> balance))
-        {
-            std::cerr << "Error: Invalid format in " << filename << std::endl;
-            continue;
-        }
+        // Read values as strings
+        std::getline(ss, username, ',');
+        std::getline(ss, user_type, ',');
+        std::getline(ss, phone_str, ',');
+        std::getline(ss, address, ',');
+        std::getline(ss, balance_str, ',');
 
-        if (role == "Buyer")
+        // Convert to proper types
+        long phoneNumber = std::stol(phone_str);
+        double balance = std::stod(balance_str);
+
+        User *u = UserFactory::createUserFromCSV(username, user_type, phoneNumber, address, balance);
+
+        // Add user to the users map using username as key
+        if (u != nullptr)
         {
-            users[username] = new Buyer(username, phoneNumber, address, balance);
-        }
-        else if (role == "Seller")
-        {
-            users[username] = new Seller(username, phoneNumber, address, balance);
-            sellers.push_back(static_cast<Seller *>(users[username]));
+            users[username] = u;
+            std::cout << "Loaded user: " << username << " (" << user_type << ")\n";
         }
     }
+
+    std::cout << "Loaded " << users.size() << " users from " << filename << std::endl;
     file.close();
 }
 
