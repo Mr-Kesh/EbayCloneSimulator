@@ -18,8 +18,6 @@ Driver::Driver() : currentUser(nullptr)
     loadData();
 }
 
-
-
 /**
  * @brief Destructor for the Driver class.
  *
@@ -720,7 +718,6 @@ void Driver::loadUsers(const std::string &filename)
     std::string line;
     std::cout << "File opened successfully. Reading lines..." << std::endl;
 
-
     while (std::getline(file, line))
     {
         std::stringstream ss(line);
@@ -851,7 +848,7 @@ void Driver::loadData()
 {
     // Update paths to look in the "CSV files" directory
     loadUsers("CSV_files/users.csv");
-    loadProducts("CSV_files/products.csv");
+    loadProducts("CSV_files/bids.csv");
 }
 
 /**
