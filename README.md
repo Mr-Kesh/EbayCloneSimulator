@@ -95,17 +95,19 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
 
 ```git clone https://github.com/jejo8526/programming-workshop-hw3.git```
 
-3. Compile the program using Makefile:
+2. Compile the program using Makefile:
 
   ```make main```
 
-5. Run the program:
+3. Run the program:
 
   ```./main```
 
+## Output
+Example game output is in output.txt
+
 ## Contributors
 
-Jenna Jones
-Jeshua 
+Jeshua Dimawea and Jenna Jones
 
 
