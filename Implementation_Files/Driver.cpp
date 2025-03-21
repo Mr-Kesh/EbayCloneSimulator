@@ -303,6 +303,7 @@ bool Driver::showBuyerMenu()
         displayAvailableProducts();
         int productId = getValidNumberChoice("Enter Product ID to bid on: ", 1000, 9999);
         double bidAmount = getValidNumberChoice("Enter bid amount: $", 0.01, 99999.99);
+        buyer->placeBuyerBid(productId, bidAmount);
         placeBid(buyer, productId, bidAmount);
         break;
     }
@@ -852,7 +853,7 @@ void Driver::loadBids(const std::string &filename)
                 if (buyer && bidPrice > 0)
                 {
                     product->addBid(buyer, bidPrice);
-                    buyer->placeBid(productId, bidPrice);
+                    buyer->placeBuyerBid(productId, bidPrice);
                 }
             }
         }

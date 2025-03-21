@@ -16,7 +16,7 @@ public:
     Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
 
     // Bidding actions
-    bool placeBid(Product &product, double bidAmount);
+    bool placeBuyerBid(int productId, double bidAmount);
     void viewActiveProducts(const std::vector<Product> &allProducts) const;
     void viewBidsPlaced() const;
     void finalizePurchase(Product &product);

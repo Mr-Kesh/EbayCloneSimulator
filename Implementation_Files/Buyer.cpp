@@ -12,33 +12,6 @@ Buyer::Buyer(const std::string &uname, long phone, const std::string &addr, doub
 //     return "Buyer";
 // };
 
-// Implement existing methods (empty for now)
-bool Buyer::placeBid(Product &product, double bidAmount)
-{
-    // Implementation...
-    return false;
-}
-
-void Buyer::viewActiveProducts(const std::vector<Product> &allProducts) const
-{
-    // Implementation...
-}
-
-void Buyer::viewBidsPlaced() const
-{
-    // Implementation...
-}
-
-void Buyer::finalizePurchase(Product &product)
-{
-    // Implementation...
-}
-
-void Buyer::viewPurchaseHistory() const
-{
-    // Implementation...
-}
-
 void Buyer::updateUserInformation()
 {
     std::string newUsername;
@@ -71,7 +44,7 @@ void Buyer::updateUserInformation()
 }
 
 // New methods moved from Driver
-bool Buyer::placeBid(int productId, double amount)
+bool Buyer::placeBuyerBid(int productId, double amount)
 {
     std::cout << "Placing bid of $" << amount << " on product ID " << productId << std::endl;
 
@@ -114,8 +87,6 @@ void Buyer::viewPurchaseHistory(int productId)
 
     bool foundProduct = false;
 
-    // Not done yet, this would search through purchase history
-    // For now, we'll just print a message
     for (const auto &product : purchaseHistory_)
     {
         if (product->getProductId() == productId || productId == 0)
@@ -129,17 +100,6 @@ void Buyer::viewPurchaseHistory(int productId)
     {
         std::cout << "No purchase found for this product ID." << std::endl;
     }
-}
-
-void Buyer::displayAvailableProducts() const
-{
-    std::cout << "===================================\n";
-    std::cout << "📋  Available Products  \n";
-    std::cout << "===================================\n";
-
-    // Not Done
-    std::cout << "To see available products, please use the main menu option.\n";
-    std::cout << "-----------------------------------" << std::endl;
 }
 
 /**
