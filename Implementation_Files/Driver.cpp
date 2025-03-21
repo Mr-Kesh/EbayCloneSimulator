@@ -14,6 +14,8 @@ Driver *Driver::instance = nullptr;
 // Private constructor
 Driver::Driver() : currentUser(nullptr)
 {
+    // Load users and products from CSV files when the Driver is instantiated
+    loadData();
 }
 
 /**
@@ -689,10 +691,13 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "Could not open file: " << filename << std::endl;
+        return;
+    }
 
-    // Users.csv
-    std::vector<User *> users;
-    std::ifstream file("users.csv");
     std::string line;
 
     while (std::getline(file, line))
@@ -714,14 +719,17 @@ void Driver::loadUsers(const std::string &filename)
         double balance = std::stod(balance_str);
 
         User *u = UserFactory::createUserFromCSV(user_id, username, user_type, phoneNumber, address, balance);
-        users.push_back(u);
+
+        // Add user to the users map using username as key
+        if (u != nullptr)
+        {
+            users[username] = u;
+            std::cout << "Loaded user: " << username << " (" << user_type << ")\n";
+        }
     }
 
-    // Print all usernames
-    for (User *user : users)
-    {
-        std::cout << user->getUsername() << "," << user->getPhoneNumber() << "," << user->getAddress() << "," << user->getBalance() << std::endl;
-    }
+    std::cout << "Loaded " << users.size() << " users from " << filename << std::endl;
+    file.close();
 }
 
 /**
