@@ -155,3 +155,4 @@ void Buyer::addPurchasedProduct(Product *product)
         std::cout << "Product '" << product->getName() << "' added to " << getUsername() << "'s purchase history.\n";
     }
 }
+

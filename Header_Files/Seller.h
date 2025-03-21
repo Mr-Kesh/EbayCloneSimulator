@@ -25,8 +25,6 @@ private:
     void getCategoryAttributes(const std::string &category, std::string &attribute1, std::string &attribute2);
 
 public:
-    // Constructors
-    Seller(int userId, const std::string &username, long phoneNumber, const std::string &address, double balance);
     Seller(const std::string &username, long phoneNumber, const std::string &address, double balance);
 
     /****************************************************

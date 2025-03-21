@@ -5,7 +5,6 @@
 #include "Header_Files/User.h"
 #include "Header_Files/Driver.h"
 
-
 // Constructor without userId (for backward compatibility)
 Seller::Seller(const std::string &uname, long phone, const std::string &addr, double bal)
     : User(uname, phone, addr, bal)
@@ -104,6 +103,22 @@ double Seller::checkAccountBalance() const
 {
     // Return the seller's account balance
     return getBalance();
+}
+
+/**
+ * @brief Updates the seller's account balance by adding the specified amount.
+ *
+ * This function increases or decreases the seller's account balance by the given amount.
+ * A positive amount adds to the balance, and a negative amount deducts from it.
+ *
+ * @param amount The amount to add to the seller's account balance.
+ */
+void Seller::updateAccountBalance(double amount)
+{
+    // Call the parent class's updateBalance method
+    updateBalance(amount);
+    std::cout << "Account balance updated by $" << amount << std::endl;
+    std::cout << "New balance: $" << getBalance() << std::endl;
 }
 
 /**
@@ -590,7 +605,6 @@ void Seller::getToolDetails(std::string &subcategory, std::string &specificType)
         }
     }
 }
-
 
 /**
  * @brief Displays the sales history of a product.

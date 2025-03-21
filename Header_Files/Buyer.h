@@ -12,7 +12,7 @@ private:
     std::vector<std::pair<int, double>> bid_history_; // Product IDs and bid amounts
 public:
     // Constructors
-    Buyer(int userId, const std::string &uname, long phone, const std::string &addr, double bal);
+
     Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
 
     // Bidding actions
@@ -24,6 +24,9 @@ public:
     // Purchase history
     void viewPurchaseHistory() const;
     void addPurchasedProduct(Product *product); // Add product to purchase history
+
+    // Account management
+    double checkAccountBalance() const;
 
     // Override from User base class
     void updateUserInformation() override;

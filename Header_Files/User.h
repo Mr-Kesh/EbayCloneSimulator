@@ -33,6 +33,7 @@ public:
     void setPhoneNumber(long new_phone_no) { phone_no_ = new_phone_no; }
     void setAddress(std::string new_address) { address_ = new_address; }
     void updateBalance(double amount) { account_balance_ += amount; }
+    void setAccountBalance(double balance) { account_balance_ = balance; }
     virtual void updateUserInformation();
 };
 

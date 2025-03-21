@@ -1003,8 +1003,8 @@ void Driver::closeBidding(Seller *seller, int productId)
         if (highestBidder != nullptr && highestBidAmount > 0)
         {
             // Transfer the money from buyer to seller
-            double buyerBalance = highestBidder->getAccountBalance();
-            double sellerBalance = seller->getAccountBalance();
+            double buyerBalance = highestBidder->getBalance();
+            double sellerBalance = seller->getBalance();
 
             if (buyerBalance >= highestBidAmount)
             {
@@ -1012,9 +1012,9 @@ void Driver::closeBidding(Seller *seller, int productId)
                 product->markAsSold();
 
                 // Deduct from buyer
-                highestBidder->setAccountBalance(buyerBalance - highestBidAmount);
+                highestBidder->setBalance(buyerBalance - highestBidAmount);
                 // Add to seller
-                seller->setAccountBalance(sellerBalance + highestBidAmount);
+                seller->setBalance(sellerBalance + highestBidAmount);
 
                 // Update the buyer's purchase history
                 highestBidder->addPurchasedProduct(product);
