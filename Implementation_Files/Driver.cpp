@@ -84,7 +84,6 @@ void Driver::returnToBeginningMenu()
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 3);
     clearInputBuffer();
-    
 
     if (selection == 1)
     {
@@ -306,7 +305,6 @@ User *Driver::authenticateUser()
     User *existingUser = findExistingUser(username);
     if (existingUser != nullptr)
     {
-
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
     }
     else
@@ -319,7 +317,6 @@ User *Driver::authenticateUser()
         if (validateYesNoInput(choice))
         {
             createAccount();
-
         }
         else
         {
@@ -338,24 +335,13 @@ User *Driver::authenticateUser()
  */
 User *Driver::authenticateUserType()
 {
-
     User *user = authenticateUser();
-    std::string userType;
-
-    // Prompt the user to specify their type (Buyer or Seller)
-    while (userType != "Buyer" && userType != "Seller")
+    if (user == nullptr)
     {
-        std::cout << "Are you a Buyer or a Seller? ";
-        std::cin >> userType;
-        std::cin.ignore();
-
-        // Check if the input is valid
-        if (userType != "Buyer" && userType != "Seller")
-        {
-            std::cout << "Invalid user type.\n";
-            break;
-        }
+        return nullptr; // Return null if authentication failed
     }
+
+    // User already authenticated, no need to ask for type
     return user;
 }
 
