@@ -14,8 +14,7 @@ public:
                             long phoneNumber, const std::string &address, double balance);
 
     // Create a user from CSV data
-    static User *createUserFromCSV(const std::string &user_id, const std::string &username,
-                                   const std::string &user_type, long phoneNumber,
+    static User *createUserFromCSV(const std::string &username, const std::string &user_type, long phoneNumber,
                                    const std::string &address, double balance);
 
     // Helper methods to create specific user types
