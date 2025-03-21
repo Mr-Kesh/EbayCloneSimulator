@@ -59,6 +59,19 @@ bool Buyer::placeBuyerBid(int productId, double amount)
     return true;
 }
 
+/**
+ * @brief Places a bid on a product
+ *
+ * @param productId The ID of the product to bid on
+ * @param amount The amount of the bid
+ * @return bool True if the bid was placed successfully, false otherwise
+ */
+bool Buyer::placeBid(int productId, double amount)
+{
+    // Call the existing placeBuyerBid method for consistency
+    return placeBuyerBid(productId, amount);
+}
+
 void Buyer::viewBiddingHistory(int productId)
 {
     std::cout << "Viewing bidding history for product ID " << productId << std::endl;
@@ -115,4 +128,3 @@ void Buyer::addPurchasedProduct(Product *product)
         std::cout << "Product '" << product->getName() << "' added to " << getUsername() << "'s purchase history.\n";
     }
 }
-

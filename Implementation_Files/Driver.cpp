@@ -220,10 +220,12 @@ bool Driver::showSellerMenu()
     std::cout << "3. Close bidding on a product" << std::endl;
     std::cout << "4. View sales history" << std::endl;
     std::cout << "5. Update user information" << std::endl;
-    std::cout << "6. Logout" << std::endl;
-    std::cout << "7. Exit the program" << std::endl;
+    std::cout << "6. View bid history for a product" << std::endl;
+    std::cout << "7. Check account balance" << std::endl;
+    std::cout << "8. Logout" << std::endl;
+    std::cout << "9. Exit the program" << std::endl;
 
-    int selection = getValidNumberChoice("Select an option: ", 1, 7);
+    int selection = getValidNumberChoice("Select an option: ", 1, 9);
 
     switch (selection)
     {
@@ -252,11 +254,23 @@ bool Driver::showSellerMenu()
         updateUserInformation(seller);
         break;
     case 6:
+    {
+        int productId = getValidNumberChoice("Enter Product ID to view bid history: ", 1000, 9999);
+        viewProductBidHistory(seller, productId);
+        break;
+    }
+    case 7:
+    {
+        // Display the seller's account balance
+        std::cout << "\nYour current account balance: $" << seller->checkAccountBalance() << std::endl;
+        break;
+    }
+    case 8:
         std::cout << "Logging out...\n";
         currentUser = nullptr; // Clear current user on logout
         returnToBeginningMenu();
         return false; // Exit the seller menu
-    case 7:
+    case 9:
         std::cout << "Goodbye!\n";
         exit(0);
     default:
@@ -303,7 +317,6 @@ bool Driver::showBuyerMenu()
         displayAvailableProducts();
         int productId = getValidNumberChoice("Enter Product ID to bid on: ", 1000, 9999);
         double bidAmount = getValidNumberChoice("Enter bid amount: $", 0.01, 99999.99);
-        buyer->placeBuyerBid(productId, bidAmount);
         placeBid(buyer, productId, bidAmount);
         break;
     }
@@ -641,7 +654,16 @@ void Driver::placeBid(Buyer *buyer, int productId, double amount)
     Product *product = getProductById(productId);
     if (product && product->isActive())
     {
-        product->addBid(buyer, amount);
+        if (product->addBid(buyer, amount))
+        {
+            // Add the bid to the buyer's history as well
+            buyer->placeBid(productId, amount);
+            std::cout << "Bid of $" << amount << " placed successfully on " << product->getName() << std::endl;
+        }
+        else
+        {
+            std::cout << "Bid amount must be higher than the current highest bid." << std::endl;
+        }
     }
     else
     {
@@ -853,7 +875,7 @@ void Driver::loadBids(const std::string &filename)
                 if (buyer && bidPrice > 0)
                 {
                     product->addBid(buyer, bidPrice);
-                    buyer->placeBuyerBid(productId, bidPrice);
+                    buyer->placeBid(productId, bidPrice);
                 }
             }
         }
@@ -1124,4 +1146,24 @@ void Driver::handleInsufficientFunds(Buyer *highestBidder, Product *product)
               << " doesn't have sufficient funds. Transaction not completed.\n";
     std::cout << "The product has been returned to active status for new bids.\n";
     product->reopenBidding();
+}
+
+/**
+ * @brief Shows the bid history for a product to a seller
+ *
+ * @param seller The seller who wants to view the bid history
+ * @param productId The ID of the product to check bid history for
+ */
+void Driver::viewProductBidHistory(Seller *seller, int productId)
+{
+    Product *product = getProductById(productId);
+    if (isProductValidAndOwned(product, seller))
+    {
+        // Display the full bid history for the product
+        product->displayBidHistoryForProduct();
+    }
+    else
+    {
+        std::cout << "Product doesn't exist or you don't own this product.\n";
+    }
 }

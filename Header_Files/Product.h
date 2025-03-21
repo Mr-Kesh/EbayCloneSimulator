@@ -6,9 +6,13 @@
 #include <map>
 #include "User.h"
 
-// Forward declarations to avoid circular dependencies
-class Buyer;
-class Seller;
+// Struct to store bid information
+struct BidInfo
+{
+    Buyer *buyer;
+    double amount;
+    BidInfo(Buyer *b, double a) : buyer(b), amount(a) {}
+};
 
 enum class Quality
 {
@@ -29,9 +33,10 @@ private:
     bool isActive_;
     bool isSold_;
     Seller *seller_;
-    std::map<Buyer *, double> bids_; // Using map to track bids by buyer
-    std::string attribute1_;         // First attribute specific to product type
-    std::string attribute2_;         // Second attribute specific to product type
+    std::map<Buyer *, double> bids_;  // Using map to track bids by buyer
+    std::vector<BidInfo> bidHistory_; // Vector to store all bids in chronological order
+    std::string attribute1_;          // First attribute specific to product type
+    std::string attribute2_;          // Second attribute specific to product type
 
 public:
     // Constructor
@@ -51,6 +56,7 @@ public:
     Seller *getSeller() const { return seller_; }
     Buyer *getHighestBidder() const;
     double getHighestBidAmount() const;
+    const std::vector<BidInfo> &getBidHistory() const { return bidHistory_; }
 
     // New attribute getters
     std::string getAttribute1() const { return attribute1_; }
@@ -74,6 +80,7 @@ public:
     void markAsSold();
     void viewSalesHistory();
     void displaySalesHistorySummary() const;
+    void displayBidHistoryForProduct() const;
     // Display product information
     virtual void displayProductInfo() const;
 };
