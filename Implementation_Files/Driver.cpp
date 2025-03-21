@@ -50,8 +50,11 @@ void Driver::run()
 {
     welcomeMessage();
 
-    // Call the main menu
-    mainMenu();
+    // If a user is logged in, show the main menu
+    if (currentUser != nullptr)
+    {
+        mainMenu();
+    }
 }
 
 /**
@@ -107,7 +110,17 @@ void Driver::welcomeMessage()
 
     if (selection == 1)
     {
-        authenticateUser();
+        User *user = authenticateUser();
+        if (user != nullptr)
+        {
+            // User authenticated successfully
+            currentUser = user;
+        }
+        else
+        {
+            // Authentication failed, return to welcome
+            welcomeMessage();
+        }
     }
     else if (selection == 2)
     {
@@ -127,7 +140,7 @@ void Driver::welcomeMessage()
  */
 void Driver::mainMenu()
 {
-    while (true)
+    while (currentUser != nullptr) // Only run the menu if we have a current user
     {
         std::string userType = currentUser->getUserType();
 
@@ -151,7 +164,6 @@ void Driver::mainMenu()
  */
 bool Driver::showSellerMenu()
 {
-
     // Basically just in case it's not a seller
     Seller *seller = dynamic_cast<Seller *>(currentUser);
     if (!seller)
@@ -175,7 +187,6 @@ bool Driver::showSellerMenu()
 
     switch (selection)
     {
-
     case 1:
         seller->addProduct();
         break;
@@ -201,6 +212,8 @@ bool Driver::showSellerMenu()
         updateUserInformation(seller);
         break;
     case 6:
+        std::cout << "Logging out...\n";
+        currentUser = nullptr; // Clear current user on logout
         returnToBeginningMenu();
         return false; // Exit the seller menu
     case 7:
@@ -235,9 +248,10 @@ bool Driver::showBuyerMenu()
     std::cout << "3. View bidding history" << std::endl;
     std::cout << "4. View purchase history" << std::endl;
     std::cout << "5. Update user information" << std::endl;
-    std::cout << "6. Exit" << std::endl;
+    std::cout << "6. Logout" << std::endl;
+    std::cout << "7. Exit program" << std::endl;
 
-    int selection = getValidNumberChoice("Select an option: ", 1, 6);
+    int selection = getValidNumberChoice("Select an option: ", 1, 7);
 
     switch (selection)
     {
@@ -268,6 +282,8 @@ bool Driver::showBuyerMenu()
         buyer->updateUserInformation();
         break;
     case 6:
+        std::cout << "Logging out...\n";
+        currentUser = nullptr; // Clear current user on logout
         returnToBeginningMenu();
         return false; // Return false to exit
     case 7:
@@ -303,7 +319,6 @@ User *Driver::authenticateUser()
     if (existingUser != nullptr)
     {
         std::cout << "Logged in as " << existingUser->getUsername() << " (" << existingUser->getUserType() << ")\n";
-        currentUser = existingUser;
         return existingUser;
     }
     else
@@ -321,39 +336,9 @@ User *Driver::authenticateUser()
         {
             returnToBeginningMenu();
         }
+        return nullptr;
     }
-    return nullptr;
 }
-
-// /**
-//  * @brief Authenticates the user's type.
-//  *
-//  * This function prompts the user to specify their type (Buyer or Seller) and validates the input.
-//  *
-//  * @return User* A pointer to the authenticated User object.
-//  */
-// User *Driver::authenticateUserType()
-// {
-
-//     User *user = authenticateUser();
-//     std::string userType;
-
-//     // Prompt the user to specify their type (Buyer or Seller)
-//     while (userType != "Buyer" && userType != "Seller")
-//     {
-//         std::cout << "Are you a Buyer or a Seller? ";
-//         std::cin >> userType;
-//         std::cin.ignore();
-
-//         // Check if the input is valid
-//         if (userType != "Buyer" && userType != "Seller")
-//         {
-//             std::cout << "Invalid user type.\n";
-//             break;
-//         }
-//     }
-//     return user;
-// }
 
 /**
  * @brief Prompts the user to enter a phone number.
@@ -493,7 +478,6 @@ void Driver::createAccount()
     std::cout << "2. Seller" << std::endl;
 
     double selection = getValidNumberChoice("Enter your choice: ", 1, 2);
-    clearInputBuffer(); // Clear input buffer
 
     if (selection == 1)
     {
@@ -652,7 +636,23 @@ std::vector<Bid *> Driver::getBidsForProduct(int productId)
 
 void Driver::updateUserInformation(Seller *seller)
 {
+    std::string oldUsername = seller->getUsername();
+
+    // Call the seller's updateUserInformation method
     seller->updateUserInformation();
+
+    // If username was changed, update the users map
+    std::string newUsername = seller->getUsername();
+    if (oldUsername != newUsername)
+    {
+        // Remove the old username entry
+        users.erase(oldUsername);
+
+        // Add the user with the new username
+        users[newUsername] = seller;
+
+        std::cout << "Username updated in the system from '" << oldUsername << "' to '" << newUsername << "'\n";
+    }
 }
 
 /****************************************************

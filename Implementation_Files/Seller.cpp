@@ -273,7 +273,7 @@ Product *Seller::addProduct()
 void Seller::getElectronicsDetails(std::string &subcategory, std::string &specificType)
 {
     // Get subcategory with validation
-    int subcategoryChoice = getValidNumberChoice<int>("Select subcategory:\n1. Computer\n2. Phone\n3. TV\n", 1, 3);
+    int subcategoryChoice = getValidNumberChoice<int>("Select subcategory:\n1. Computer\n2. Phone\n3. TV\nEnter choice: ", 1, 3);
 
     std::string customCategory;
     int typeChoice;
