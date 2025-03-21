@@ -1,4 +1,3 @@
-Jenna and Jeshua's CSCI 3010 HW3
 
 ![Build Status](https://github.com/jejo8526/programming-workshop-hw3/actions/workflows/c-cpp.yml/badge.svg)
 
@@ -134,7 +133,7 @@ BidToBuy is a command-line interface (CLI) application that simulates an online 
   ```./main```
 
 ## Output
-Example game output is in output.txt
+Example output of the simulation is in output.txt.
 
 ## Contributors
 
