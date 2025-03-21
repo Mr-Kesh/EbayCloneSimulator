@@ -88,10 +88,12 @@ public:
     /****************************************************
      * Data CSV Files Functions
      ****************************************************/
-    void loadData();
     void loadUsers(const std::string &filename);
     void loadProducts(const std::string &filename);
+    void loadData();
     void saveData();
+    void saveUsers(const std::string &filename);
+    void saveProducts(const std::string &filename);
     Seller *getSellerByUsername(const std::string &username);
     bool validateYesNoInput(char &choice);
 };

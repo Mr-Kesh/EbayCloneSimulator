@@ -691,7 +691,6 @@ void Driver::updateUserInformation(Seller *seller)
  */
 void Driver::loadUsers(const std::string &filename)
 {
-    std::cout << "Attempting to load users from: " << filename << std::endl;
 
     std::ifstream file(filename);
     if (!file.is_open())
@@ -701,8 +700,6 @@ void Driver::loadUsers(const std::string &filename)
     }
 
     std::string line;
-    std::cout << "File opened successfully. Reading lines..." << std::endl;
-
 
     while (std::getline(file, line))
     {
@@ -728,11 +725,9 @@ void Driver::loadUsers(const std::string &filename)
         if (u != nullptr)
         {
             users[username] = u;
-            std::cout << "Loaded user: " << username << " (" << user_type << ")\n";
         }
     }
 
-    std::cout << "Loaded " << users.size() << " users from " << filename << std::endl;
     file.close();
 }
 
@@ -835,7 +830,7 @@ void Driver::loadData()
 {
     // Update paths to look in the "CSV files" directory
     loadUsers("CSV_files/users.csv");
-    loadProducts("CSV_files/products.csv");
+    loadProducts("CSV_files/bids.csv");
 }
 
 /**
@@ -843,7 +838,111 @@ void Driver::loadData()
  *
  * @return void This function ensures that any changes made during the program are saved.
  */
-void Driver::saveData() {}
+void Driver::saveData()
+{
+    // Save users data to CSV
+    saveUsers("CSV_files/users.csv");
+
+    // Save products data to CSV
+    saveProducts("CSV_files/bids.csv");
+
+    std::cout << "Data saved successfully." << std::endl;
+}
+
+/**
+ * @brief Saves users data to a CSV file.
+ *
+ * @param filename The name of the CSV file to write user data to.
+ * @return void This function writes user data to a CSV file.
+ */
+void Driver::saveUsers(const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: Could not open file for writing: " << filename << std::endl;
+        return;
+    }
+    
+
+    // Write each user's data
+    for (const auto &pair : users)
+    {
+        User *user = pair.second;
+        file << user->getUserId() << ","
+             << user->getUsername() << ","
+             << user->getUserType() << ","
+             << user->getPhoneNumber() << ","
+             << user->getAddress() << ","
+             << user->getBalance() << std::endl;
+    }
+
+    file.close();
+}
+
+/**
+ * @brief Saves products data to a CSV file.
+ *
+ * @param filename The name of the CSV file to write product data to.
+ * @return void This function writes product data to a CSV file.
+ */
+void Driver::saveProducts(const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "ERROR: Could not open file for writing: " << filename << std::endl;
+        return;
+    }
+
+    // Write header row
+    file << "Product ID,Category,Attribute 1,Attribute 2,Buyer,Product Name,Base Price,Quality,Seller" << std::endl;
+
+    // Write each product's data
+    for (const auto &pair : products)
+    {
+        Product *product = pair.second;
+        Seller *seller = product->getSeller();
+        Buyer *buyer = product->getHighestBidder();
+
+        // Convert Quality enum to string
+        std::string qualityStr;
+        switch (product->getQuality())
+        {
+        case Quality::New:
+            qualityStr = "New";
+            break;
+        case Quality::Used_VeryGood:
+            qualityStr = "Used_VeryGood";
+            break;
+        case Quality::Used_Good:
+            qualityStr = "Used_Good";
+            break;
+        case Quality::Used_Okay:
+            qualityStr = "Used_Okay";
+            break;
+        default:
+            qualityStr = "Unknown";
+        }
+
+        // For attribute fields, we don't have direct access in base Product class
+        // So we'll leave them empty for now - in a real implementation, derive these from the specific product types
+        std::string attribute1 = "";
+        std::string attribute2 = "";
+
+        file << product->getProductId() << ","
+             << product->getCategory() << ","
+             << attribute1 << ","
+             << attribute2 << ","
+             << (buyer ? buyer->getUsername() : "") << ","
+             << product->getName() << ","
+             << product->getBasePrice() << ","
+             << qualityStr << ","
+             << (seller ? seller->getUsername() : "") << std::endl;
+    }
+
+    file.close();
+}
 
 /****************************************************
  * Helper Functions
