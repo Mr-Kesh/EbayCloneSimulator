@@ -55,6 +55,12 @@ void Driver::run()
     {
         mainMenu();
     }
+
+    // If we get here and no user is logged in, ask again
+    if (currentUser == nullptr)
+    {
+        run();
+    }
 }
 
 /**
@@ -115,6 +121,7 @@ void Driver::welcomeMessage()
         {
             // User authenticated successfully
             currentUser = user;
+            mainMenu(); // Show main menu right after successful login
         }
         else
         {
