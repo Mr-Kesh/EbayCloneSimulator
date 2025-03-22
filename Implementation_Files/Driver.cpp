@@ -1,10 +1,10 @@
-#include <iostream> // For std::cout
-#include <fstream>  // For std::ifstream
-#include <sstream>  // For std::stringstream
-#include <vector>   // For std::vector
-#include <map>      // For std::map
-#include <limits>   // For std::numeric_limits
-#include <set>      // For std::set
+#include <iostream> 
+#include <fstream>  
+#include <sstream> 
+#include <vector>   
+#include <map>     
+#include <limits>  
+#include <set>      
 #include "Header_Files/Driver.h"
 #include "Header_Files/Bid.h"
 #include "Header_Files/UserFactory.h"
@@ -1189,7 +1189,6 @@ void Driver::saveBidsToCSV(const std::string &filename)
     std::ofstream file(filename);
     if (!file.is_open())
     {
-        std::cerr << "Error: Could not open " << filename << " for writing." << std::endl;
         return;
     }
 
@@ -1253,7 +1252,6 @@ void Driver::saveBidsToCSV(const std::string &filename)
     }
 
     file.close();
-    std::cout << "Updated bids saved to " << filename << std::endl;
 }
 
 

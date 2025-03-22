@@ -1,0 +1,402 @@
+Loaded user: AliceJohnson (Seller)
+Loaded user: BobWilliams (Buyer)
+Loaded user: CharlieBrown (Seller)
+Loaded user: DanielWhite (Buyer)
+Loaded user: EmilyDavis (Buyer)
+Loaded user: EthanWhite (Seller)
+Loaded user: FrankMiller (Seller)
+Loaded user: GraceWilson (Buyer)
+Loaded user: HenryClark (Seller)
+Loaded user: IvyMartinez (Buyer)
+Loaded user: JackAnderson (Seller)
+Loaded user: JamesMiller (Seller)
+Loaded user: JaneSmith (Buyer)
+Loaded user: JohnDoe (Seller)
+Loaded user: KarenMoore (Buyer)
+Loaded user: LiamScott (Seller)
+Loaded user: MiaRoberts (Buyer)
+Loaded user: NathanWhite (Seller)
+Loaded user: OliviaBrown (Buyer)
+Loaded user: SophiaGreen (Buyer)
+Loaded 20 users from CSV_files/users.csv
+Loaded 19 products from CSV_files/products.csv
+Placing bid of $35 on product ID 1001
+Placing bid of $55 on product ID 1002
+Placing bid of $1300 on product ID 1003
+Placing bid of $1050 on product ID 1004
+Placing bid of $220 on product ID 1005
+Placing bid of $45 on product ID 1006
+Placing bid of $85 on product ID 1007
+Placing bid of $720 on product ID 1008
+Placing bid of $320 on product ID 1009
+Placing bid of $25 on product ID 1010
+Placing bid of $2300 on product ID 1011
+Placing bid of $165 on product ID 1012
+Placing bid of $30 on product ID 1014
+Placing bid of $130 on product ID 1015
+Placing bid of $1150 on product ID 1016
+Placing bid of $32 on product ID 1017
+Placing bid of $55 on product ID 1018
+Placing bid of $1250 on product ID 1019
+Placing bid of $1050 on product ID 1020
+Added 19 bids from CSV_files/bids.csv to existing products
+Next Bid ID will be: 21
+
+
+===================================
+  Welcome to the Auction System  
+===================================
+1. Login
+2. Create a New Account
+3. Exit
+-----------------------------------
+Enter your choice: 1
+Enter your username: JamesMiller
+Logged in as JamesMiller (Seller)
+
+
+===================================
+  Seller Menu  
+===================================
+1. Add a product for sale
+2. Open bidding on a product
+3. Close bidding on a product
+4. View sales history
+5. Update user information
+6. View bid history for a product
+7. Check account balance
+8. Logout
+9. Exit the program
+Select an option: 1
+
+
+===================================
+  Add a Product!  
+===================================
+Select category:
+1. Electronics
+2. Clothing
+3. Furniture
+4. Books
+5. Tools
+Enter choice: 1
+Select subcategory:
+1. Computer
+2. Phone
+3. TV
+Enter choice: 1
+Select computer type:
+1. Laptop
+2. Custom
+Enter choice: 1
+Enter base price: 1400
+Select product quality:
+0: New
+1: Used (Very Good)
+2: Used (Good)
+3: Used (Okay)
+Enter choice: 0
+Give a name to your product: AMD Ryzen
+Enter the brand (e.g., Dell, Apple, Samsung): NVIDIA
+Enter the model (e.g., XPS 15, iPhone 14, Galaxy S23): RTX 4090
+Updated bids saved to CSV_files/bids.csv
+Product 1021 (AMD Ryzen) listed for sale under Electronics successfully!
+
+
+===================================
+  Seller Menu  
+===================================
+1. Add a product for sale
+2. Open bidding on a product
+3. Close bidding on a product
+4. View sales history
+5. Update user information
+6. View bid history for a product
+7. Check account balance
+8. Logout
+9. Exit the program
+Select an option: 6
+Enter Product ID to view bid history: 1021
+
+
+===================================
+  Bid History for Product #1021  
+===================================
+Name: AMD Ryzen
+Base Price: $1400
+-----------------------------------
+No bids have been placed on this product yet.
+
+
+===================================
+  Seller Menu  
+===================================
+1. Add a product for sale
+2. Open bidding on a product
+3. Close bidding on a product
+4. View sales history
+5. Update user information
+6. View bid history for a product
+7. Check account balance
+8. Logout
+9. Exit the program
+Select an option: 8
+Logging out...
+
+
+===================================
+  What would you like to do now?  
+===================================
+1. Login
+2. Create a New Account
+3. Exit
+-----------------------------------
+Enter your choice: 1
+Enter your username: JaneSmith
+Logged in as JaneSmith (Buyer)
+
+
+===================================
+  Buyer Menu  
+===================================
+1. View available products
+2. Place a bid on a product
+3. View bidding history
+4. View purchase history
+5. Update user information
+6. Logout
+7. Exit program
+Select an option: 2
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1001 | Name: Polo T-Shirt | Category: Clothing | Price: $30 | Status: Bidding Open
+-----------------------------------
+Size: Shirt
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1002 | Name: Levi's 501 | Category: Clothing | Price: $50 | Status: Bidding Open
+-----------------------------------
+Size: Pants
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1003 | Name: Dell XPS 15 | Category: Electronics | Price: $1200 | Status: Bidding Open
+-----------------------------------
+Brand: Dell
+Model: XPS 15
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1004 | Name: iPhone 14 Pro | Category: Electronics | Price: $1000 | Status: Bidding Open
+-----------------------------------
+Brand: iPhone
+Model: 14
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1005 | Name: Twin Bedz | Category: Furniture | Price: $200 | Status: Bidding Open
+-----------------------------------
+Material: Bed
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1006 | Name: Harry Potter | Category: Books | Price: $40 | Status: Bidding Open
+-----------------------------------
+Author: Fiction
+Genre: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1007 | Name: Hammer | Category: Tools | Price: $80 | Status: Bidding Open
+-----------------------------------
+Tool Type: Black & Decker
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1008 | Name: Samsung 55-inch | Category: Electronics | Price: $700 | Status: Bidding Open
+-----------------------------------
+Brand: Samsung
+Model: QLED 4K
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1009 | Name: Coffee Table | Category: Furniture | Price: $300 | Status: Bidding Open
+-----------------------------------
+Material: Table
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1010 | Name: A Brief History of Time | Category: Books | Price: $20 | Status: Bidding Open
+-----------------------------------
+Author: Non-Fiction
+Genre: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1011 | Name: MacBook Pro 16-inch | Category: Electronics | Price: $2200 | Status: Bidding Open
+-----------------------------------
+Brand: MacBook
+Model: Pro
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1012 | Name: Nike Air Jordan 1 | Category: Clothing | Price: $150 | Status: Bidding Open
+-----------------------------------
+Size: Shoes
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1014 | Name: Murder on the Orient Express | Category: Books | Price: $25 | Status: Bidding Open
+-----------------------------------
+Author: Fiction
+Genre: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1015 | Name: Ryobi Drill | Category: Tools | Price: $120 | Status: Bidding Open
+-----------------------------------
+Tool Type: Ryobi
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1016 | Name: Samsung Galaxy S23 Ultra | Category: Electronics | Price: $1100 | Status: Bidding Open
+-----------------------------------
+Brand: Samsung
+Model: S23 Ultra
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1017 | Name: Polo T-Shirt | Category: Clothing | Price: $30 | Status: Bidding Open
+-----------------------------------
+Size: Shirt
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1018 | Name: Addidas Joggers | Category: Clothing | Price: $50 | Status: Bidding Open
+-----------------------------------
+Size: Pants
+Type: Generic
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1019 | Name: Alienware M15 | Category: Electronics | Price: $1200 | Status: Bidding Open
+-----------------------------------
+Brand: Dell
+Model: Alienware M15
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1020 | Name: iPhone 14 Pro | Category: Electronics | Price: $1000 | Status: Bidding Open
+-----------------------------------
+Brand: Apple
+Model: Iphone14
+
+
+===================================
+ Your Products for Sale 
+===================================
+ID: 1021 | Name: AMD Ryzen | Category: Electronics | Price: $1400 | Status: Bidding Open
+-----------------------------------
+Brand: NVIDIA
+Model: RTX 4090
+Enter Product ID to bid on: 1021
+Enter bid amount: $1500
+Placing bid of $1500 on product ID 1021
+Bid #21 of $1500 placed successfully on AMD Ryzen
+Updated bids saved to CSV_files/bids.csv
+
+
+===================================
+  Buyer Menu  
+===================================
+1. View available products
+2. Place a bid on a product
+3. View bidding history
+4. View purchase history
+5. Update user information
+6. Logout
+7. Exit program
+Select an option: 6
+Logging out...
+
+
+===================================
+  What would you like to do now?  
+===================================
+1. Login
+2. Create a New Account
+3. Exit
+-----------------------------------
+Enter your choice: 2
+
+
+===================================
+  Create a New Account  
+===================================
+Are you signing up as a: 
+1. Buyer
+2. Seller
+Enter your choice: 2
+Enter username: RizzGod
+Enter phone number: 7199999999
+Enter address: Goofy Road 123
+Enter starting balance: 333
+Account created as a Seller successfully!
+Updated bids saved to CSV_files/bids.csv
+
+
+===================================
+  What would you like to do now?  
+===================================
+1. Login
+2. Create a New Account
+3. Exit
+-----------------------------------
+Enter your choice: 3
+Goodbye!
