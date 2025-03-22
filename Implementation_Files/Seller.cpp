@@ -24,10 +24,10 @@ T getValidNumberChoice(const std::string &prompt, T min, T max)
         // Explain the error
         std::cout << "Error: Please enter a number between " << min << " and " << max << ": ";
 
-        // Clear the previous input (Resets cin so we can take a new input)
+        // Clear the previous input
         std::cin.clear();
 
-        // Discard previous input (Gets rid of the invalid input)
+        // Discard previous input
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
@@ -191,9 +191,9 @@ Product *Seller::addProduct()
     std::cout << "  Add a Product!  " << std::endl;
     std::cout << "===================================" << std::endl;
 
-    // Get main category choice using the new function
+    // Get main category choice
     int categoryChoice = getValidNumberChoice<int>("Select category:\n1. Electronics\n2. Clothing\n3. Furniture\n4. Books\n5. Tools\nEnter choice: ", 1, 5);
-    // Process category selection using helper functions
+    // Process category selection
     switch (categoryChoice)
     {
     case 1:
@@ -235,8 +235,7 @@ Product *Seller::addProduct()
     getCategoryAttributes(category, attribute1, attribute2);
     
 
-    // Step 5: Create the product using `ProductFactory`
-    // This line creates a formatted string for the product's category. specificType is only added if it's not empty so we don't end up with an extra colon at the end.
+    // Create the product using `ProductFactory`
     std::string formattedCategory = category + ":" + subcategory + (specificType.empty() ? "" : (":" + specificType));
 
     // Generate a product ID the next available one so if the previous productID was 1001, the new one will be 1002

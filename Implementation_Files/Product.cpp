@@ -2,7 +2,7 @@
 #include "Header_Files/Buyer.h"
 #include "Header_Files/Seller.h"
 #include <iostream>
-#include <algorithm> // Include for max_element
+#include <algorithm> 
 
 /**
  * @brief Gets the buyer with the highest bid for this product.
@@ -33,7 +33,6 @@ double Product::getHighestBidAmount() const
     // If nobody's bidding, return $0
     if (bids_.empty())
         return 0.0;
-    // Same thing as the function above - find the max bid and return the amount
     return std::max_element(bids_.begin(), bids_.end(),
                             [](const auto &a, const auto &b)
                             { return a.second < b.second; })
