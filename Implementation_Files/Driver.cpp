@@ -1019,13 +1019,13 @@ void Driver::saveUsers(const std::string &filename)
  */
 void Driver::saveProductsToCSV(const std::string &productsFilename)
 {
-    // First, identify existing products
-    std::set<int> existingProductIds;
-    std::ifstream checkFile(productsFilename);
-    if (checkFile.is_open())
+    // First, read all existing products from the CSV file
+    std::map<int, std::string> existingProducts;
+    std::ifstream existingFile(productsFilename);
+    if (existingFile.is_open())
     {
         std::string line;
-        while (std::getline(checkFile, line))
+        while (std::getline(existingFile, line))
         {
             std::stringstream ss(line);
             std::string productIdStr;
@@ -1034,7 +1034,8 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
             try
             {
                 int productId = std::stoi(productIdStr);
-                existingProductIds.insert(productId);
+                // Store the entire line for each product ID
+                existingProducts[productId] = line;
             }
             catch (...)
             {
@@ -1042,31 +1043,52 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
                 continue;
             }
         }
-        checkFile.close();
+        existingFile.close();
     }
 
-    // Open file for appending
-    std::ofstream productsFile(productsFilename, std::ios::app);
+    // Track new product IDs that have been added during runtime
+    std::set<int> newProductIds;
+    for (const auto &pair : products)
+    {
+        int productId = pair.first;
+        // If this product didn't exist in the original file, it's new
+        if (existingProducts.find(productId) == existingProducts.end())
+        {
+            newProductIds.insert(productId);
+        }
+    }
+
+    // Now open products.csv for writing
+    std::ofstream productsFile(productsFilename);
     if (!productsFile.is_open())
     {
         return;
     }
 
-    // Count of new products added
-    int newProductsCount = 0;
-
-    // Only write new products not already in the file
-    for (const auto &pair : products)
+    // First, write all the existing products that haven't been changed
+    for (const auto &pair : existingProducts)
     {
         int productId = pair.first;
-        Product *product = pair.second;
-
-        // Skip products that already exist in the file
-        if (existingProductIds.find(productId) != existingProductIds.end())
+        // Skip writing this product if it no longer exists in our products map
+        if (products.find(productId) == products.end())
         {
             continue;
         }
 
+        // If this is a new product added during runtime, don't write the old data
+        if (newProductIds.find(productId) != newProductIds.end())
+        {
+            continue;
+        }
+
+        // Write the original line for this product
+        productsFile << pair.second << std::endl;
+    }
+
+    // Then write all the new products
+    for (int newProductId : newProductIds)
+    {
+        Product *product = products[newProductId];
         if (product != nullptr)
         {
             std::string attr1 = product->getAttribute1();
@@ -1086,7 +1108,7 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
             }
 
             // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
-            productsFile << productId << ","
+            productsFile << newProductId << ","
                          << fullCategory << ","
                          << attr1 << ","
                          << attr2 << ","
@@ -1114,7 +1136,6 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
             }
 
             productsFile << "," << product->getSeller()->getUsername() << std::endl;
-            newProductsCount++;
         }
     }
 
@@ -1129,13 +1150,13 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
  */
 void Driver::saveBidsToCSV(const std::string &filename)
 {
-    // Find maximum existing bid ID to determine which bids are new
-    int maxExistingBidId = 0;
-    std::ifstream checkFile(filename);
-    if (checkFile.is_open())
+    // Read existing bids from the file
+    std::map<int, std::string> existingBids;
+    std::ifstream existingFile(filename);
+    if (existingFile.is_open())
     {
         std::string line;
-        while (std::getline(checkFile, line))
+        while (std::getline(existingFile, line))
         {
             std::stringstream ss(line);
             std::string bidIdStr;
@@ -1144,100 +1165,97 @@ void Driver::saveBidsToCSV(const std::string &filename)
             try
             {
                 int bidId = std::stoi(bidIdStr);
-                if (bidId > maxExistingBidId)
-                {
-                    maxExistingBidId = bidId;
-                }
+                existingBids[bidId] = line;
             }
             catch (...)
             {
-                // Skip invalid lines
                 continue;
             }
         }
-        checkFile.close();
+        existingFile.close();
     }
 
-    // Open file for appending (not rewriting)
-    std::ofstream file(filename, std::ios::app);
+    // Determine max existing bid ID
+    int maxExistingBidId = 0;
+    for (const auto &pair : existingBids)
+    {
+        if (pair.first > maxExistingBidId)
+        {
+            maxExistingBidId = pair.first;
+        }
+    }
+
+    // Open file for writing (overwrites existing)
+    std::ofstream file(filename);
     if (!file.is_open())
     {
+        std::cerr << "Error: Could not open " << filename << " for writing." << std::endl;
         return;
     }
 
-    // Count of new bids added
-    int newBidsCount = 0;
+    // Write back all existing bids
+    for (const auto &pair : existingBids)
+    {
+        file << pair.second << std::endl;
+    }
 
-    // Only write new bids (bids with ID > maxExistingBidId)
+    // Add new bids
     for (const auto &productPair : products)
     {
         Product *product = productPair.second;
-        if (product)
+        if (!product) continue;
+
+        const std::vector<BidInfo> &bidHistory = product->getBidHistory();
+
+        // Get attribute1 and attribute2
+        std::string attr1 = product->getAttribute1();
+        std::string attr2 = product->getAttribute2();
+
+        // Rebuild full category string
+        std::string fullCategory = product->getCategory();
+        if (!product->getSubCategory().empty())
         {
-            // Get all bids for this product
-            const std::vector<BidInfo> &bidHistory = product->getBidHistory();
+            fullCategory += ":" + product->getSubCategory();
+        }
+        if (!product->getSpecificType().empty())
+        {
+            fullCategory += ":" + product->getSpecificType();
+        }
 
-            // Construct full category string for new bids
-            std::string fullCategory = product->getCategory();
-            std::string attr1 = product->getAttribute1();
-            std::string attr2 = product->getAttribute2();
+        for (const BidInfo &bid : bidHistory)
+        {
+            if (bid.bidId <= maxExistingBidId)
+                continue;
 
-            if (!attr1.empty())
+            // Write formatted bid
+            file << bid.bidId << ","
+                 << product->getProductId() << ","
+                 << fullCategory << ","
+                 << attr1 << ","
+                 << attr2 << ","
+                 << bid.buyer->getUsername() << ","
+                 << bid.amount << ","
+                 << product->getName() << ","
+                 << product->getBasePrice() << ",";
+
+            // Write quality
+            switch (product->getQuality())
             {
-                fullCategory += ":" + product->getSubCategory();
+            case Quality::New: file << "New"; break;
+            case Quality::Used_VeryGood: file << "Used_VeryGood"; break;
+            case Quality::Used_Good: file << "Used_Good"; break;
+            case Quality::Used_Okay: file << "Used_Okay"; break;
+            default: file << "Unknown"; break;
             }
-            if (!attr2.empty())
-            {
-                fullCategory += ":" + product->getSpecificType();
-            }
 
-            for (const BidInfo &bid : bidHistory)
-            {
-                // Skip bids that already exist in the file
-                if (bid.bidId <= maxExistingBidId)
-                {
-                    continue;
-                }
-
-                // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
-                file << bid.bidId << ","
-                     << product->getProductId() << ","
-                     << fullCategory << ","
-                     << attr1 << ","
-                     << attr2 << ","
-                     << bid.buyer->getUsername() << ","
-                     << bid.amount << ","
-                     << product->getName() << ","
-                     << product->getBasePrice() << ",";
-
-                // Convert quality enum to string
-                Quality quality = product->getQuality();
-                switch (quality)
-                {
-                case Quality::New:
-                    file << "New";
-                    break;
-                case Quality::Used_VeryGood:
-                    file << "Used_VeryGood";
-                    break;
-                case Quality::Used_Good:
-                    file << "Used_Good";
-                    break;
-                case Quality::Used_Okay:
-                    file << "Used_Okay";
-                    break;
-                default:
-                    file << "Unknown";
-                }
-
-                file << "," << product->getSeller()->getUsername() << std::endl;
-                newBidsCount++;
-            }
+            file << "," << product->getSeller()->getUsername() << std::endl;
         }
     }
 
     file.close();
+    std::cout << "Updated bids saved to " << filename << std::endl;
 }
+
 
 /****************************************************
  * Helper Functions
