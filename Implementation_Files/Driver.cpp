@@ -1222,12 +1222,19 @@ void Driver::saveBidsToCSV(const std::string &filename)
             // Get all bids for this product
             const std::vector<BidInfo> &bidHistory = product->getBidHistory();
 
+            // Build full category string from individual parts
+            std::string category = product->getCategory();
+            if (!product->getAttribute1().empty())
+                category += ":" + product->getAttribute1();
+            if (!product->getAttribute2().empty())
+                category += ":" + product->getAttribute2();
+
             for (const BidInfo &bid : bidHistory)
             {
                 // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
                 file << bid.bidId << ","
                      << product->getProductId() << ","
-                     << product->getCategory() << ","
+                     << category << ","
                      << product->getAttribute1() << ","
                      << product->getAttribute2() << ","
                      << bid.buyer->getUsername() << ","
