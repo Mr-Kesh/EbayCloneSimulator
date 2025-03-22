@@ -14,6 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: make executable
-      run: make
+      run: make test
     - name: run executable
       run: ./test
