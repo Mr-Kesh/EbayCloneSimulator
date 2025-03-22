@@ -1081,40 +1081,7 @@ void Driver::saveUsers(const std::string &filename)
  */
 void Driver::saveProductsToCSV(const std::string &productsFilename)
 {
-    // First, let's create a map to store the full category information for each product
-    std::map<int, std::string> productCategories;
-
-    // Open bids.csv which has the full category information
-    std::ifstream bidsFile("CSV_files/bids.csv");
-    if (bidsFile.is_open())
-    {
-        std::string line;
-        while (std::getline(bidsFile, line))
-        {
-            std::stringstream ss(line);
-            std::string bidIdStr, productIdStr, fullCategory;
-
-            // Read the first three fields (BidID, ProductID, Category)
-            std::getline(ss, bidIdStr, ',');
-            std::getline(ss, productIdStr, ',');
-            std::getline(ss, fullCategory, ',');
-
-            try
-            {
-                int productId = std::stoi(productIdStr);
-                // Store the full category for this product ID
-                productCategories[productId] = fullCategory;
-            }
-            catch (const std::exception &e)
-            {
-                // Skip invalid lines
-                continue;
-            }
-        }
-        bidsFile.close();
-    }
-
-    // Now open products file for writing
+    // Open products file for writing
     std::ofstream productsFile(productsFilename);
     if (!productsFile.is_open())
     {
@@ -1131,17 +1098,16 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
         {
             try
             {
-                std::string fullCategory = product->getCategory();
-
-                // If we have more detailed category from bids.csv, use that instead
-                if (productCategories.find(product->getProductId()) != productCategories.end())
-                {
-                    fullCategory = productCategories[product->getProductId()];
-                }
+                // Build full category string from individual parts
+                std::string category = product->getCategory();
+                if (!product->getAttribute1().empty())
+                    category += ":" + product->getAttribute1();
+                if (!product->getAttribute2().empty())
+                    category += ":" + product->getAttribute2();
 
                 // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
                 productsFile << product->getProductId() << ","
-                             << fullCategory << ","
+                             << category << ","
                              << product->getAttribute1() << ","
                              << product->getAttribute2() << ","
                              << product->getName() << ","
