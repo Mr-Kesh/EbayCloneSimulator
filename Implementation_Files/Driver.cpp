@@ -1165,19 +1165,17 @@ void Driver::saveBidsToCSV(const std::string &filename)
             try
             {
                 int bidId = std::stoi(bidIdStr);
-                // Store the entire line for each bid ID
                 existingBids[bidId] = line;
             }
             catch (...)
             {
-                // Skip invalid lines
                 continue;
             }
         }
         existingFile.close();
     }
 
-    // Find maximum existing bid ID to determine which bids are new
+    // Determine max existing bid ID
     int maxExistingBidId = 0;
     for (const auto &pair : existingBids)
     {
@@ -1187,7 +1185,7 @@ void Driver::saveBidsToCSV(const std::string &filename)
         }
     }
 
-    // Open file for writing
+    // Open file for writing (overwrites existing)
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -1195,87 +1193,69 @@ void Driver::saveBidsToCSV(const std::string &filename)
         return;
     }
 
-    // First, write all existing bids
+    // Write back all existing bids
     for (const auto &pair : existingBids)
     {
         file << pair.second << std::endl;
     }
 
-    // Count of new bids added
-    int newBidsCount = 0;
-
-    // Then write any new bids (bids with ID > maxExistingBidId)
+    // Add new bids
     for (const auto &productPair : products)
     {
         Product *product = productPair.second;
-        if (product)
+        if (!product) continue;
+
+        const std::vector<BidInfo> &bidHistory = product->getBidHistory();
+
+        // Get attribute1 and attribute2
+        std::string attr1 = product->getAttribute1();
+        std::string attr2 = product->getAttribute2();
+
+        // Rebuild full category string
+        std::string fullCategory = product->getCategory();
+        if (!product->getSubCategory().empty())
         {
-            // Get all bids for this product
-            const std::vector<BidInfo> &bidHistory = product->getBidHistory();
+            fullCategory += ":" + product->getSubCategory();
+        }
+        if (!product->getSpecificType().empty())
+        {
+            fullCategory += ":" + product->getSpecificType();
+        }
 
-            // Construct full category string for new bids
-            std::string fullCategory = product->getCategory();
-            std::string attr1 = product->getAttribute1();
-            std::string attr2 = product->getAttribute2();
+        for (const BidInfo &bid : bidHistory)
+        {
+            if (bid.bidId <= maxExistingBidId)
+                continue;
 
-            if (!attr1.empty())
+            // Write formatted bid
+            file << bid.bidId << ","
+                 << product->getProductId() << ","
+                 << fullCategory << ","
+                 << attr1 << ","
+                 << attr2 << ","
+                 << bid.buyer->getUsername() << ","
+                 << bid.amount << ","
+                 << product->getName() << ","
+                 << product->getBasePrice() << ",";
+
+            // Write quality
+            switch (product->getQuality())
             {
-                fullCategory += ":" + product->getSubCategory();
+            case Quality::New: file << "New"; break;
+            case Quality::Used_VeryGood: file << "Used_VeryGood"; break;
+            case Quality::Used_Good: file << "Used_Good"; break;
+            case Quality::Used_Okay: file << "Used_Okay"; break;
+            default: file << "Unknown"; break;
             }
-            if (!attr2.empty())
-            {
-                fullCategory += ":" + product->getSpecificType();
-            }
 
-            for (const BidInfo &bid : bidHistory)
-            {
-                // Skip bids that already exist in the file
-                if (bid.bidId <= maxExistingBidId)
-                {
-                    continue;
-                }
-
-                // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
-                file << bid.bidId << ","
-                     << product->getProductId() << ","
-                     << fullCategory << ","
-                     << attr1 << ","
-                     << attr2 << ","
-                     << bid.buyer->getUsername() << ","
-                     << bid.amount << ","
-                     << product->getName() << ","
-                     << product->getBasePrice() << ",";
-
-                // Convert quality enum to string
-                Quality quality = product->getQuality();
-                switch (quality)
-                {
-                case Quality::New:
-                    file << "New";
-                    break;
-                case Quality::Used_VeryGood:
-                    file << "Used_VeryGood";
-                    break;
-                case Quality::Used_Good:
-                    file << "Used_Good";
-                    break;
-                case Quality::Used_Okay:
-                    file << "Used_Okay";
-                    break;
-                default:
-                    file << "Unknown";
-                }
-
-                file << "," << product->getSeller()->getUsername() << std::endl;
-                newBidsCount++;
-            }
+            file << "," << product->getSeller()->getUsername() << std::endl;
         }
     }
 
     file.close();
-    std::cout << "Preserved " << existingBids.size() << " existing bids and added "
-              << newBidsCount << " new bids to " << filename << std::endl;
+    std::cout << "Updated bids saved to " << filename << std::endl;
 }
+
 
 /****************************************************
  * Helper Functions
