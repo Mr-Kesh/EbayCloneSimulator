@@ -1205,40 +1205,6 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
  */
 void Driver::saveBidsToCSV(const std::string &filename)
 {
-    // First, read existing bids to preserve their category information
-    std::map<int, std::map<int, std::string>> bidCategories; // productId -> [bidId -> category]
-
-    // Open existing bids.csv to get the full category formats
-    std::ifstream existingBids(filename);
-    if (existingBids.is_open())
-    {
-        std::string line;
-        while (std::getline(existingBids, line))
-        {
-            std::stringstream ss(line);
-            std::string bidIdStr, productIdStr, fullCategory;
-
-            // Read bid ID, product ID, and category
-            std::getline(ss, bidIdStr, ',');
-            std::getline(ss, productIdStr, ',');
-            std::getline(ss, fullCategory, ',');
-
-            try
-            {
-                int bidId = std::stoi(bidIdStr);
-                int productId = std::stoi(productIdStr);
-                bidCategories[productId][bidId] = fullCategory;
-            }
-            catch (...)
-            {
-                // Skip invalid lines
-                continue;
-            }
-        }
-        existingBids.close();
-    }
-
-    // Now open bids.csv for writing
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -1253,32 +1219,18 @@ void Driver::saveBidsToCSV(const std::string &filename)
         Product *product = productPair.second;
         if (product)
         {
-            int productId = product->getProductId();
-
             // Get all bids for this product
             const std::vector<BidInfo> &bidHistory = product->getBidHistory();
 
+            // Build full category string from individual parts
+            std::string category = product->getCategory();
+            if (!product->getAttribute1().empty())
+                category += ":" + product->getAttribute1();
+            if (!product->getAttribute2().empty())
+                category += ":" + product->getAttribute2();
+
             for (const BidInfo &bid : bidHistory)
             {
-                int bidId = bid.bidId;
-
-                // Get the category - first check if we have this bid's category preserved
-                std::string category;
-                if (bidCategories.count(productId) > 0 && bidCategories[productId].count(bidId) > 0)
-                {
-                    // Use preserved category from existing file
-                    category = bidCategories[productId][bidId];
-                }
-                else
-                {
-                    // Build new category string from individual parts
-                    category = product->getCategory();
-                    if (!product->getAttribute1().empty())
-                        category += ":" + product->getAttribute1();
-                    if (!product->getAttribute2().empty())
-                        category += ":" + product->getAttribute2();
-                }
-
                 // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
                 file << bid.bidId << ","
                      << product->getProductId() << ","
