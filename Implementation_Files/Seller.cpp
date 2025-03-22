@@ -233,6 +233,7 @@ Product *Seller::addProduct()
 
     // Get category-specific attributes
     getCategoryAttributes(category, attribute1, attribute2);
+    
 
     // Step 5: Create the product using `ProductFactory`
     // This line creates a formatted string for the product's category. specificType is only added if it's not empty so we don't end up with an extra colon at the end.
@@ -242,7 +243,8 @@ Product *Seller::addProduct()
     int productId = getNextProductId();
     // Create a new product using the ProductFactory with all the details we gathered
     Product *newProduct = ProductFactory::CreateProduct(productId, name, formattedCategory, price, quality, this, attribute1, attribute2);
-
+    newProduct->setAttribute1(attribute1);
+    newProduct->setAttribute2(attribute2);
     // Check if the product was created successfully
     if (newProduct)
     {
