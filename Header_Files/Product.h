@@ -75,7 +75,6 @@ public:
 
     // Bid management
     bool addBid(Buyer *buyer, double amount);
-
     void openBidding();
     void closeBidding();
     void reopenBidding();

@@ -59,7 +59,6 @@ public:
     double checkAccountBalance() const;
     void updateUserInformation() override;
 
-
     /****************************************************
      * Helper Functions
      ****************************************************

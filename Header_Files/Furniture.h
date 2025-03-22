@@ -1,11 +1,7 @@
 #ifndef FURNITURE_H_
 #define FURNITURE_H_
 
-
-
 #include "Product.h"
-
-
 
 class Furniture : public Product {
 public:
@@ -21,15 +17,13 @@ private:
     std::string type_;
 };
 
-
-
 // Furniture Subcategories
+
 class Chair : public Furniture {
 public:
     Chair(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& material)
     : Furniture(productId, name, base_price, quality, seller, material, "Chair") {}
 };
-
 
 class OfficeChair : public Chair {
 public:
@@ -37,15 +31,11 @@ public:
     : Chair(productId, name, base_price, quality, seller, material) {}
 };
 
-
-
 class Table : public Furniture {
 public:
     Table(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& material)
     : Furniture(productId, name, base_price, quality, seller, material, "Table") {}
 };
-
-
 
 class CoffeeTable : public Table {
 public:
@@ -53,22 +43,16 @@ public:
     : Table(productId, name, base_price, quality, seller, material) {}
 };
 
-
-
 class Bed : public Furniture {
 public:
     Bed(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& material)
     : Furniture(productId, name, base_price, quality, seller, material, "Bed") {}
 };
 
-
-
 class TwinBed : public Bed {
 public:
     TwinBed(const int productId, const std::string& name, const double base_price, const Quality quality, Seller* seller, const std::string& material)
     : Bed(productId, name, base_price, quality, seller, material) {}
 };
-
-
 
 #endif // FURNITURE_H_

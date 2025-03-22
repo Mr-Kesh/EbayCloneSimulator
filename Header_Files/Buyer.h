@@ -14,29 +14,19 @@ private:
     std::vector<std::pair<int, double>> bid_history_; // Product IDs and bid amounts
 public:
     // Constructors
-
     Buyer(const std::string &uname, long phone, const std::string &addr, double bal);
 
     // Bidding actions
     bool placeBuyerBid(int productId, double bidAmount);
-    void viewActiveProducts(const std::vector<Product> &allProducts) const;
-    void viewBidsPlaced() const;
-    void finalizePurchase(Product &product);
-
-    // Purchase history
-    void viewPurchaseHistory() const;
-    void addPurchasedProduct(Product *product); // Add product to purchase history
-
-    // Account management
-    double checkAccountBalance() const;
 
     // Override from User base class
     void updateUserInformation() override;
 
-    // New methods moved from Driver
+    // Methods for bidding and purchasing
     bool placeBid(int productId, double amount);
     void viewBiddingHistory(int productId);
     void viewPurchaseHistory(int productId);
+    void addPurchasedProduct(Product *product); 
 
     // Method for displaying available products
     void displayAvailableProducts() const;
