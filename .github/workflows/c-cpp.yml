@@ -16,4 +16,4 @@ jobs:
     - name: make executable
       run: make
     - name: run executable
-      run: ./make
+      run: ./main
