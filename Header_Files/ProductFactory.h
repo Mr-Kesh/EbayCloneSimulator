@@ -186,10 +186,6 @@ public:
             return new Tools(productId, name, base_price, quality, seller, attribute1);
         }
 
-        // If all else fails, create a generic product
-        Product *product = new Product(productId, name, category, base_price, quality, seller);
-        // Make sure to set attributes for generic products too
-        SetAttributesOnProduct(product, attribute1, attribute2);
         return product;
     }
 };
