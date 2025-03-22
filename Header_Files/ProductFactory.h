@@ -14,8 +14,6 @@ class Seller;
 class ProductFactory
 {
 public:
-    // Helper function to set attributes on a Product object
-    static void SetAttributesOnProduct(Product *product, const std::string &attribute1, const std::string &attribute2);
 
     // Main factory method with consistent parameter order
     static Product *CreateProduct(int productId, const std::string &name, const std::string &category, double base_price,
