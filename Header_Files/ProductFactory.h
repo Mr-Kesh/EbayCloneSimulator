@@ -186,7 +186,8 @@ public:
             return new Tools(productId, name, base_price, quality, seller, attribute1);
         }
 
-        return product;
+        // If all else fails, create a generic product
+        return new Product(productId, name, category, base_price, quality, seller);
     }
 };
 
