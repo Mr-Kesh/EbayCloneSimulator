@@ -817,7 +817,16 @@ void Driver::loadProducts(const std::string &filename)
         double basePrice = std::stod(basePriceStr);
 
         // Find the seller
-        Seller *seller = getSellerByUsername(sellerName);
+        Seller *seller = nullptr;
+        for (const auto &pair : users)
+        {
+            User *user = pair.second;
+            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
+            {
+                seller = static_cast<Seller *>(user);
+                break;
+            }
+        }
 
         if (seller)
         {
