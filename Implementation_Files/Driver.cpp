@@ -1081,7 +1081,39 @@ void Driver::saveUsers(const std::string &filename)
  */
 void Driver::saveProductsToCSV(const std::string &productsFilename)
 {
-    // Open products file for writing
+    // First, let's read the current format from bids.csv
+    std::map<int, std::string> fullCategories;
+
+    // Open bids.csv to get the full category format
+    std::ifstream bidsFile("CSV_files/bids.csv");
+    if (bidsFile.is_open())
+    {
+        std::string line;
+        while (std::getline(bidsFile, line))
+        {
+            std::stringstream ss(line);
+            std::string bidIdStr, productIdStr, fullCategory;
+
+            // Read bid ID, product ID, and full category
+            std::getline(ss, bidIdStr, ',');
+            std::getline(ss, productIdStr, ',');
+            std::getline(ss, fullCategory, ',');
+
+            try
+            {
+                int productId = std::stoi(productIdStr);
+                fullCategories[productId] = fullCategory;
+            }
+            catch (...)
+            {
+                // Skip invalid lines
+                continue;
+            }
+        }
+        bidsFile.close();
+    }
+
+    // Now open products.csv for writing
     std::ofstream productsFile(productsFilename);
     if (!productsFile.is_open())
     {
@@ -1089,58 +1121,75 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
         return;
     }
 
-    // Save all products in the products map to the CSV file
+    // Save all products
     for (const auto &pair : products)
     {
         Product *product = pair.second;
 
         if (product != nullptr)
         {
-            try
+            int productId = product->getProductId();
+
+            // Get the full category from bids.csv if available
+            std::string fullCategory;
+            if (fullCategories.find(productId) != fullCategories.end())
             {
-                // Build full category string from individual parts
-                std::string category = product->getCategory();
-                if (!product->getAttribute1().empty())
-                    category += ":" + product->getAttribute1();
-                if (!product->getAttribute2().empty())
-                    category += ":" + product->getAttribute2();
+                fullCategory = fullCategories[productId];
+            }
+            else
+            {
+                // If not in bids.csv, construct it from product data
+                fullCategory = product->getCategory();
 
-                // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
-                productsFile << product->getProductId() << ","
-                             << category << ","
-                             << product->getAttribute1() << ","
-                             << product->getAttribute2() << ","
-                             << product->getName() << ","
-                             << product->getBasePrice() << ",";
+                // Debug output to check what's in the category
+                std::cout << "Debug - Product ID: " << productId
+                          << ", Category: " << product->getCategory()
+                          << ", Attr1: " << product->getAttribute1()
+                          << ", Attr2: " << product->getAttribute2() << std::endl;
 
-                // Convert quality enum to string
-                Quality quality = product->getQuality();
-                switch (quality)
+                // Add subcategory and specific type if available
+                std::string attr1 = product->getAttribute1();
+                std::string attr2 = product->getAttribute2();
+
+                if (!attr1.empty())
                 {
-                case Quality::New:
-                    productsFile << "New";
-                    break;
-                case Quality::Used_VeryGood:
-                    productsFile << "Used_VeryGood";
-                    break;
-                case Quality::Used_Good:
-                    productsFile << "Used_Good";
-                    break;
-                case Quality::Used_Okay:
-                    productsFile << "Used_Okay";
-                    break;
-                default:
-                    productsFile << "Unknown";
+                    fullCategory += ":" + attr1;
                 }
+                if (!attr2.empty())
+                {
+                    fullCategory += ":" + attr2;
+                }
+            }
 
-                productsFile << "," << product->getSeller()->getUsername() << std::endl;
-            }
-            catch (const std::exception &e)
+            // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
+            productsFile << productId << ","
+                         << fullCategory << ","
+                         << product->getAttribute1() << ","
+                         << product->getAttribute2() << ","
+                         << product->getName() << ","
+                         << product->getBasePrice() << ",";
+
+            // Convert quality enum to string
+            Quality quality = product->getQuality();
+            switch (quality)
             {
-                std::cerr << "Error saving product " << product->getProductId() << ": " << e.what() << std::endl;
-                // Continue with next product rather than crashing
-                continue;
+            case Quality::New:
+                productsFile << "New";
+                break;
+            case Quality::Used_VeryGood:
+                productsFile << "Used_VeryGood";
+                break;
+            case Quality::Used_Good:
+                productsFile << "Used_Good";
+                break;
+            case Quality::Used_Okay:
+                productsFile << "Used_Okay";
+                break;
+            default:
+                productsFile << "Unknown";
             }
+
+            productsFile << "," << product->getSeller()->getUsername() << std::endl;
         }
     }
 
