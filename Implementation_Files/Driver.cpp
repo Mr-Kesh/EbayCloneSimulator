@@ -1191,6 +1191,7 @@ void Driver::saveBidsToCSV(const std::string &filename)
     std::ofstream file(filename);
     if (!file.is_open())
     {
+        std::cerr << "Error: Could not open " << filename << " for writing." << std::endl;
         return;
     }
 
@@ -1272,6 +1273,8 @@ void Driver::saveBidsToCSV(const std::string &filename)
     }
 
     file.close();
+    std::cout << "Preserved " << existingBids.size() << " existing bids and added "
+              << newBidsCount << " new bids to " << filename << std::endl;
 }
 
 /****************************************************
