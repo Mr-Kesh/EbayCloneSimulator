@@ -44,17 +44,10 @@ void Buyer::updateUserInformation()
     std::cout << "User information updated successfully!" << std::endl;
 }
 
-// New methods moved from Driver
 bool Buyer::placeBuyerBid(int productId, double amount)
 {
     std::cout << "Placing bid of $" << amount << " on product ID " << productId << std::endl;
 
-    // 1. Find the product by ID
-    // 2. Check if the product is active for bidding
-    // 3. Verify the bid amount is higher than current bids
-    // 4. Place the bid and add it to bid history
-
-    // For now, we'll just add it to our bid history
     bid_history_.push_back(std::make_pair(productId, amount));
 
     return true;
