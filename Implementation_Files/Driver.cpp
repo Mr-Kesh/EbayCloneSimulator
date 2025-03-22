@@ -796,66 +796,101 @@ void Driver::loadProducts(const std::string &filename)
     }
 
     std::string line;
+    int lineNumber = 0;
+
     while (std::getline(file, line))
     {
-        std::stringstream ss(line);
-        std::string productIdStr, category, attribute1, attribute2, name, basePriceStr, qualityStr, sellerName;
-
-        // Parse CSV line based on format:
-        // productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
-        std::getline(ss, productIdStr, ',');
-        std::getline(ss, category, ',');
-        std::getline(ss, attribute1, ',');
-        std::getline(ss, attribute2, ',');
-        std::getline(ss, name, ',');
-        std::getline(ss, basePriceStr, ',');
-        std::getline(ss, qualityStr, ',');
-        std::getline(ss, sellerName, ',');
-
-        // Convert numeric values
-        int productId = std::stoi(productIdStr);
-        double basePrice = std::stod(basePriceStr);
-
-        // Find the seller
-        Seller *seller = nullptr;
-        for (const auto &pair : users)
+        lineNumber++;
+        try
         {
-            User *user = pair.second;
-            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
+            std::stringstream ss(line);
+            std::string productIdStr, category, attribute1, attribute2, name, basePriceStr, qualityStr, sellerName;
+
+            // Parse CSV line based on format:
+            // productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
+            std::getline(ss, productIdStr, ',');
+            std::getline(ss, category, ',');
+            std::getline(ss, attribute1, ',');
+            std::getline(ss, attribute2, ',');
+            std::getline(ss, name, ',');
+            std::getline(ss, basePriceStr, ',');
+            std::getline(ss, qualityStr, ',');
+            std::getline(ss, sellerName, ',');
+
+            // Convert numeric values with error handling
+            int productId;
+            double basePrice;
+
+            try
             {
-                seller = static_cast<Seller *>(user);
-                break;
+                productId = std::stoi(productIdStr);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error on line " << lineNumber << " of " << filename
+                          << ": Invalid product ID '" << productIdStr << "'" << std::endl;
+                continue; // Skip this line
+            }
+
+            try
+            {
+                basePrice = std::stod(basePriceStr);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error on line " << lineNumber << " of " << filename
+                          << ": Invalid base price '" << basePriceStr << "' for product " << productId << std::endl;
+                continue; // Skip this line
+            }
+
+            // Find the seller
+            Seller *seller = nullptr;
+            for (const auto &pair : users)
+            {
+                User *user = pair.second;
+                if (user->getUsername() == sellerName && user->getUserType() == "Seller")
+                {
+                    seller = static_cast<Seller *>(user);
+                    break;
+                }
+            }
+
+            if (seller)
+            {
+                // Convert string to Quality enum
+                Quality quality = Quality::Used_Okay; // Default value
+                if (qualityStr == "New")
+                {
+                    quality = Quality::New;
+                }
+                else if (qualityStr == "Used_VeryGood")
+                {
+                    quality = Quality::Used_VeryGood;
+                }
+                else if (qualityStr == "Used_Good")
+                {
+                    quality = Quality::Used_Good;
+                }
+                else if (qualityStr == "Used_Okay")
+                {
+                    quality = Quality::Used_Okay;
+                }
+
+                Product *product = ProductFactory::CreateProduct(productId, name, category, basePrice, quality, seller, attribute1, attribute2);
+
+                if (product)
+                {
+                    products[productId] = product;
+                    seller->addProductForSale(product);
+                }
             }
         }
-
-        if (seller)
+        catch (const std::exception &e)
         {
-            // Convert string to Quality enum
-            Quality quality = Quality::Used_Okay; // Default value
-            if (qualityStr == "New")
-            {
-                quality = Quality::New;
-            }
-            else if (qualityStr == "Used_VeryGood")
-            {
-                quality = Quality::Used_VeryGood;
-            }
-            else if (qualityStr == "Used_Good")
-            {
-                quality = Quality::Used_Good;
-            }
-            else if (qualityStr == "Used_Okay")
-            {
-                quality = Quality::Used_Okay;
-            }
-
-            Product *product = ProductFactory::CreateProduct(productId, name, category, basePrice, quality, seller, attribute1, attribute2);
-
-            if (product)
-            {
-                products[productId] = product;
-                seller->addProductForSale(product);
-            }
+            std::cerr << "Error processing line " << lineNumber << " of " << filename << ": " << e.what() << std::endl;
+            std::cerr << "Line content: " << line << std::endl;
+            // Continue with next line rather than crashing
+            continue;
         }
     }
 
@@ -881,58 +916,105 @@ void Driver::loadBids(const std::string &filename)
     std::string line;
     int bidsLoaded = 0;
     int highestBidId = 0;
+    int lineNumber = 0;
 
     while (std::getline(file, line))
     {
-        std::stringstream ss(line);
-        std::string bidIdStr, productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
-
-        // Parse CSV line with bid ID:
-        // BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
-        std::getline(ss, bidIdStr, ',');
-        std::getline(ss, productIdStr, ',');
-        std::getline(ss, category, ',');
-        std::getline(ss, attribute1, ',');
-        std::getline(ss, attribute2, ',');
-        std::getline(ss, buyerName, ',');
-        std::getline(ss, bidPriceStr, ',');
-        std::getline(ss, productName, ',');
-        std::getline(ss, basePriceStr, ',');
-        std::getline(ss, qualityStr, ',');
-        std::getline(ss, sellerName);
-
-        // Convert numeric values
-        int bidId = std::stoi(bidIdStr);
-        int productId = std::stoi(productIdStr);
-        double bidPrice = std::stod(bidPriceStr);
-
-        // Track highest bid ID to set nextBidId
-        if (bidId > highestBidId)
+        lineNumber++;
+        try
         {
-            highestBidId = bidId;
-        }
+            std::stringstream ss(line);
+            std::string bidIdStr, productIdStr, category, attribute1, attribute2;
+            std::string buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
 
-        // Find the buyer
-        Buyer *buyer = nullptr;
-        for (const auto &pair : users)
-        {
-            User *user = pair.second;
-            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
+            // Parse CSV line with bid ID:
+            // BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
+            std::getline(ss, bidIdStr, ',');
+            std::getline(ss, productIdStr, ',');
+            std::getline(ss, category, ',');
+            std::getline(ss, attribute1, ',');
+            std::getline(ss, attribute2, ',');
+            std::getline(ss, buyerName, ',');
+            std::getline(ss, bidPriceStr, ',');
+            std::getline(ss, productName, ',');
+            std::getline(ss, basePriceStr, ',');
+            std::getline(ss, qualityStr, ',');
+            std::getline(ss, sellerName);
+
+            // Convert numeric values with error handling
+            int bidId, productId;
+            double bidPrice;
+
+            try
             {
-                buyer = static_cast<Buyer *>(user);
-                break;
+                bidId = std::stoi(bidIdStr);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error on line " << lineNumber << " of " << filename
+                          << ": Invalid bid ID '" << bidIdStr << "'" << std::endl;
+                continue; // Skip this line
+            }
+
+            try
+            {
+                productId = std::stoi(productIdStr);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error on line " << lineNumber << " of " << filename
+                          << ": Invalid product ID '" << productIdStr << "' for bid " << bidId << std::endl;
+                continue; // Skip this line
+            }
+
+            try
+            {
+                bidPrice = std::stod(bidPriceStr);
+                // Parse basePrice for validation, but we don't need to store it
+                std::stod(basePriceStr);
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Error on line " << lineNumber << " of " << filename
+                          << ": Invalid price format in line: " << line << std::endl;
+                continue; // Skip this line
+            }
+
+            // Track highest bid ID to set nextBidId
+            if (bidId > highestBidId)
+            {
+                highestBidId = bidId;
+            }
+
+            // Find the buyer
+            Buyer *buyer = nullptr;
+            for (const auto &pair : users)
+            {
+                User *user = pair.second;
+                if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
+                {
+                    buyer = static_cast<Buyer *>(user);
+                    break;
+                }
+            }
+
+            // Find the product - it should have been loaded already by loadProducts
+            Product *product = getProductById(productId);
+
+            // Add the bid to the product if the product exists and there's a buyer
+            if (product && buyer && bidPrice > 0)
+            {
+                product->addBid(buyer, bidPrice, bidId);
+                buyer->placeBid(productId, bidPrice);
+                bidsLoaded++;
             }
         }
-
-        // Find the product - it should have been loaded already by loadProducts
-        Product *product = getProductById(productId);
-
-        // Add the bid to the product if the product exists and there's a buyer
-        if (product && buyer && bidPrice > 0)
+        catch (const std::exception &e)
         {
-            product->addBid(buyer, bidPrice, bidId);
-            buyer->placeBid(productId, bidPrice);
-            bidsLoaded++;
+            std::cerr << "Error processing line " << lineNumber << " of " << filename << ": " << e.what() << std::endl;
+            std::cerr << "Line content: " << line << std::endl;
+            // Continue with next line rather than crashing
+            continue;
         }
     }
 
