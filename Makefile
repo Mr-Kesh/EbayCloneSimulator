@@ -1,13 +1,17 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Werror -Wpedantic
+INCLUDES = -IHeader_Files -I.
 
-all: test
+SRC_DIR = Implementation_Files
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 
-main: main.cpp
-	$(CXX) $(CXXFLAGS) main.cpp -o main
+all: main
+
+main: main.cpp $(SRC_FILES)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o main
 
 test: test.cpp
-	$(CXX) $(CXXFLAGS) test.cpp -o test
+	$(CXX) $(CXXFLAGS) $(INCLUDES) test.cpp -o test
 
 clean:
 	rm -f main test
