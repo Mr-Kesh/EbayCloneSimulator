@@ -13,7 +13,7 @@
 Driver *Driver::instance = nullptr;
 
 // Private constructor
-Driver::Driver() : currentUser(nullptr), nextBidId(1)
+Driver::Driver() : nextBidId(1), currentUser(nullptr)
 {
     // Load users and products from CSV files when the Driver is instantiated
     loadData();
