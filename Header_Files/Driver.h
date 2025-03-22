@@ -26,6 +26,9 @@ private:
     std::vector<Bid *> bids;
     std::vector<Seller *> sellers;
 
+    // Next bid ID for tracking bid numbers
+    int nextBidId;
+
     // Current logged in user
     User *currentUser;
 
@@ -80,6 +83,7 @@ public:
     void openBidding(Seller *seller, int productId);
     void closeBidding(Seller *seller, int productId);
     void viewProductBidHistory(Seller *seller, int productId);
+    int getNextBidId() { return nextBidId++; }
 
     /****************************************************
      * User Update Functions
@@ -90,12 +94,13 @@ public:
      * Data CSV Files Functions
      ****************************************************/
     void loadUsers(const std::string &filename);
+    void loadProducts(const std::string &filename);
     void loadBids(const std::string &filename);
     void loadData();
     void saveData();
     void saveUsers(const std::string &filename);
-    void saveBids(const std::string &filename);
     void saveProductsToCSV(const std::string &productsFilename);
+    void saveBidsToCSV(const std::string &filename);
 
     /****************************************************
      * Helper Functions

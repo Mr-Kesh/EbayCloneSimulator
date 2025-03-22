@@ -13,7 +13,7 @@
 Driver *Driver::instance = nullptr;
 
 // Private constructor
-Driver::Driver() : currentUser(nullptr)
+Driver::Driver() : currentUser(nullptr), nextBidId(1)
 {
     // Load users and products from CSV files when the Driver is instantiated
     loadData();
@@ -546,6 +546,9 @@ void Driver::createAccount()
         std::cout << "Account created as a Seller successfully!" << std::endl;
     }
 
+    // Save the data immediately after creating a new account
+    saveData();
+
     returnToBeginningMenu();
 }
 
@@ -654,11 +657,15 @@ void Driver::placeBid(Buyer *buyer, int productId, double amount)
     Product *product = getProductById(productId);
     if (product && product->isActive())
     {
-        if (product->addBid(buyer, amount))
+        int currentBidId = getNextBidId();
+        if (product->addBid(buyer, amount, currentBidId))
         {
             // Add the bid to the buyer's history as well
             buyer->placeBid(productId, amount);
-            std::cout << "Bid of $" << amount << " placed successfully on " << product->getName() << std::endl;
+            std::cout << "Bid #" << currentBidId << " of $" << amount << " placed successfully on " << product->getName() << std::endl;
+
+            // Save the bids to the CSV file
+            saveBidsToCSV("CSV_files/bids.csv");
         }
         else
         {
@@ -774,12 +781,12 @@ void Driver::loadUsers(const std::string &filename)
 }
 
 /**
- * @brief Loads bids from a specified CSV file.
+ * @brief Loads products from a CSV file.
  *
- * @param filename The name of the CSV file to read bid data from (bids.csv)
- * @return void This function populates the bids vector and updates products with bid information
+ * @param filename The name of the CSV file to read product data from.
+ * @return void This function populates the products map.
  */
-void Driver::loadBids(const std::string &filename)
+void Driver::loadProducts(const std::string &filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
@@ -789,55 +796,28 @@ void Driver::loadBids(const std::string &filename)
     }
 
     std::string line;
-    // Skip header line
-    std::getline(file, line);
-
     while (std::getline(file, line))
     {
         std::stringstream ss(line);
-        std::string productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
+        std::string productIdStr, category, attribute1, attribute2, name, basePriceStr, qualityStr, sellerName;
 
-        // Parse CSV line based on updated bids.csv format:
-        // Product ID,Category,Attribute 1,Attribute 2,Buyer,Bid Price,Product Name,Base Price,Quality,Seller
+        // Parse CSV line based on format:
+        // productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
         std::getline(ss, productIdStr, ',');
         std::getline(ss, category, ',');
         std::getline(ss, attribute1, ',');
         std::getline(ss, attribute2, ',');
-        std::getline(ss, buyerName, ',');
-        std::getline(ss, bidPriceStr, ',');
-        std::getline(ss, productName, ',');
+        std::getline(ss, name, ',');
         std::getline(ss, basePriceStr, ',');
         std::getline(ss, qualityStr, ',');
-        std::getline(ss, sellerName);
+        std::getline(ss, sellerName, ',');
 
         // Convert numeric values
         int productId = std::stoi(productIdStr);
         double basePrice = std::stod(basePriceStr);
-        double bidPrice = std::stod(bidPriceStr);
 
         // Find the seller
-        Seller *seller = nullptr;
-        for (const auto &pair : users)
-        {
-            User *user = pair.second;
-            if (user->getUsername() == sellerName && user->getUserType() == "Seller")
-            {
-                seller = static_cast<Seller *>(user);
-                break;
-            }
-        }
-
-        // Find the buyer
-        Buyer *buyer = nullptr;
-        for (const auto &pair : users)
-        {
-            User *user = pair.second;
-            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
-            {
-                buyer = static_cast<Buyer *>(user);
-                break;
-            }
-        }
+        Seller *seller = getSellerByUsername(sellerName);
 
         if (seller)
         {
@@ -859,29 +839,100 @@ void Driver::loadBids(const std::string &filename)
             {
                 quality = Quality::Used_Okay;
             }
-            else
-            {
-                std::cout << "Unknown quality '" << qualityStr << "' for product " << productId << ", defaulting to Used_Okay\n";
-            }
 
-            Product *product = ProductFactory::CreateProduct(productId, productName, category, basePrice, quality, seller, attribute1, attribute2);
+            Product *product = ProductFactory::CreateProduct(productId, name, category, basePrice, quality, seller, attribute1, attribute2);
 
             if (product)
             {
                 products[productId] = product;
                 seller->addProductForSale(product);
-
-                // Add the bid to the product if there's a buyer
-                if (buyer && bidPrice > 0)
-                {
-                    product->addBid(buyer, bidPrice);
-                    buyer->placeBid(productId, bidPrice);
-                }
             }
         }
     }
 
     file.close();
+    std::cout << "Loaded " << products.size() << " products from " << filename << std::endl;
+}
+
+/**
+ * @brief Loads bids from a specified CSV file.
+ *
+ * @param filename The name of the CSV file to read bid data from (bids.csv)
+ * @return void This function updates products with bid information
+ */
+void Driver::loadBids(const std::string &filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        std::cout << "Could not open file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    int bidsLoaded = 0;
+    int highestBidId = 0;
+
+    while (std::getline(file, line))
+    {
+        std::stringstream ss(line);
+        std::string bidIdStr, productIdStr, category, attribute1, attribute2, buyerName, bidPriceStr, productName, basePriceStr, qualityStr, sellerName;
+
+        // Parse CSV line with bid ID:
+        // BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
+        std::getline(ss, bidIdStr, ',');
+        std::getline(ss, productIdStr, ',');
+        std::getline(ss, category, ',');
+        std::getline(ss, attribute1, ',');
+        std::getline(ss, attribute2, ',');
+        std::getline(ss, buyerName, ',');
+        std::getline(ss, bidPriceStr, ',');
+        std::getline(ss, productName, ',');
+        std::getline(ss, basePriceStr, ',');
+        std::getline(ss, qualityStr, ',');
+        std::getline(ss, sellerName);
+
+        // Convert numeric values
+        int bidId = std::stoi(bidIdStr);
+        int productId = std::stoi(productIdStr);
+        double bidPrice = std::stod(bidPriceStr);
+
+        // Track highest bid ID to set nextBidId
+        if (bidId > highestBidId)
+        {
+            highestBidId = bidId;
+        }
+
+        // Find the buyer
+        Buyer *buyer = nullptr;
+        for (const auto &pair : users)
+        {
+            User *user = pair.second;
+            if (user->getUsername() == buyerName && user->getUserType() == "Buyer")
+            {
+                buyer = static_cast<Buyer *>(user);
+                break;
+            }
+        }
+
+        // Find the product - it should have been loaded already by loadProducts
+        Product *product = getProductById(productId);
+
+        // Add the bid to the product if the product exists and there's a buyer
+        if (product && buyer && bidPrice > 0)
+        {
+            product->addBid(buyer, bidPrice, bidId);
+            buyer->placeBid(productId, bidPrice);
+            bidsLoaded++;
+        }
+    }
+
+    // Set nextBidId to one more than the highest bid ID loaded
+    nextBidId = highestBidId + 1;
+
+    file.close();
+    std::cout << "Added " << bidsLoaded << " bids from " << filename << " to existing products" << std::endl;
+    std::cout << "Next Bid ID will be: " << nextBidId << std::endl;
 }
 
 /**
@@ -893,6 +944,11 @@ void Driver::loadData()
 {
     // Update paths to look in the "CSV files" directory
     loadUsers("CSV_files/users.csv");
+
+    // First load products from products.csv
+    loadProducts("CSV_files/products.csv");
+
+    // Then load bids from bids.csv
     loadBids("CSV_files/bids.csv");
 }
 
@@ -905,6 +961,7 @@ void Driver::saveData()
 {
     saveUsers("CSV_files/users.csv");
     saveProductsToCSV("CSV_files/products.csv");
+    saveBidsToCSV("CSV_files/bids.csv");
 }
 
 void Driver::saveUsers(const std::string &filename)
@@ -981,6 +1038,74 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
 
     productsFile.close();
     std::cout << "Products saved to " << productsFilename << std::endl;
+}
+
+/**
+ * @brief Saves all bids data to a CSV file
+ *
+ * @param filename The name of the CSV file to write bid data to.
+ * @return void This function writes all bid data to the specified file.
+ */
+void Driver::saveBidsToCSV(const std::string &filename)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cerr << "Error: Could not open " << filename << " for writing." << std::endl;
+        return;
+    }
+
+    int bidCount = 0;
+    // Loop through all products
+    for (const auto &productPair : products)
+    {
+        Product *product = productPair.second;
+        if (product)
+        {
+            // Get all bids for this product
+            const std::vector<BidInfo> &bidHistory = product->getBidHistory();
+
+            for (const BidInfo &bid : bidHistory)
+            {
+                // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
+                file << bid.bidId << ","
+                     << product->getProductId() << ","
+                     << product->getCategory() << ","
+                     << product->getAttribute1() << ","
+                     << product->getAttribute2() << ","
+                     << bid.buyer->getUsername() << ","
+                     << bid.amount << ","
+                     << product->getName() << ","
+                     << product->getBasePrice() << ",";
+
+                // Convert quality enum to string
+                Quality quality = product->getQuality();
+                switch (quality)
+                {
+                case Quality::New:
+                    file << "New";
+                    break;
+                case Quality::Used_VeryGood:
+                    file << "Used_VeryGood";
+                    break;
+                case Quality::Used_Good:
+                    file << "Used_Good";
+                    break;
+                case Quality::Used_Okay:
+                    file << "Used_Okay";
+                    break;
+                default:
+                    file << "Unknown";
+                }
+
+                file << "," << product->getSeller()->getUsername() << std::endl;
+                bidCount++;
+            }
+        }
+    }
+
+    file.close();
+    std::cout << "Saved " << bidCount << " bids to " << filename << std::endl;
 }
 
 /****************************************************

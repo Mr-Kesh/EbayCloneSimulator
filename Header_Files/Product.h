@@ -12,9 +12,10 @@ class Seller;
 // Struct to store bid information
 struct BidInfo
 {
+    int bidId;
     Buyer *buyer;
     double amount;
-    BidInfo(Buyer *b, double a) : buyer(b), amount(a) {}
+    BidInfo(int id, Buyer *b, double a) : bidId(id), buyer(b), amount(a) {}
 };
 
 enum class Quality
@@ -74,7 +75,7 @@ public:
     void setIsSold(bool sold) { isSold_ = sold; }
 
     // Bid management
-    bool addBid(Buyer *buyer, double amount);
+    bool addBid(Buyer *buyer, double amount, int bidId);
     void openBidding();
     void closeBidding();
     void reopenBidding();

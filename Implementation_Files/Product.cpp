@@ -117,7 +117,15 @@ void Product::displayProductInfo() const
               << "\n-----------------------------------" << std::endl;
 }
 
-bool Product::addBid(Buyer *buyer, double amount)
+/**
+ * @brief Adds a bid to the product.
+ *
+ * @param buyer The buyer placing the bid.
+ * @param amount The amount of the bid.
+ * @param bidId The ID of the bid.
+ * @return bool True if the bid was added successfully, false if it was not a higher bid.
+ */
+bool Product::addBid(Buyer *buyer, double amount, int bidId)
 {
     // Check if this is a higher bid
     if (amount > getHighestBidAmount())
@@ -125,13 +133,13 @@ bool Product::addBid(Buyer *buyer, double amount)
         bids_[buyer] = amount;
 
         // Add to bid history regardless of whether it's the highest
-        bidHistory_.push_back(BidInfo(buyer, amount));
+        bidHistory_.push_back(BidInfo(bidId, buyer, amount));
 
         return true;
     }
 
     // Even if not the highest bid, still record it in history
-    bidHistory_.push_back(BidInfo(buyer, amount));
+    bidHistory_.push_back(BidInfo(bidId, buyer, amount));
 
     return false;
 }
@@ -219,7 +227,7 @@ void Product::displayBidHistoryForProduct() const
     for (size_t i = 0; i < bidHistory_.size(); i++)
     {
         const BidInfo &bid = bidHistory_[i];
-        std::cout << "Bid #" << (i + 1) << ": $" << bid.amount
+        std::cout << "Bid #" << bid.bidId << ": $" << bid.amount
                   << " by " << bid.buyer->getUsername() << std::endl;
     }
 
