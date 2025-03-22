@@ -1081,28 +1081,23 @@ void Driver::saveUsers(const std::string &filename)
  */
 void Driver::saveProductsToCSV(const std::string &productsFilename)
 {
-    // First, let's read the current format from bids.csv
-    std::map<int, std::string> fullCategories;
-
-    // Open bids.csv to get the full category format
-    std::ifstream bidsFile("CSV_files/bids.csv");
-    if (bidsFile.is_open())
+    // First, read all existing products from the CSV file
+    std::map<int, std::string> existingProducts;
+    std::ifstream existingFile(productsFilename);
+    if (existingFile.is_open())
     {
         std::string line;
-        while (std::getline(bidsFile, line))
+        while (std::getline(existingFile, line))
         {
             std::stringstream ss(line);
-            std::string bidIdStr, productIdStr, fullCategory;
-
-            // Read bid ID, product ID, and full category
-            std::getline(ss, bidIdStr, ',');
+            std::string productIdStr;
             std::getline(ss, productIdStr, ',');
-            std::getline(ss, fullCategory, ',');
 
             try
             {
                 int productId = std::stoi(productIdStr);
-                fullCategories[productId] = fullCategory;
+                // Store the entire line for each product ID
+                existingProducts[productId] = line;
             }
             catch (...)
             {
@@ -1110,7 +1105,19 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
                 continue;
             }
         }
-        bidsFile.close();
+        existingFile.close();
+    }
+
+    // Track new product IDs that have been added during runtime
+    std::set<int> newProductIds;
+    for (const auto &pair : products)
+    {
+        int productId = pair.first;
+        // If this product didn't exist in the original file, it's new
+        if (existingProducts.find(productId) == existingProducts.end())
+        {
+            newProductIds.insert(productId);
+        }
     }
 
     // Now open products.csv for writing
@@ -1121,44 +1128,53 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
         return;
     }
 
-    // Save all products
-    for (const auto &pair : products)
+    // First, write all the existing products that haven't been changed
+    for (const auto &pair : existingProducts)
     {
-        Product *product = pair.second;
+        int productId = pair.first;
+        // Skip writing this product if it no longer exists in our products map
+        if (products.find(productId) == products.end())
+        {
+            continue;
+        }
 
+        // If this is a new product added during runtime, don't write the old data
+        if (newProductIds.find(productId) != newProductIds.end())
+        {
+            continue;
+        }
+
+        // Write the original line for this product
+        productsFile << pair.second << std::endl;
+    }
+
+    // Then write all the new products
+    for (int newProductId : newProductIds)
+    {
+        Product *product = products[newProductId];
         if (product != nullptr)
         {
-            int productId = product->getProductId();
             std::string attr1 = product->getAttribute1();
             std::string attr2 = product->getAttribute2();
 
-            // Get the full category from bids.csv if available
-            std::string fullCategory;
-            if (fullCategories.find(productId) != fullCategories.end())
-            {
-                fullCategory = fullCategories[productId];
-            }
-            else
-            {
-                // If not in bids.csv, construct it from product data
-                fullCategory = product->getCategory();
+            // Construct full category string
+            std::string fullCategory = product->getCategory();
 
-                // Add subcategory and specific type if available
-                if (!attr1.empty())
-                {
-                    fullCategory += ":" + product->getSubCategory();
-                }
-                if (!attr2.empty())
-                {
-                    fullCategory += ":" + product->getSpecificType();
-                }
+            // Add subcategory and specific type if available
+            if (!attr1.empty())
+            {
+                fullCategory += ":" + product->getSubCategory();
+            }
+            if (!attr2.empty())
+            {
+                fullCategory += ":" + product->getSpecificType();
             }
 
             // Format: productId,category,attribute1,attribute2,name,basePrice,quality,sellerUsername
-            productsFile << productId << ","
+            productsFile << newProductId << ","
                          << fullCategory << ","
-                         << attr1 << "," // Use the already extracted attribute1
-                         << attr2 << "," // Use the already extracted attribute2
+                         << attr1 << ","
+                         << attr2 << ","
                          << product->getName() << ","
                          << product->getBasePrice() << ",";
 
@@ -1198,6 +1214,44 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
  */
 void Driver::saveBidsToCSV(const std::string &filename)
 {
+    // Read existing bids from the file
+    std::map<int, std::string> existingBids;
+    std::ifstream existingFile(filename);
+    if (existingFile.is_open())
+    {
+        std::string line;
+        while (std::getline(existingFile, line))
+        {
+            std::stringstream ss(line);
+            std::string bidIdStr;
+            std::getline(ss, bidIdStr, ',');
+
+            try
+            {
+                int bidId = std::stoi(bidIdStr);
+                // Store the entire line for each bid ID
+                existingBids[bidId] = line;
+            }
+            catch (...)
+            {
+                // Skip invalid lines
+                continue;
+            }
+        }
+        existingFile.close();
+    }
+
+    // Find maximum existing bid ID to determine which bids are new
+    int maxExistingBidId = 0;
+    for (const auto &pair : existingBids)
+    {
+        if (pair.first > maxExistingBidId)
+        {
+            maxExistingBidId = pair.first;
+        }
+    }
+
+    // Open file for writing
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -1205,8 +1259,16 @@ void Driver::saveBidsToCSV(const std::string &filename)
         return;
     }
 
-    int bidCount = 0;
-    // Loop through all products
+    // First, write all existing bids
+    for (const auto &pair : existingBids)
+    {
+        file << pair.second << std::endl;
+    }
+
+    // Count of new bids added
+    int newBidsCount = 0;
+
+    // Then write any new bids (bids with ID > maxExistingBidId)
     for (const auto &productPair : products)
     {
         Product *product = productPair.second;
@@ -1215,7 +1277,7 @@ void Driver::saveBidsToCSV(const std::string &filename)
             // Get all bids for this product
             const std::vector<BidInfo> &bidHistory = product->getBidHistory();
 
-            // Construct full category string
+            // Construct full category string for new bids
             std::string fullCategory = product->getCategory();
             std::string attr1 = product->getAttribute1();
             std::string attr2 = product->getAttribute2();
@@ -1231,6 +1293,12 @@ void Driver::saveBidsToCSV(const std::string &filename)
 
             for (const BidInfo &bid : bidHistory)
             {
+                // Skip bids that already exist in the file
+                if (bid.bidId <= maxExistingBidId)
+                {
+                    continue;
+                }
+
                 // Format: BidID,ProductID,Category,Attribute1,Attribute2,Buyer,BidAmount,ProductName,BasePrice,Quality,Seller
                 file << bid.bidId << ","
                      << product->getProductId() << ","
@@ -1263,13 +1331,14 @@ void Driver::saveBidsToCSV(const std::string &filename)
                 }
 
                 file << "," << product->getSeller()->getUsername() << std::endl;
-                bidCount++;
+                newBidsCount++;
             }
         }
     }
 
     file.close();
-    std::cout << "Saved " << bidCount << " bids to " << filename << std::endl;
+    std::cout << "Preserved " << existingBids.size() << " existing bids and added "
+              << newBidsCount << " new bids to " << filename << std::endl;
 }
 
 /****************************************************
