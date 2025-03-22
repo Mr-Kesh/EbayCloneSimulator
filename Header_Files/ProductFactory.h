@@ -62,6 +62,8 @@ public:
             specificType = category.substr(posSubCategory + 1, posSpecificType - posSubCategory - 1);
         }
 
+        
+
         // Product factory based on the main category, sub category, and specific type
         // Alright, let's check out the main category first
         if (mainCategory == "Electronics") // If it's electronics

@@ -41,6 +41,8 @@ private:
     std::vector<BidInfo> bidHistory_; // Vector to store all bids in chronological order
     std::string attribute1_;          // First attribute specific to product type
     std::string attribute2_;          // Second attribute specific to product type
+    std::string subCategory_;         // Subcategory of the product
+    std::string specificType_;       // Specific type of the product
 
 public:
     // Constructor
@@ -61,6 +63,8 @@ public:
     Buyer *getHighestBidder() const;
     double getHighestBidAmount() const;
     const std::vector<BidInfo> &getBidHistory() const { return bidHistory_; }
+    std::string getSubCategory() const { return subCategory_; }
+    std::string getSpecificType() const { return specificType_; }
 
     // New attribute getters
     std::string getAttribute1() const { return attribute1_; }
@@ -69,6 +73,8 @@ public:
     // New attribute setters
     void setAttribute1(const std::string &attr) { attribute1_ = attr; }
     void setAttribute2(const std::string &attr) { attribute2_ = attr; }
+    void setSubCategory(const std::string &subCategory) { subCategory_ = subCategory; }
+    void setSpecificType(const std::string &specificType) { specificType_ = specificType; }
 
     // Setters
     void setIsActive(bool active) { isActive_ = active; }

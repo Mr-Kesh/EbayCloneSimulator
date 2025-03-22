@@ -1146,11 +1146,11 @@ void Driver::saveProductsToCSV(const std::string &productsFilename)
                 // Add subcategory and specific type if available
                 if (!attr1.empty())
                 {
-                    fullCategory += ":" + attr1;
+                    fullCategory += ":" + product->getSubCategory();
                 }
                 if (!attr2.empty())
                 {
-                    fullCategory += ":" + attr2;
+                    fullCategory += ":" + product->getSpecificType();
                 }
             }
 
@@ -1222,11 +1222,11 @@ void Driver::saveBidsToCSV(const std::string &filename)
 
             if (!attr1.empty())
             {
-                fullCategory += ":" + attr1;
+                fullCategory += ":" + product->getSubCategory();
             }
             if (!attr2.empty())
             {
-                fullCategory += ":" + attr2;
+                fullCategory += ":" + product->getSpecificType();
             }
 
             for (const BidInfo &bid : bidHistory)

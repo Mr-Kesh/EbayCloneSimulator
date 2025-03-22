@@ -244,6 +244,8 @@ Product *Seller::addProduct()
     Product *newProduct = ProductFactory::CreateProduct(productId, name, formattedCategory, price, quality, this, attribute1, attribute2);
     newProduct->setAttribute1(attribute1);
     newProduct->setAttribute2(attribute2);
+    newProduct->setSubCategory(subcategory);
+    newProduct->setSpecificType(specificType);
     // Check if the product was created successfully
     if (newProduct)
     {
