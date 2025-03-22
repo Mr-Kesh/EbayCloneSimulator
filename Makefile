@@ -5,10 +5,10 @@ INCLUDES = -IHeader_Files -I.
 SRC_DIR = Implementation_Files
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 
-all: main
+all: test
 
-main: main.cpp $(SRC_FILES)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o main
+test: main.cpp $(SRC_FILES)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o test
 
 clean:
 	rm -f main
