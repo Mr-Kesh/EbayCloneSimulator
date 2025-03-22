@@ -19,10 +19,10 @@ public:
     // Constructor
     User(const std::string &username, long phoneNumber, const std::string &address, double balance);
 
-    // Virtual destructor (important for base classes)
+    // Virtual destructor
     virtual ~User() {}
 
-    // Getters - inline implementation
+    // Getters
     std::string getUsername() const { return username_; }
     long getPhoneNumber() const { return phone_no_; }
     std::string getAddress() const { return address_; }

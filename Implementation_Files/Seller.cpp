@@ -5,14 +5,21 @@
 #include "Header_Files/User.h"
 #include "Header_Files/Driver.h"
 
-// Constructor without userId (for backward compatibility)
+
 Seller::Seller(const std::string &uname, long phone, const std::string &addr, double bal)
     : User(uname, phone, addr, bal)
 {
     user_type_ = "Seller";
 }
 
-// Define getValidNumberChoice template function
+/**
+ * @brief Get a valid number choice
+ * 
+ * @tparam T The type of the number
+ * @param prompt The prompt to display to the user
+ * @param min The minimum value of the number
+ * @param max The maximum value of the number
+ */
 template <typename T>
 T getValidNumberChoice(const std::string &prompt, T min, T max)
 {

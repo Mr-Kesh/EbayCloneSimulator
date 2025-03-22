@@ -9,10 +9,9 @@ Buyer::Buyer(const std::string &uname, long phone, const std::string &addr, doub
     user_type_ = "Buyer";
 }
 
-// std::string Buyer::getUserType() const {
-//     return "Buyer";
-// };
-
+/**
+ * @brief Updates the user's information
+*/
 void Buyer::updateUserInformation()
 {
     std::string newUsername;
@@ -44,6 +43,13 @@ void Buyer::updateUserInformation()
     std::cout << "User information updated successfully!" << std::endl;
 }
 
+/*  
+ * @brief Places a bid on a product
+ * 
+ * @param productId The ID of the product to bid on
+ * @param amount The amount of the bid
+ * @return bool True if the bid was placed successfully, false otherwise
+ */
 bool Buyer::placeBuyerBid(int productId, double amount)
 {
     std::cout << "Placing bid of $" << amount << " on product ID " << productId << std::endl;
@@ -88,6 +94,11 @@ void Buyer::viewBiddingHistory(int productId)
     }
 }
 
+/**
+ * @brief View the purchase history of a product
+ * 
+ * @param productId The ID of the product to view the purchase history of
+ */
 void Buyer::viewPurchaseHistory(int productId)
 {
     std::cout << "Viewing purchase history for product ID " << productId << std::endl;

@@ -65,7 +65,6 @@ public:
         
 
         // Product factory based on the main category, sub category, and specific type
-        // Alright, let's check out the main category first
         if (mainCategory == "Electronics") // If it's electronics
         {
             if (subCategory == "Phone") // And it's a phone
@@ -184,11 +183,11 @@ public:
 
         if (mainCategory == "Tools") // Finally, tools
         {
-            // For simplicity, we'll just create a generic Tools object
+            
             return new Tools(productId, name, base_price, quality, seller, attribute1);
         }
 
-        // If all else fails, create a generic product
+        // If all else fails, create a normal product
         return new Product(productId, name, category, base_price, quality, seller);
     }
 };
