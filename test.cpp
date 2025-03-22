@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_MAIN
- #include <vector>
- 
+#include "catch.hpp"
+
+#include <vector>
+
 TEST_CASE( "Temp test case", "[tempTest]" ) {
     REQUIRE( 1 == 1 );
 }
