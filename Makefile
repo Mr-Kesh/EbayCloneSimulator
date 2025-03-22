@@ -10,9 +10,5 @@ all: main
 main: main.cpp $(SRC_FILES)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $^ -o main
 
-
-test: test.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) test.cpp -o test
-
 clean:
-	rm -f main test
+	rm -f main
