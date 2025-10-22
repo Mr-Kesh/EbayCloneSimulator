@@ -4,7 +4,7 @@
 
 # BidToBuy: CLI-Based eBay Simulation
 
-Jenna and Jeshua's CSCI 3010 - Intensive Programming Workshop - HW3
+Jenna and Jeshua's Ebay Simulator
 
 ## Overview
 
